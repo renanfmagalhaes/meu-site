@@ -25,49 +25,14 @@
     <main>
         <h1 class="page-title">Tutoriais</h1>
 
-        <div class="hashtag-filter">
-            <button class="tag-btn" onclick="filtrarTag('todos')">#Todos</button>
-            <button class="tag-btn" onclick="filtrarTag('#CSS')">#CSS</button>
-            <button class="tag-btn" onclick="filtrarTag('#FrontEnd')">#FrontEnd</button>
-            <button class="tag-btn" onclick="filtrarTag('#Git')">#Git</button>
-            <button class="tag-btn" onclick="filtrarTag('#Deploy')">#Deploy</button>
-        </div>
+        <div class="hashtag-filter" id="filters"></div>
 
-        <div class="bento-grid">
-
-            <div class="media-card" data-tags="#CSS #FrontEnd">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" alt="Como montar um bento grid em CSS">
-                    <span class="card-rating">⭐ 9.1</span>
-                </div>
-                <div class="card-content">
-                    <h3>Como montar um bento grid em CSS</h3>
-                    <p class="sinopse">Passo a passo para criar grades responsivas com CSS Grid, do zero até o layout final.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#CSS')">#CSS</span>
-                        <span class="tag" onclick="filtrarTag('#FrontEnd')">#FrontEnd</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="media-card" data-tags="#Git #Deploy">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80" alt="Publicando um site no GitHub Pages">
-                    <span class="card-rating">⭐ 8.9</span>
-                </div>
-                <div class="card-content">
-                    <h3>Publicando um site no GitHub Pages</h3>
-                    <p class="sinopse">Guia rápido para colocar seu site pessoal no ar gratuitamente usando o GitHub Pages.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#Git')">#Git</span>
-                        <span class="tag" onclick="filtrarTag('#Deploy')">#Deploy</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        <div class="bento-grid" id="grid"></div>
     </main>
 
-    <script src="assets/script.js"></script>
+    <script src="assets/render.js"></script>
+    <script>
+        initCategoryPage('assets/data/tutoriais.json', '#grid', '#filters');
+    </script>
 </body>
 </html>
