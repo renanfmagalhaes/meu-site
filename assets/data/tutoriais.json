@@ -8,7 +8,8 @@
       "#CSS",
       "#FrontEnd"
     ],
-    "date": "2026-07-01"
+    "date": "2026-07-01",
+    "link": "tutoriais/como-montar-bento-grid.html"
   },
   {
     "title": "Publicando um site no GitHub Pages",
@@ -19,6 +20,7 @@
       "#Git",
       "#Deploy"
     ],
-    "date": "2026-04-22"
+    "date": "2026-04-22",
+    "link": "tutoriais/publicando-no-github-pages.html"
   }
 ]
