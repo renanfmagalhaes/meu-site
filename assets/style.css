@@ -101,6 +101,19 @@ main {
     border-color: #38bdf8;
 }
 
+/* Botões de filtro de plataforma (jogos): cor diferenciada dos filtros de gênero */
+.tag-btn.platform-btn {
+    border-color: #a78bfa;
+    color: #a78bfa;
+}
+
+.tag-btn.platform-btn:hover,
+.tag-btn.platform-btn.active {
+    background-color: #a78bfa;
+    color: #0f111a;
+    border-color: #a78bfa;
+}
+
 /* Grade estilo Bento Grid */
 .bento-grid {
     display: grid;
@@ -162,6 +175,20 @@ main {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+/* Selo de plataforma (jogos): SNES, Mega Drive, PC etc. */
+.card-platform {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background-color: rgba(167, 139, 250, 0.9);
+    color: #0f111a;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    backdrop-filter: blur(5px);
 }
 
 /* Textos, Sinopse e Tags */
@@ -231,6 +258,18 @@ main {
     flex-direction: column;
 }
 
+.home-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
 .home-item h2 {
     font-size: 1rem;
     color: #a0a6b8;
@@ -258,4 +297,76 @@ main {
     color: #a0a6b8;
     font-size: 0.9rem;
     padding: 20px 0;
+}
+
+/* Páginas de artigo (conteúdo de um tutorial individual) */
+.article {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.article .voltar {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #38bdf8;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.article .voltar:hover {
+    text-decoration: underline;
+}
+
+.article-cover {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.article h1 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.article .article-meta {
+    color: #a0a6b8;
+    font-size: 0.85rem;
+    margin-bottom: 24px;
+}
+
+.article h2 {
+    font-size: 1.2rem;
+    margin: 30px 0 12px;
+    color: #38bdf8;
+}
+
+.article p {
+    line-height: 1.7;
+    color: #d3d6e0;
+    margin-bottom: 14px;
+}
+
+.article pre {
+    background-color: #1a1d29;
+    border: 1px solid #252a3d;
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+}
+
+.article code {
+    font-family: 'Courier New', monospace;
+    background-color: #1a1d29;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.article ul, .article ol {
+    margin: 0 0 16px 20px;
+    color: #d3d6e0;
+    line-height: 1.7;
 }
