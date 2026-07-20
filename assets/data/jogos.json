@@ -8,6 +8,7 @@
       "#Cyberpunk",
       "#RPG"
     ],
+    "platform": "PC",
     "date": "2026-06-28"
   },
   {
@@ -19,6 +20,31 @@
       "#Suspense",
       "#Indie"
     ],
+    "platform": "PC",
     "date": "2026-05-02"
+  },
+  {
+    "title": "Chrono Trigger",
+    "sinopse": "Um grupo de aventureiros viaja no tempo para impedir uma catástrofe que ameaça toda a humanidade.",
+    "img": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80",
+    "rating": 9.8,
+    "tags": [
+      "#RPG",
+      "#Aventura"
+    ],
+    "platform": "SNES",
+    "date": "2026-03-15"
+  },
+  {
+    "title": "Sonic the Hedgehog 2",
+    "sinopse": "O ouriço azul corre para impedir os planos do Dr. Robotnik com a ajuda do parceiro Tails.",
+    "img": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80",
+    "rating": 9.1,
+    "tags": [
+      "#Aventura",
+      "#Clássico"
+    ],
+    "platform": "Mega Drive",
+    "date": "2026-02-10"
   }
 ]
