@@ -207,25 +207,38 @@ main {
     color: #0f111a;
 }
 
-/* Seções da Home (uma por categoria) */
-.section-block {
-    margin-bottom: 50px;
+/* Seções da Home: grid 3x2 (3 em cima, 3 embaixo) */
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
 }
 
-.section-block h2 {
-    font-size: 1.1rem;
+@media (max-width: 1000px) {
+    .home-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .home-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.home-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-item h2 {
+    font-size: 1rem;
     color: #a0a6b8;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     border-left: 3px solid #38bdf8;
     padding-left: 10px;
-}
-
-.home-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
 }
 
 .ver-todos {
