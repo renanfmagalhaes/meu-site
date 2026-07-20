@@ -1,0 +1,24 @@
+[
+  {
+    "title": "Neuromancer",
+    "sinopse": "Um cowboy do ciberespaço decadente é contratado para realizar o último e definitivo golpe na matriz.",
+    "img": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80",
+    "rating": 9.5,
+    "tags": [
+      "#Cyberpunk",
+      "#SciFi"
+    ],
+    "date": "2026-07-10"
+  },
+  {
+    "title": "Dark",
+    "sinopse": "Famílias de uma pequena cidade alemã são arrastadas para um labirinto de mistério envolvendo quatro gerações.",
+    "img": "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=600&q=80",
+    "rating": 9.6,
+    "tags": [
+      "#Suspense",
+      "#SciFi"
+    ],
+    "date": "2026-05-20"
+  }
+]

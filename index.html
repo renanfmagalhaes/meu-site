@@ -23,113 +23,44 @@
     </header>
 
     <main>
-        <div class="section-block">
-            <h2>Último Filme</h2>
-            <div class="home-grid">
-            <div class="media-card" data-tags="#SciFi #Suspense">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80" alt="A Origem">
-                    <span class="card-category">filme</span>
-                    <span class="card-rating">⭐ 9.8</span>
-                </div>
-                <div class="card-content">
-                    <h3>A Origem</h3>
-                    <p class="sinopse">Um ladrão que rouba segredos corporativos através dos sonhos recebe a tarefa inversa de plantar uma ideia.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
-                        <span class="tag" onclick="filtrarTag('#Suspense')">#Suspense</span>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <a class="ver-todos" href="filmes.html">Ver todos &rarr;</a>
-        </div>
-        <div class="section-block">
-            <h2>Última Série</h2>
-            <div class="home-grid">
-            <div class="media-card" data-tags="#Cyberpunk #SciFi">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Neuromancer">
-                    <span class="card-category">série</span>
-                    <span class="card-rating">⭐ 9.5</span>
-                </div>
-                <div class="card-content">
-                    <h3>Neuromancer</h3>
-                    <p class="sinopse">Um cowboy do ciberespaço decadente é contratado para realizar o último e definitivo golpe na matriz.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
-                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <a class="ver-todos" href="series.html">Ver todos &rarr;</a>
-        </div>
-        <div class="section-block">
-            <h2>Último Livro</h2>
-            <div class="home-grid">
-            <div class="media-card" data-tags="#SciFi #Aventura">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=600&q=80" alt="Duna">
-                    <span class="card-category">livro</span>
-                    <span class="card-rating">⭐ 9.7</span>
-                </div>
-                <div class="card-content">
-                    <h3>Duna</h3>
-                    <p class="sinopse">Em um futuro distante, um jovem herdeiro se torna o centro de uma disputa por especiaria e poder no deserto de Arrakis.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
-                        <span class="tag" onclick="filtrarTag('#Aventura')">#Aventura</span>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <a class="ver-todos" href="livros.html">Ver todos &rarr;</a>
-        </div>
-        <div class="section-block">
-            <h2>Última Música</h2>
-            <div class="home-grid">
-            <div class="media-card" data-tags="#Cyberpunk #Instrumental">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80" alt="Blade Runner Blues">
-                    <span class="card-category">música</span>
-                    <span class="card-rating">⭐ 9.3</span>
-                </div>
-                <div class="card-content">
-                    <h3>Blade Runner Blues</h3>
-                    <p class="sinopse">Faixa instrumental de Vangelis que define a atmosfera melancólica e futurista do cyberpunk clássico.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
-                        <span class="tag" onclick="filtrarTag('#Instrumental')">#Instrumental</span>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <a class="ver-todos" href="musicas.html">Ver todos &rarr;</a>
-        </div>
-        <div class="section-block">
-            <h2>Última Foto</h2>
-            <div class="home-grid">
-            <div class="media-card" data-tags="#Cyberpunk #Urbano">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=600&q=80" alt="Neon Alley">
-                    <span class="card-category">foto</span>
-                    <span class="card-rating">⭐ 9.2</span>
-                </div>
-                <div class="card-content">
-                    <h3>Neon Alley</h3>
-                    <p class="sinopse">Registro noturno de uma viela iluminada por letreiros neon, clima cyberpunk urbano.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
-                        <span class="tag" onclick="filtrarTag('#Urbano')">#Urbano</span>
-                    </div>
-                </div>
-            </div>
-            </div>
-            <a class="ver-todos" href="fotos.html">Ver todos &rarr;</a>
-        </div>
+        <div id="home-sections"></div>
     </main>
 
-    <script src="assets/script.js"></script>
+    <script src="assets/render.js"></script>
+    <script>
+        const categoriasHome = [
+  {
+    "file": "filmes.json",
+    "label": "Último Filme",
+    "badge": "filme",
+    "link": "filmes.html"
+  },
+  {
+    "file": "series.json",
+    "label": "Última Série",
+    "badge": "série",
+    "link": "series.html"
+  },
+  {
+    "file": "livros.json",
+    "label": "Último Livro",
+    "badge": "livro",
+    "link": "livros.html"
+  },
+  {
+    "file": "musicas.json",
+    "label": "Última Música",
+    "badge": "música",
+    "link": "musicas.html"
+  },
+  {
+    "file": "fotos.json",
+    "label": "Última Foto",
+    "badge": "foto",
+    "link": "fotos.html"
+  }
+];
+        initHomePage(categoriasHome, '#home-sections');
+    </script>
 </body>
 </html>

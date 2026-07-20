@@ -95,6 +95,12 @@ main {
     color: #0f111a;
 }
 
+.tag-btn.active {
+    background-color: #38bdf8;
+    color: #0f111a;
+    border-color: #38bdf8;
+}
+
 /* Grade estilo Bento Grid */
 .bento-grid {
     display: grid;
@@ -232,4 +238,11 @@ main {
 
 .ver-todos:hover {
     text-decoration: underline;
+}
+
+/* Estado vazio / carregando */
+.empty-state, .loading-state {
+    color: #a0a6b8;
+    font-size: 0.9rem;
+    padding: 20px 0;
 }
