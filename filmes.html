@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmes - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="filmes.html" class="active">Filmes</a>
+            <a href="series.html">Séries</a>
+            <a href="livros.html">Livros</a>
+            <a href="musicas.html">Músicas</a>
+            <a href="jogos.html">Jogos</a>
+            <a href="tutoriais.html">Tutoriais</a>
+            <a href="fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page-title">Filmes</h1>
+
+        <div class="hashtag-filter">
+            <button class="tag-btn" onclick="filtrarTag('todos')">#Todos</button>
+            <button class="tag-btn" onclick="filtrarTag('#SciFi')">#SciFi</button>
+            <button class="tag-btn" onclick="filtrarTag('#Suspense')">#Suspense</button>
+            <button class="tag-btn" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</button>
+            <button class="tag-btn" onclick="filtrarTag('#Aventura')">#Aventura</button>
+        </div>
+
+        <div class="bento-grid">
+
+            <div class="media-card" data-tags="#SciFi #Suspense">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80" alt="A Origem">
+                    <span class="card-rating">⭐ 9.8</span>
+                </div>
+                <div class="card-content">
+                    <h3>A Origem</h3>
+                    <p class="sinopse">Um ladrão que rouba segredos corporativos através dos sonhos recebe a tarefa inversa de plantar uma ideia.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
+                        <span class="tag" onclick="filtrarTag('#Suspense')">#Suspense</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-card" data-tags="#Cyberpunk #SciFi">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=600&q=80" alt="Blade Runner 2049">
+                    <span class="card-rating">⭐ 9.2</span>
+                </div>
+                <div class="card-content">
+                    <h3>Blade Runner 2049</h3>
+                    <p class="sinopse">Um novo blade runner descobre um segredo enterrado que pode mergulhar o que resta da sociedade no caos.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
+                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>

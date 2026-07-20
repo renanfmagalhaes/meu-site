@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Séries - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="filmes.html">Filmes</a>
+            <a href="series.html" class="active">Séries</a>
+            <a href="livros.html">Livros</a>
+            <a href="musicas.html">Músicas</a>
+            <a href="jogos.html">Jogos</a>
+            <a href="tutoriais.html">Tutoriais</a>
+            <a href="fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page-title">Séries</h1>
+
+        <div class="hashtag-filter">
+            <button class="tag-btn" onclick="filtrarTag('todos')">#Todos</button>
+            <button class="tag-btn" onclick="filtrarTag('#SciFi')">#SciFi</button>
+            <button class="tag-btn" onclick="filtrarTag('#Suspense')">#Suspense</button>
+            <button class="tag-btn" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</button>
+        </div>
+
+        <div class="bento-grid">
+
+            <div class="media-card" data-tags="#Cyberpunk #SciFi">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80" alt="Neuromancer">
+                    <span class="card-rating">⭐ 9.5</span>
+                </div>
+                <div class="card-content">
+                    <h3>Neuromancer</h3>
+                    <p class="sinopse">Um cowboy do ciberespaço decadente é contratado para realizar o último e definitivo golpe na matriz.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
+                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-card" data-tags="#Suspense #SciFi">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=600&q=80" alt="Dark">
+                    <span class="card-rating">⭐ 9.6</span>
+                </div>
+                <div class="card-content">
+                    <h3>Dark</h3>
+                    <p class="sinopse">Famílias de uma pequena cidade alemã são arrastadas para um labirinto de mistério envolvendo quatro gerações.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#Suspense')">#Suspense</span>
+                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>

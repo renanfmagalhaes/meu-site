@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livros - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="filmes.html">Filmes</a>
+            <a href="series.html">Séries</a>
+            <a href="livros.html" class="active">Livros</a>
+            <a href="musicas.html">Músicas</a>
+            <a href="jogos.html">Jogos</a>
+            <a href="tutoriais.html">Tutoriais</a>
+            <a href="fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page-title">Livros</h1>
+
+        <div class="hashtag-filter">
+            <button class="tag-btn" onclick="filtrarTag('todos')">#Todos</button>
+            <button class="tag-btn" onclick="filtrarTag('#SciFi')">#SciFi</button>
+            <button class="tag-btn" onclick="filtrarTag('#Aventura')">#Aventura</button>
+            <button class="tag-btn" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</button>
+        </div>
+
+        <div class="bento-grid">
+
+            <div class="media-card" data-tags="#SciFi #Aventura">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=600&q=80" alt="Duna">
+                    <span class="card-rating">⭐ 9.7</span>
+                </div>
+                <div class="card-content">
+                    <h3>Duna</h3>
+                    <p class="sinopse">Em um futuro distante, um jovem herdeiro se torna o centro de uma disputa por especiaria e poder no deserto de Arrakis.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
+                        <span class="tag" onclick="filtrarTag('#Aventura')">#Aventura</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-card" data-tags="#Cyberpunk #SciFi">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80" alt="Neuromancer (livro)">
+                    <span class="card-rating">⭐ 9.4</span>
+                </div>
+                <div class="card-content">
+                    <h3>Neuromancer (livro)</h3>
+                    <p class="sinopse">A obra que definiu o gênero cyberpunk, seguindo um hacker decadente em busca de redenção digital.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
+                        <span class="tag" onclick="filtrarTag('#SciFi')">#SciFi</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>

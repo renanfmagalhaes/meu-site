@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Músicas - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="filmes.html">Filmes</a>
+            <a href="series.html">Séries</a>
+            <a href="livros.html">Livros</a>
+            <a href="musicas.html" class="active">Músicas</a>
+            <a href="jogos.html">Jogos</a>
+            <a href="tutoriais.html">Tutoriais</a>
+            <a href="fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page-title">Músicas</h1>
+
+        <div class="hashtag-filter">
+            <button class="tag-btn" onclick="filtrarTag('todos')">#Todos</button>
+            <button class="tag-btn" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</button>
+            <button class="tag-btn" onclick="filtrarTag('#Instrumental')">#Instrumental</button>
+            <button class="tag-btn" onclick="filtrarTag('#Trilha')">#Trilha</button>
+        </div>
+
+        <div class="bento-grid">
+
+            <div class="media-card" data-tags="#Cyberpunk #Instrumental">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80" alt="Blade Runner Blues">
+                    <span class="card-rating">⭐ 9.3</span>
+                </div>
+                <div class="card-content">
+                    <h3>Blade Runner Blues</h3>
+                    <p class="sinopse">Faixa instrumental de Vangelis que define a atmosfera melancólica e futurista do cyberpunk clássico.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
+                        <span class="tag" onclick="filtrarTag('#Instrumental')">#Instrumental</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-card" data-tags="#Trilha #Instrumental">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=600&q=80" alt="Time">
+                    <span class="card-rating">⭐ 9.6</span>
+                </div>
+                <div class="card-content">
+                    <h3>Time</h3>
+                    <p class="sinopse">Composição de Hans Zimmer que cresce lentamente até um clímax orquestral hipnotizante.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#Trilha')">#Trilha</span>
+                        <span class="tag" onclick="filtrarTag('#Instrumental')">#Instrumental</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>

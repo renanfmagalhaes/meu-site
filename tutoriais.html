@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutoriais - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="filmes.html">Filmes</a>
+            <a href="series.html">Séries</a>
+            <a href="livros.html">Livros</a>
+            <a href="musicas.html">Músicas</a>
+            <a href="jogos.html">Jogos</a>
+            <a href="tutoriais.html" class="active">Tutoriais</a>
+            <a href="fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page-title">Tutoriais</h1>
+
+        <div class="hashtag-filter">
+            <button class="tag-btn" onclick="filtrarTag('todos')">#Todos</button>
+            <button class="tag-btn" onclick="filtrarTag('#CSS')">#CSS</button>
+            <button class="tag-btn" onclick="filtrarTag('#FrontEnd')">#FrontEnd</button>
+            <button class="tag-btn" onclick="filtrarTag('#Git')">#Git</button>
+            <button class="tag-btn" onclick="filtrarTag('#Deploy')">#Deploy</button>
+        </div>
+
+        <div class="bento-grid">
+
+            <div class="media-card" data-tags="#CSS #FrontEnd">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80" alt="Como montar um bento grid em CSS">
+                    <span class="card-rating">⭐ 9.1</span>
+                </div>
+                <div class="card-content">
+                    <h3>Como montar um bento grid em CSS</h3>
+                    <p class="sinopse">Passo a passo para criar grades responsivas com CSS Grid, do zero até o layout final.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#CSS')">#CSS</span>
+                        <span class="tag" onclick="filtrarTag('#FrontEnd')">#FrontEnd</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="media-card" data-tags="#Git #Deploy">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80" alt="Publicando um site no GitHub Pages">
+                    <span class="card-rating">⭐ 8.9</span>
+                </div>
+                <div class="card-content">
+                    <h3>Publicando um site no GitHub Pages</h3>
+                    <p class="sinopse">Guia rápido para colocar seu site pessoal no ar gratuitamente usando o GitHub Pages.</p>
+                    <div class="card-tags">
+                        <span class="tag" onclick="filtrarTag('#Git')">#Git</span>
+                        <span class="tag" onclick="filtrarTag('#Deploy')">#Deploy</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="assets/script.js"></script>
+</body>
+</html>
