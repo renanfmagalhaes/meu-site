@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como montar um bento grid em CSS - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="../index.html">Início</a>
+            <a href="../filmes.html">Filmes</a>
+            <a href="../series.html">Séries</a>
+            <a href="../livros.html">Livros</a>
+            <a href="../musicas.html">Músicas</a>
+            <a href="../jogos.html">Jogos</a>
+            <a href="../tutoriais.html" class="active">Tutoriais</a>
+            <a href="../fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <article class="article">
+            <a class="voltar" href="../tutoriais.html">&larr; Voltar para Tutoriais</a>
+            <img class="article-cover" src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1000&q=80" alt="Como montar um bento grid em CSS">
+            <h1>Como montar um bento grid em CSS</h1>
+            <p class="article-meta">Publicado em 01/07/2026 · #CSS #FrontEnd</p>
+
+        <p>Um "bento grid" é uma grade de blocos de tamanhos variados, como uma marmita
+        japonesa — daí o nome. Em CSS puro, dá pra montar isso com poucas linhas usando
+        <code>display: grid</code>.</p>
+
+        <h2>1. A base do grid</h2>
+        <p>Comece definindo quantas colunas o grid deve ter e o espaço entre os itens:</p>
+        <pre><code>.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}</code></pre>
+        <p>O <code>auto-fill</code> com <code>minmax()</code> faz o grid quebrar linha
+        sozinho conforme a largura da tela, sem precisar de media queries manuais.</p>
+
+        <h2>2. Cards de tamanhos diferentes</h2>
+        <p>Para dar variedade ao bento, alguns itens podem ocupar mais de uma coluna
+        ou linha:</p>
+        <pre><code>.destaque {
+    grid-column: span 2;
+    grid-row: span 2;
+}</code></pre>
+
+        <h2>3. Responsividade</h2>
+        <p>Como o grid já se adapta sozinho com <code>auto-fill</code>, normalmente
+        só é preciso ajustar o <code>minmax()</code> em telas muito pequenas.</p>
+
+        <h2>Conclusão</h2>
+        <p>Com poucas regras de CSS Grid já dá pra montar um layout parecido com o
+        deste site: cards uniformes, responsivos, sem JavaScript nenhum.</p>
+        
+        </article>
+    </main>
+</body>
+</html>
