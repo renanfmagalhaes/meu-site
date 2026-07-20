@@ -122,11 +122,9 @@ async function initHomePage(categorias, containerSelector) {
 
             const maisRecente = items[0];
             blocos.push(`
-                <div class="section-block">
+                <div class="home-item">
                     <h2>${cat.label}</h2>
-                    <div class="home-grid">
-                        ${cardHTML(maisRecente, { showBadge: true, badgeLabel: cat.badge })}
-                    </div>
+                    ${cardHTML(maisRecente, { showBadge: true, badgeLabel: cat.badge })}
                     <a class="ver-todos" href="${cat.link}">Ver todos &rarr;</a>
                 </div>`);
         } catch (err) {
@@ -135,6 +133,6 @@ async function initHomePage(categorias, containerSelector) {
     }
 
     container.innerHTML = blocos.length
-        ? blocos.join("")
+        ? `<div class="home-grid">${blocos.join("")}</div>`
         : '<p class="empty-state">Nenhum item cadastrado ainda.</p>';
 }
