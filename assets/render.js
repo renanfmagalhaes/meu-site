@@ -17,20 +17,25 @@ async function loadItems(jsonPath) {
     return items;
 }
 
-/** Gera o HTML de um único card. */
+/** Gera o HTML de um único card. Se o item tiver "link", o card inteiro vira um link clicável. */
 function cardHTML(item, options = {}) {
     const { showBadge = false, badgeLabel = "" } = options;
     const badge = showBadge ? `<span class="card-category">${badgeLabel}</span>` : "";
+    const platformBadge = item.platform
+        ? `<span class="card-platform">🎮 ${item.platform}</span>`
+        : "";
+    const platformAttr = item.platform ? ` data-platform="${item.platform}"` : "";
     const tagsData = item.tags.join(" ");
     const tagSpans = item.tags
         .map(t => `<span class="tag" data-tag="${t}">${t}</span>`)
         .join("");
 
-    return `
-        <div class="media-card" data-tags="${tagsData}">
+    const cardInner = `
+        <div class="media-card" data-tags="${tagsData}"${platformAttr}>
             <div class="card-image">
                 <img src="${item.img}" alt="${item.title}" loading="lazy">
                 ${badge}
+                ${platformBadge}
                 <span class="card-rating">⭐ ${item.rating}</span>
             </div>
             <div class="card-content">
@@ -39,21 +44,31 @@ function cardHTML(item, options = {}) {
                 <div class="card-tags">${tagSpans}</div>
             </div>
         </div>`;
+
+    return item.link
+        ? `<a class="card-link" href="${item.link}">${cardInner}</a>`
+        : cardInner;
 }
 
-/** Mostra/esconde os cards do grid conforme a tag selecionada. */
-function filtrarTag(tagSelecionada, gridEl, filtersEl) {
+/** Mostra/esconde os cards do grid conforme a tag ou plataforma selecionada. */
+function filtrarTag(valorSelecionado, gridEl, filtersEl) {
     gridEl.querySelectorAll(".media-card").forEach(card => {
-        const tagsDoCard = card.getAttribute("data-tags");
-        card.style.display =
-            tagSelecionada === "todos" || tagsDoCard.includes(tagSelecionada)
-                ? "block"
-                : "none";
+        let visivel;
+        if (valorSelecionado === "todos") {
+            visivel = true;
+        } else if (valorSelecionado.startsWith("plat:")) {
+            const plataforma = valorSelecionado.slice(5);
+            visivel = card.getAttribute("data-platform") === plataforma;
+        } else {
+            const tagsDoCard = card.getAttribute("data-tags") || "";
+            visivel = tagsDoCard.includes(valorSelecionado);
+        }
+        card.style.display = visivel ? "block" : "none";
     });
 
     if (filtersEl) {
         filtersEl.querySelectorAll(".tag-btn").forEach(btn => {
-            btn.classList.toggle("active", btn.dataset.tag === tagSelecionada);
+            btn.classList.toggle("active", btn.dataset.tag === valorSelecionado);
         });
     }
 }
@@ -77,13 +92,23 @@ async function initCategoryPage(jsonPath, gridSelector, filtersSelector) {
             return;
         }
 
-        // Botões de filtro dinâmicos, a partir das tags presentes nos itens
+        // Botões de filtro dinâmicos, a partir das tags e plataformas presentes nos itens
         const tagsUnicas = [...new Set(items.flatMap(i => i.tags))];
-        filtersEl.innerHTML =
+        const plataformasUnicas = [...new Set(items.filter(i => i.platform).map(i => i.platform))];
+
+        let filtrosHTML =
             '<button class="tag-btn active" data-tag="todos">#Todos</button>' +
             tagsUnicas
                 .map(t => `<button class="tag-btn" data-tag="${t}">${t}</button>`)
                 .join("");
+
+        if (plataformasUnicas.length > 0) {
+            filtrosHTML += plataformasUnicas
+                .map(p => `<button class="tag-btn platform-btn" data-tag="plat:${p}">🎮 ${p}</button>`)
+                .join("");
+        }
+
+        filtersEl.innerHTML = filtrosHTML;
 
         filtersEl.addEventListener("click", e => {
             if (e.target.matches(".tag-btn")) {
@@ -94,9 +119,11 @@ async function initCategoryPage(jsonPath, gridSelector, filtersSelector) {
         // Renderiza os cards
         gridEl.innerHTML = items.map(item => cardHTML(item)).join("");
 
-        // Clicar numa tag dentro de um card também filtra
+        // Clicar numa tag dentro de um card também filtra (e não deve navegar, se o card for um link)
         gridEl.addEventListener("click", e => {
             if (e.target.matches(".tag")) {
+                e.preventDefault();
+                e.stopPropagation();
                 filtrarTag(e.target.dataset.tag, gridEl, filtersEl);
             }
         });
@@ -124,8 +151,9 @@ async function initHomePage(categorias, containerSelector) {
             blocos.push(`
                 <div class="home-item">
                     <h2>${cat.label}</h2>
-                    ${cardHTML(maisRecente, { showBadge: true, badgeLabel: cat.badge })}
-                    <a class="ver-todos" href="${cat.link}">Ver todos &rarr;</a>
+                    <a class="home-card-link" href="${cat.link}" aria-label="Ver todos os itens em ${cat.label}">
+                        ${cardHTML(maisRecente, { showBadge: true, badgeLabel: cat.badge })}
+                    </a>
                 </div>`);
         } catch (err) {
             console.error(`Erro ao carregar ${cat.file}:`, err);
