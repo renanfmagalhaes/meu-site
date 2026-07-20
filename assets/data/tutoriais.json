@@ -1,0 +1,24 @@
+[
+  {
+    "title": "Como montar um bento grid em CSS",
+    "sinopse": "Passo a passo para criar grades responsivas com CSS Grid, do zero até o layout final.",
+    "img": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+    "rating": 9.1,
+    "tags": [
+      "#CSS",
+      "#FrontEnd"
+    ],
+    "date": "2026-07-01"
+  },
+  {
+    "title": "Publicando um site no GitHub Pages",
+    "sinopse": "Guia rápido para colocar seu site pessoal no ar gratuitamente usando o GitHub Pages.",
+    "img": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80",
+    "rating": 8.9,
+    "tags": [
+      "#Git",
+      "#Deploy"
+    ],
+    "date": "2026-04-22"
+  }
+]

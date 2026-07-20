@@ -1,0 +1,248 @@
+/* ============================================
+   Renan Magalhães - Estilo Global
+   Usado em todas as páginas do site
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0f111a;
+    color: #f1f1f1;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+}
+
+/* Cabeçalho / Menu de Navegação (centralizado) */
+header {
+    background-color: #141722;
+    padding: 24px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    border-bottom: 1px solid #252a3d;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: #a0a6b8;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+nav a:hover, nav a.active {
+    color: #38bdf8;
+}
+
+/* Conteúdo Principal */
+main {
+    padding: 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+}
+
+/* Filtro de Hashtags */
+.hashtag-filter {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.tag-btn {
+    background-color: #1a1d29;
+    color: #38bdf8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid #252a3d;
+    transition: all 0.2s;
+}
+
+.tag-btn:hover {
+    background-color: #38bdf8;
+    color: #0f111a;
+}
+
+.tag-btn.active {
+    background-color: #38bdf8;
+    color: #0f111a;
+    border-color: #38bdf8;
+}
+
+/* Grade estilo Bento Grid */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* Estilo do Card Unificado */
+.media-card {
+    background-color: #1a1d29;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 1px solid #252a3d;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.media-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+}
+
+/* Imagem e Nota */
+.card-image {
+    position: relative;
+    width: 100%;
+    height: 380px;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-rating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: rgba(0, 0, 0, 0.75);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ffd700;
+    backdrop-filter: blur(5px);
+}
+
+/* Selo de categoria (usado na Home, sobre os cards em destaque) */
+.card-category {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: rgba(56, 189, 248, 0.9);
+    color: #0f111a;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Textos, Sinopse e Tags */
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.25rem;
+    color: #f1f1f1;
+}
+
+.sinopse {
+    font-size: 0.85rem;
+    color: #a0a6b8;
+    margin-bottom: 16px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tag {
+    background-color: #252a3d;
+    color: #38bdf8;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.tag:hover {
+    background-color: #38bdf8;
+    color: #0f111a;
+}
+
+/* Seções da Home (uma por categoria) */
+.section-block {
+    margin-bottom: 50px;
+}
+
+.section-block h2 {
+    font-size: 1.1rem;
+    color: #a0a6b8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    border-left: 3px solid #38bdf8;
+    padding-left: 10px;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.ver-todos {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: #38bdf8;
+    text-decoration: none;
+}
+
+.ver-todos:hover {
+    text-decoration: underline;
+}
+
+/* Estado vazio / carregando */
+.empty-state, .loading-state {
+    color: #a0a6b8;
+    font-size: 0.9rem;
+    padding: 20px 0;
+}
