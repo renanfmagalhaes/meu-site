@@ -1,54 +1,88 @@
 [
   {
-    "title": "Cyberpunk 2077",
-    "sinopse": "Em Night City, um mercenário busca um implante único que é a chave para a imortalidade.",
-    "img": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80",
+    "title": "The Last of Us Part II",
+    "sinopse": "The Last of Us Part II acompanha Ellie e Joel cinco anos após o primeiro jogo. Vivendo em paz na comunidade de Jackson, Wyoming, a rotina é bruscamente interrompida por um evento violento. Isso leva Ellie a embarcar em uma jornada incansável e brutal por Seattle em busca de justiça e vingança.",
+    "img": "https://upload.wikimedia.org/wikipedia/pt/9/96/The_Last_of_Us_2_capa.png",
+    "rating": 9.5,
+    "tags": [
+      "#Ação",
+      "#Aventura",
+      "#Furtividade"
+    ],
+    "platform": "PC",
+    "date": "18/01/2026",
+    "id": "TheLastofUsPartII"
+  },
+  {
+    "title": "Alone in the Dark 2024",
+    "sinopse": "O jogo é um remake de Alone in the Dark (1992), o primeiro jogo da franquia, o jogo segue Emily Hartwood (Jodie Comer) e o investigador particular Edward Carnby (David Harbour) enquanto eles viajam para Derceto Manor, um lar para deficientes mentais, para investigar o desaparecimento de Jeremy Hartwood, tio de Emily.",
+    "img": "https://upload.wikimedia.org/wikipedia/pt/1/1f/Alone_in_the_Dark_%282023%29.png",
     "rating": 9.0,
     "tags": [
-      "#Cyberpunk",
-      "#RPG"
+      "#Survival)",
+      "#Horror"
     ],
     "platform": "PC",
-    "date": "2026-06-28",
-    "id": "cyberpunk-2077"
+    "date": "23/01/2026",
+    "id": "AloneintheDark2024"
   },
   {
-    "title": "Inscryption",
-    "sinopse": "Um jogo de cartas de terror psicológico onde nada é o que parece em uma cabana isolada.",
-    "img": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80",
-    "rating": 9.4,
+    "title": "Marvel's Spider-Man: Miles Morales",
+    "sinopse": "Em Marvel's Spider-Man: Miles Morales, o jovem Miles assume o uniforme do Homem-Aranha para proteger Nova York enquanto Peter Parker viaja. Quando uma guerra entre a corporação de energia Roxxon e o grupo criminoso de alta tecnologia Underground ameaça destruir sua nova casa, o Harlem, Miles precisa provar seu valor e descobrir o verdadeiro significado de ser um herói.",
+    "img": "https://upload.wikimedia.org/wikipedia/pt/7/74/Spider-Man_Miles_Morales_capa.png",
+    "rating": 9.5,
     "tags": [
-      "#Suspense",
-      "#Indie"
+      "#Ação",
+      "#Aventura",
+      "#Mundo Aberto"
     ],
     "platform": "PC",
-    "date": "2026-05-02",
-    "id": "inscryption"
+    "date": "26/01/2026",
+    "id": "MarvelsSpider-ManMilesMorales"
   },
   {
-    "title": "Chrono Trigger",
-    "sinopse": "Um grupo de aventureiros viaja no tempo para impedir uma catástrofe que ameaça toda a humanidade.",
-    "img": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80",
-    "rating": 9.8,
-    "tags": [
-      "#RPG",
-      "#Aventura"
-    ],
-    "platform": "SNES",
-    "date": "2026-03-15",
-    "id": "chrono-trigger"
-  },
-  {
-    "title": "Sonic the Hedgehog 2",
-    "sinopse": "O ouriço azul corre para impedir os planos do Dr. Robotnik com a ajuda do parceiro Tails.",
-    "img": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80",
-    "rating": 9.1,
+    "title": "Eriksholm: The Stolen Dream",
+    "sinopse": "Experimente um jogo de furtividade isométrico baseado em narrativa e junte-se à aventura de Hanna na vibrante cidade de Eriksholm. O desaparecimento misterioso de seu irmão, Herman, desencadeia uma série de eventos catastróficos que mudarão para sempre suas vidas e o destino de toda a cidade.",
+    "img": "https://upload.wikimedia.org/wikipedia/en/8/88/Eriksholm_%E2%80%94_The_Stolen_Dream_cover_art.png",
+    "rating": 9.5,
     "tags": [
       "#Aventura",
-      "#Clássico"
-    ],
-    "platform": "Mega Drive",
-    "date": "2026-02-10",
-    "id": "sonic-the-hedgehog-2"
+      "#Isometrico",
+      "#Furtivo",
+      "#Tatico"
+    ], 
+    "platform": "PC",
+    "date": "31/01/2026",
+    "id": "Eriksholm:TheStolenDream"
+  },
+  {
+    "title": "Battletoads",
+    "sinopse": "Battletoads (2020) acompanha os sapos guerreiros Rash, Zitz e Pimple, que retornam após 26 anos presos em uma realidade ilusória onde eram super celebridades. Ao voltarem à vida real, ninguém mais se lembra deles. Frustrados, eles se aliam à sua antiga arqui-inimiga, a Dark Queen, para derrotar os Topians, divindades alienígenas que estão causando o caos no universo.",
+    "img": "https://upload.wikimedia.org/wikipedia/pt/c/c7/Battletoads_2020_cover.jpg",
+    "rating": 0,
+    "tags": [
+      "#Aventura",
+      "#Isometrico",
+      "#Furtivo",
+      "#Tatico"
+    ], 
+    "platform": "PC",
+    "date": "06/02/2026",
+    "id": "Battletoads"
+  },
+  {
+    "title": "FINAL FANTASY VII REMAKE INTERGRADE",
+    "sinopse": "Cloud Strife, ex-agente da SOLDIER, chega a Midgar, a cidade movida a energia de mako. O clássico atemporal FINAL FANTASY VII renasceu, com gráficos de última geração, um novo sistema de combate e uma aventura adicional com Yuffie Kisaragi.",
+    "img": "https://upload.wikimedia.org/wikipedia/pt/0/09/Final_Fantasy_VII_Remake_capa.png",
+    "rating": 9.0,
+    "tags": [
+      "#Aventura",
+      "#Isometrico",
+      "#Furtivo",
+      "#Tatico"
+    ], 
+    "platform": "PC",
+    "date": "27/03/2026",
+    "id": "FINALFANTASYVIIREMAKEINTERGRADE"
   }
 ]
