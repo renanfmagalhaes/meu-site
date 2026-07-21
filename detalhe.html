@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filmes - Renan Magalhães</title>
+    <title>Renan Magalhães</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -12,7 +12,7 @@
         <div class="logo">Renan Magalhães</div>
         <nav>
             <a href="index.html">Início</a>
-            <a href="filmes.html" class="active">Filmes</a>
+            <a href="filmes.html">Filmes</a>
             <a href="series.html">Séries</a>
             <a href="livros.html">Livros</a>
             <a href="musicas.html">Músicas</a>
@@ -23,16 +23,14 @@
     </header>
 
     <main>
-        <h1 class="page-title">Filmes</h1>
-
-        <div class="hashtag-filter" id="filters"></div>
-
-        <div class="bento-grid" id="grid"></div>
+        <div id="article-container">
+            <p class="loading-state">Carregando...</p>
+        </div>
     </main>
 
     <script src="assets/render.js"></script>
     <script>
-        initCategoryPage('assets/data/filmes.json', '#grid', '#filters', 'filmes');
+        initDetailPage('#article-container');
     </script>
 </body>
 </html>
