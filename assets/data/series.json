@@ -1,12 +1,12 @@
 [
   {
-    "title": "Neuromancer",
-    "sinopse": "Um cowboy do ciberespaço decadente é contratado para realizar o último e definitivo golpe na matriz.",
-    "img": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80",
+    "title": "Origem",
+    "sinopse": "A série Origem (conhecida internacionalmente como From) acompanha pessoas que ficam presas em uma cidade misteriosa no meio-oeste americano. Toda estrada leva de volta ao mesmo lugar e, quando anoitece, a população precisa se trancar em casa para sobreviver a criaturas aterrorizantes que emergem da floresta.",
+    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj5HL5BqprQDffOarf4g43paGk7yRcUsYMcEgvpxvjERJVhCXV-clfBgY&s=10",
     "rating": 9.5,
     "tags": [
-      "#Cyberpunk",
-      "#SciFi"
+      "#Terror",
+      "#Suspense"
     ],
     "date": "2026-07-10",
     "id": "neuromancer"
