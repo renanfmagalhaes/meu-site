@@ -17,9 +17,9 @@ async function loadItems(jsonPath) {
     return items;
 }
 
-/** Gera o HTML de um único card. Se o item tiver "link", o card inteiro vira um link clicável. */
+/** Gera o HTML de um único card. Se o item tiver "link" (ou uma "category" for passada), o card inteiro vira um link clicável. */
 function cardHTML(item, options = {}) {
-    const { showBadge = false, badgeLabel = "" } = options;
+    const { showBadge = false, badgeLabel = "", category = null } = options;
     const badge = showBadge ? `<span class="card-category">${badgeLabel}</span>` : "";
     const platformBadge = item.platform
         ? `<span class="card-platform">🎮 ${item.platform}</span>`
@@ -45,9 +45,11 @@ function cardHTML(item, options = {}) {
             </div>
         </div>`;
 
-    return item.link
-        ? `<a class="card-link" href="${item.link}">${cardInner}</a>`
-        : cardInner;
+    // Prioridade: link customizado do item (ex: tutoriais) > página de detalhe genérica (ex: filmes, séries...)
+    const detailLink =
+        item.link || (category && item.id ? `detalhe.html?cat=${category}&id=${item.id}` : null);
+
+    return detailLink ? `<a class="card-link" href="${detailLink}">${cardInner}</a>` : cardInner;
 }
 
 /** Mostra/esconde os cards do grid conforme a tag ou plataforma selecionada. */
@@ -79,7 +81,7 @@ function filtrarTag(valorSelecionado, gridEl, filtersEl) {
  * - desenha os botões de filtro (com base nas tags realmente usadas)
  * - desenha os cards, do mais recente para o mais antigo
  */
-async function initCategoryPage(jsonPath, gridSelector, filtersSelector) {
+async function initCategoryPage(jsonPath, gridSelector, filtersSelector, categorySlug = null) {
     const gridEl = document.querySelector(gridSelector);
     const filtersEl = document.querySelector(filtersSelector);
     gridEl.innerHTML = '<p class="loading-state">Carregando...</p>';
@@ -117,7 +119,7 @@ async function initCategoryPage(jsonPath, gridSelector, filtersSelector) {
         });
 
         // Renderiza os cards
-        gridEl.innerHTML = items.map(item => cardHTML(item)).join("");
+        gridEl.innerHTML = items.map(item => cardHTML(item, { category: categorySlug })).join("");
 
         // Clicar numa tag dentro de um card também filtra (e não deve navegar, se o card for um link)
         gridEl.addEventListener("click", e => {
@@ -163,4 +165,77 @@ async function initHomePage(categorias, containerSelector) {
     container.innerHTML = blocos.length
         ? `<div class="home-grid">${blocos.join("")}</div>`
         : '<p class="empty-state">Nenhum item cadastrado ainda.</p>';
+}
+
+/**
+ * Metadados de cada categoria, usados pela página de detalhe genérica
+ * (detalhe.html) para saber qual JSON buscar e para onde voltar.
+ */
+const CATEGORY_META = {
+    filmes: { label: "Filmes", file: "filmes.json", page: "filmes.html" },
+    series: { label: "Séries", file: "series.json", page: "series.html" },
+    livros: { label: "Livros", file: "livros.json", page: "livros.html" },
+    musicas: { label: "Músicas", file: "musicas.json", page: "musicas.html" },
+    jogos: { label: "Jogos", file: "jogos.json", page: "jogos.html" },
+    fotos: { label: "Fotos", file: "fotos.json", page: "fotos.html" },
+};
+
+/** Formata "2026-07-18" como "18/07/2026". */
+function formatarData(dateStr) {
+    const d = new Date(dateStr + "T00:00:00");
+    return d.toLocaleDateString("pt-BR");
+}
+
+/**
+ * Monta a página de detalhe genérica (detalhe.html?cat=filmes&id=a-origem):
+ * busca o item certo no JSON da categoria e mostra tudo, sem cortar a sinopse.
+ */
+async function initDetailPage(containerSelector) {
+    const container = document.querySelector(containerSelector);
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get("cat");
+    const id = params.get("id");
+    const meta = CATEGORY_META[cat];
+
+    if (!meta || !id) {
+        container.innerHTML = '<p class="empty-state">Item não encontrado.</p>';
+        return;
+    }
+
+    // Destaca o item de menu correspondente à categoria
+    document.querySelectorAll("header nav a").forEach(a => {
+        if (a.getAttribute("href") === meta.page) a.classList.add("active");
+    });
+
+    try {
+        const items = await loadItems(`assets/data/${meta.file}`);
+        const item = items.find(i => i.id === id);
+
+        if (!item) {
+            container.innerHTML = '<p class="empty-state">Item não encontrado.</p>';
+            return;
+        }
+
+        document.title = `${item.title} - Renan Magalhães`;
+
+        const platformInfo = item.platform ? ` · 🎮 ${item.platform}` : "";
+        const tagsHTML = item.tags.map(t => `<span class="tag">${t}</span>`).join("");
+        const analiseHTML = item.analise
+            ? `<h2>Minha análise</h2><p>${item.analise}</p>`
+            : "";
+
+        container.innerHTML = `
+            <article class="article">
+                <a class="voltar" href="${meta.page}">&larr; Voltar para ${meta.label}</a>
+                <img class="article-cover" src="${item.img}" alt="${item.title}">
+                <h1>${item.title}</h1>
+                <p class="article-meta">⭐ ${item.rating}${platformInfo} · ${formatarData(item.date)}</p>
+                <div class="card-tags article-tags">${tagsHTML}</div>
+                <p>${item.sinopse}</p>
+                ${analiseHTML}
+            </article>`;
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="empty-state">Erro ao carregar o item. Verifique o arquivo JSON.</p>';
+    }
 }
