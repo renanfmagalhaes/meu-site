@@ -4,6 +4,30 @@
    ============================================================ */
 
 /**
+ * Converte uma data em texto para um objeto Date, aceitando tanto o formato
+ * esperado (AAAA-MM-DD) quanto o formato brasileiro (DD/MM/AAAA), caso
+ * alguém digite errado no JSON sem querer.
+ */
+function parseData(dateStr) {
+    if (!dateStr) return new Date(0);
+
+    const br = dateStr.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (br) {
+        const [, dd, mm, yyyy] = br;
+        return new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
+    }
+
+    const iso = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (iso) {
+        return new Date(`${dateStr}T00:00:00`);
+    }
+
+    // Formato desconhecido: tenta do jeito padrão e avisa no console
+    console.warn(`Data em formato inesperado: "${dateStr}". Use AAAA-MM-DD.`);
+    return new Date(dateStr);
+}
+
+/**
  * Busca um arquivo JSON de dados e devolve os itens já ordenados
  * do mais recente para o mais antigo (usando o campo "date").
  */
@@ -13,7 +37,7 @@ async function loadItems(jsonPath) {
         throw new Error(`Não foi possível carregar ${jsonPath} (status ${res.status})`);
     }
     const items = await res.json();
-    items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    items.sort((a, b) => parseData(b.date) - parseData(a.date));
     return items;
 }
 
@@ -180,10 +204,9 @@ const CATEGORY_META = {
     fotos: { label: "Fotos", file: "fotos.json", page: "fotos.html" },
 };
 
-/** Formata "2026-07-18" como "18/07/2026". */
+/** Formata a data (AAAA-MM-DD ou DD/MM/AAAA) como "18/07/2026". */
 function formatarData(dateStr) {
-    const d = new Date(dateStr + "T00:00:00");
-    return d.toLocaleDateString("pt-BR");
+    return parseData(dateStr).toLocaleDateString("pt-BR");
 }
 
 /**
