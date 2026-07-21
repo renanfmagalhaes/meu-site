@@ -8,7 +8,8 @@
       "#SciFi",
       "#Aventura"
     ],
-    "date": "2026-07-05"
+    "date": "2026-07-05",
+    "id": "duna"
   },
   {
     "title": "Neuromancer (livro)",
@@ -19,6 +20,7 @@
       "#Cyberpunk",
       "#SciFi"
     ],
-    "date": "2026-04-11"
+    "date": "2026-04-11",
+    "id": "neuromancer-livro"
   }
 ]

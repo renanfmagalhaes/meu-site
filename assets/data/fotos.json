@@ -8,7 +8,8 @@
       "#Cyberpunk",
       "#Urbano"
     ],
-    "date": "2026-07-19"
+    "date": "2026-07-19",
+    "id": "neon-alley"
   },
   {
     "title": "Horizonte Digital",
@@ -19,6 +20,7 @@
       "#Urbano",
       "#Noturno"
     ],
-    "date": "2026-06-14"
+    "date": "2026-06-14",
+    "id": "horizonte-digital"
   }
 ]

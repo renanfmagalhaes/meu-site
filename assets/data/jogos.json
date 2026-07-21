@@ -9,7 +9,8 @@
       "#RPG"
     ],
     "platform": "PC",
-    "date": "2026-06-28"
+    "date": "2026-06-28",
+    "id": "cyberpunk-2077"
   },
   {
     "title": "Inscryption",
@@ -21,7 +22,8 @@
       "#Indie"
     ],
     "platform": "PC",
-    "date": "2026-05-02"
+    "date": "2026-05-02",
+    "id": "inscryption"
   },
   {
     "title": "Chrono Trigger",
@@ -33,7 +35,8 @@
       "#Aventura"
     ],
     "platform": "SNES",
-    "date": "2026-03-15"
+    "date": "2026-03-15",
+    "id": "chrono-trigger"
   },
   {
     "title": "Sonic the Hedgehog 2",
@@ -45,6 +48,7 @@
       "#Clássico"
     ],
     "platform": "Mega Drive",
-    "date": "2026-02-10"
+    "date": "2026-02-10",
+    "id": "sonic-the-hedgehog-2"
   }
 ]

@@ -8,7 +8,8 @@
       "#Cyberpunk",
       "#SciFi"
     ],
-    "date": "2026-07-10"
+    "date": "2026-07-10",
+    "id": "neuromancer"
   },
   {
     "title": "Dark",
@@ -19,6 +20,7 @@
       "#Suspense",
       "#SciFi"
     ],
-    "date": "2026-05-20"
+    "date": "2026-05-20",
+    "id": "dark"
   }
 ]

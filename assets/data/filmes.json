@@ -8,7 +8,9 @@
       "#SciFi",
       "#Suspense"
     ],
-    "date": "2026-07-18"
+    "date": "2026-07-18",
+    "analise": "O que mais me marcou foi a construção das camadas de sonho: cada nível tem sua própria física e seu próprio ritmo, e o filme consegue fazer isso ficar claro sem perder a tensão. A trilha do Hans Zimmer faz o trabalho pesado nas cenas de ação, mas é no drama pessoal do protagonista que a história realmente sustenta o peso emocional.",
+    "id": "a-origem"
   },
   {
     "title": "Blade Runner 2049",
@@ -19,6 +21,7 @@
       "#Cyberpunk",
       "#SciFi"
     ],
-    "date": "2026-06-02"
+    "date": "2026-06-02",
+    "id": "blade-runner-2049"
   }
 ]
