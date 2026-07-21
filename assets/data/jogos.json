@@ -61,10 +61,7 @@
     "img": "https://upload.wikimedia.org/wikipedia/pt/c/c7/Battletoads_2020_cover.jpg",
     "rating": 0,
     "tags": [
-      "#Aventura",
-      "#Isometrico",
-      "#Furtivo",
-      "#Tatico"
+      "#beat 'em up"
     ], 
     "platform": "PC",
     "date": "06/02/2026",
@@ -77,9 +74,10 @@
     "rating": 9.0,
     "tags": [
       "#Aventura",
-      "#Isometrico",
-      "#Furtivo",
-      "#Tatico"
+      "#RPG",
+      "#Mundo Aberto",
+      "#Tatico",
+      "#Turno"
     ], 
     "platform": "PC",
     "date": "27/03/2026",
