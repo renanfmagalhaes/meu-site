@@ -25,48 +25,14 @@
     <main>
         <h1 class="page-title">Fotos</h1>
 
-        <div class="hashtag-filter">
-            <button class="tag-btn" onclick="filtrarTag('todos')">#Todos</button>
-            <button class="tag-btn" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</button>
-            <button class="tag-btn" onclick="filtrarTag('#Urbano')">#Urbano</button>
-            <button class="tag-btn" onclick="filtrarTag('#Noturno')">#Noturno</button>
-        </div>
+        <div class="hashtag-filter" id="filters"></div>
 
-        <div class="bento-grid">
-
-            <div class="media-card" data-tags="#Cyberpunk #Urbano">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=600&q=80" alt="Neon Alley">
-                    <span class="card-rating">⭐ 9.2</span>
-                </div>
-                <div class="card-content">
-                    <h3>Neon Alley</h3>
-                    <p class="sinopse">Registro noturno de uma viela iluminada por letreiros neon, clima cyberpunk urbano.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#Cyberpunk')">#Cyberpunk</span>
-                        <span class="tag" onclick="filtrarTag('#Urbano')">#Urbano</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="media-card" data-tags="#Urbano #Noturno">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=600&q=80" alt="Horizonte Digital">
-                    <span class="card-rating">⭐ 8.8</span>
-                </div>
-                <div class="card-content">
-                    <h3>Horizonte Digital</h3>
-                    <p class="sinopse">Ensaio fotográfico sobre reflexos de telas e luzes artificiais na cidade à noite.</p>
-                    <div class="card-tags">
-                        <span class="tag" onclick="filtrarTag('#Urbano')">#Urbano</span>
-                        <span class="tag" onclick="filtrarTag('#Noturno')">#Noturno</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        <div class="bento-grid" id="grid"></div>
     </main>
 
-    <script src="assets/script.js"></script>
+    <script src="assets/render.js"></script>
+    <script>
+        initCategoryPage('assets/data/fotos.json', '#grid', '#filters');
+    </script>
 </body>
 </html>
