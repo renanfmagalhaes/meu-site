@@ -1,6 +1,6 @@
 [
   {
-    "title": "Origem",
+    "title": "Origem Season 1 - 4",
     "sinopse": "A série Origem (conhecida internacionalmente como From) acompanha pessoas que ficam presas em uma cidade misteriosa no meio-oeste americano. Toda estrada leva de volta ao mesmo lugar e, quando anoitece, a população precisa se trancar em casa para sobreviver a criaturas aterrorizantes que emergem da floresta.",
     "img": "https://upload.wikimedia.org/wikipedia/pt/c/c0/From_%28s%C3%A9rie%29.jpg",
     "rating": 10,
@@ -8,31 +8,208 @@
       "#Terror",
       "#Suspense"
     ],
-    "date": "21/07/2026",
+    "date": "02/07/2026",
     "id": "Origem"
   },
   {
-    "title": "Dark",
-    "sinopse": "Famílias de uma pequena cidade alemã são arrastadas para um labirinto de mistério envolvendo quatro gerações.",
-    "img": "https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=600&q=80",
-    "rating": 9.6,
+    "title": "Twisted Metal Season 1 - 2",
+    "sinopse": "Twisted Metal é uma série de ação e comédia pós-apocalíptica baseada na clássica franquia de jogos da PlayStation. A história segue John Doe (Anthony Mackie), um entregador tagarela com amnésia que arrisca a vida em estradas desertas para entregar um pacote misterioso em troca de uma vida melhor.",
+    "img": "https://static.wikia.nocookie.net/twistedmetal/images/3/35/TMSeriesPoster.png/revision/latest?cb=20230722103452",
+    "rating": 10,
     "tags": [
-      "#Suspense",
-      "#SciFi"
+      "#Ação",
+      "#Drama",
+      "#Brutal",
+      "#Comedia"
     ],
-    "date": "2026-05-20",
-    "id": "dark"
+    "date": "10/07/2026",
+    "id": "Twisted Metal"
   },
   {
-  "title": "Origem",
+  "title": "Teacup",
     "sinopse": "A série Origem (conhecida internacionalmente como From) acompanha pessoas que ficam presas em uma cidade misteriosa no meio-oeste americano. Toda estrada leva de volta ao mesmo lugar e, quando anoitece, a população precisa se trancar em casa para sobreviver a criaturas aterrorizantes que emergem da floresta.",
-    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQj5HL5BqprQDffOarf4g43paGk7yRcUsYMcEgvpxvjERJVhCXV-clfBgY&s=10",
-    "rating": 10,
+    "img": "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Teacup_%28TV_series%29.jpg/250px-Teacup_%28TV_series%29.jpg",
+    "rating": 6,
+    "tags": [
+      "#Sci-fi",
+      "#Suspense"
+    ],
+    "date": "19/07/2026",
+    "id": "Teacup"
+  },
+  {
+    "title": "Espíritos na Escola Season 1 - 3",
+    "sinopse": "Em Espíritos na Escola (School Spirits), a adolescente Maddie Nears acorda presa no limbo de sua própria escola. Sem memória de como morreu, ela se une a outros fantasmas do colégio para investigar seu próprio desaparecimento. Enquanto isso, ela usa sua habilidade de se comunicar com um amigo vivo para descobrir a verdade.",
+    "img": "https://br.web.img3.acsta.net/c_310_420/img/e8/9f/e89f022271d8734831cc38ab148b3420.jpg",
+    "rating": 9,
     "tags": [
       "#Terror",
       "#Suspense"
     ],
-    "date": "21/07/2026",
-    "id": "Origem"
+    "date": "20/06/2026",
+    "id": "Espíritos na Escola"
+  },
+  {
+    "title":"Carnivàle Season 1 - 2",
+    "sinopse":"Carnivàle é uma série de televisão americana que se passa durante a Grande Depressão e segue a história de um circo itinerante que viaja pelo Dust Bowl. A trama mistura elementos de fantasia, drama e mistério, explorando temas como o bem e o mal, a fé e a redenção.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/0/0e/Carniv%C3%A0le_title_card.jpg",
+    "rating":10,
+    "tags":[
+      "#Drama",
+      "#Fantasia",
+      "#Mistério"
+    ],
+    "date":"15/08/2016",
+    "id":"Carnivàle"
+  },
+  {
+    "title":"Panic",
+    "sinopse":"Panic é uma série de televisão americana baseada no romance homônimo de Lauren Oliver. A história se passa em uma pequena cidade do Texas, onde os jovens participam de um jogo perigoso e secreto chamado 'Panic', que oferece uma grande recompensa em dinheiro para aqueles que conseguem completar os desafios. A série explora temas de amizade, coragem e os limites que as pessoas estão dispostas a ultrapassar para alcançar seus objetivos.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/3/3e/Panic_2021_TV_series.jpg",
+    "rating":9,
+    "tags":[
+      "#Drama",
+      "#Suspense",
+      "#Mistério"
+    ],
+    "date":"10/05/2021",
+    "id":"Panic"
+  },
+  {
+    "title":"Game of Thrones Season 1 - 8",
+    "sinopse":"Game of Thrones é uma série de televisão americana baseada na série de livros 'As Crônicas de Gelo e Fogo', de George R. R. Martin. A história se passa em um mundo fictício chamado Westeros, onde várias famílias nobres lutam pelo controle do Trono de Ferro e pelo poder sobre os Sete Reinos. A série é conhecida por sua narrativa complexa, personagens intrigantes e reviravoltas inesperadas.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/d/d8/Game_of_Thrones_title_card.jpg",
+    "rating":10,
+    "tags":[
+      "#Drama",
+      "#Fantasia",
+      "#Ação"
+    ],
+    "date":"10/05/2019",
+    "id":"Game of Thrones"
+  },
+  {
+    "title":"How I Met Your Mother Season 1 - 9",
+    "sinopse":"How I Met Your Mother é uma série de televisão americana que segue a vida de Ted Mosby e seus amigos em Nova York. A história é narrada por Ted no futuro, enquanto ele conta aos filhos como conheceu a mãe deles. A série combina comédia, romance e drama, explorando temas de amizade, amor e as complexidades da vida adulta.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/0/0c/How_I_Met_Your_Mother_title_card.jpg",
+    "rating":10,
+    "tags":[
+      "#Comédia",
+      "#Romance",
+      "#Drama"
+    ],
+    "date":"19/09/2016",
+    "id":"How I Met Your Mother"
+  },
+  {
+    "title":"Flaked Season 1 - 2",
+    "sinopse":"Flaked é uma série de televisão americana que segue a vida de Chip, um homem carismático e problemático que vive em Venice, Califórnia. Ele é conhecido por ser um 'guru' local, oferecendo conselhos e apoio aos outros, mas luta com seus próprios vícios e problemas pessoais. A série explora temas de amizade, redenção e as complexidades das relações humanas.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/5/5e/Flaked_title_card.jpg",
+    "rating":8,
+    "tags":[
+      "#Comédia",
+      "#Drama"
+    ],
+    "date":"15/09/2017",
+    "id":"Flaked"
+  },
+  {
+    "title":"Californication Season 1 - 7",
+    "sinopse":"Californication é uma série de televisão americana que segue a vida de Hank Moody, um escritor talentoso, mas autodestrutivo, que luta para equilibrar sua carreira, vida pessoal e relacionamentos. A série é conhecida por seu humor irreverente, diálogos afiados e exploração de temas como amor, sexo e vício.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/3/3e/Californication_title_card.jpg",
+    "rating":9,
+    "tags":[
+      "#Comédia",
+      "#Drama"
+    ],
+    "date":"10/09/2016",
+    "id":"Californication"
+  },
+  {
+    "title":"O clube da meia-noite Season 1 - 2",
+    "sinopse":"O clube da meia-noite é uma série de televisão americana baseada no romance homônimo de Christopher Pike. A história segue um grupo de adolescentes que se reúnem à meia-noite para compartilhar histórias de terror e mistério. Cada episódio apresenta uma narrativa diferente, explorando temas de amizade, coragem e os desafios da adolescência.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/4/4e/Midnight_Club_title_card.jpg",
+    "rating":8, 
+    "tags":[
+        "#Terror",
+        "#Mistério"
+      ],
+    "date":"10/10/2022",
+    "id":"O clube da meia-noite"
+  },
+  {
+    "title":"Rua do Medo: 1994 – Parte 1",
+    "sinopse":"Rua do Medo é uma série de filmes de terror baseada na trilogia de livros homônima de R.L. Stine. A história se passa na cidade fictícia de Shadyside, onde uma série de assassinatos e eventos sobrenaturais ocorrem ao longo de diferentes períodos de tempo. Cada filme explora os mistérios e segredos da cidade, enquanto os personagens lutam para sobreviver e descobrir a verdade por trás dos horrores que os cercam.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/3/3e/Fear_Street_Part_One_1994.jpg",
+    "rating":8.5,
+    "tags":[
+      "#Terror",
+      "#Mistério"
+    ],
+    "date":"10/10/2020",
+    "id":"Rua do Medo 1994 – Parte 1"
+  },
+  {
+    "title":"Rua do Medo: 1978 – Parte 2",
+    "sinopse":"Rua do Medo é uma série de filmes de terror baseada na trilogia de livros homônima de R.L. Stine. A história se passa na cidade fictícia de Shadyside, onde uma série de assassinatos e eventos sobrenaturais ocorrem ao longo de diferentes períodos de tempo. Cada filme explora os mistérios e segredos da cidade, enquanto os personagens lutam para sobreviver e descobrir a verdade por trás dos horrores que os cercam.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/3/3e/Fear_Street_Part_Two_1978.jpg",
+    "rating":8.5,
+    "tags":[
+      "#Terror",
+      "#Mistério"
+    ],
+    "date":"10/10/2021",
+    "id":"Rua do Medo 1978 – Parte 2"
+  },
+  {
+    "title":"Rua do Medo: 1666 – Parte 3",
+    "sinopse":"Rua do Medo é uma série de filmes de terror baseada na trilogia de livros homônima de R.L. Stine. A história se passa na cidade fictícia de Shadyside, onde uma série de assassinatos e eventos sobrenaturais ocorrem ao longo de diferentes períodos de tempo. Cada filme explora os mistérios e segredos da cidade, enquanto os personagens lutam para sobreviver e descobrir a verdade por trás dos horrores que os cercam.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/3/3e/Fear_Street_Part_Three_1666.jpg",
+    "rating":8.5,
+    "tags":[
+      "#Terror",
+      "#Mistério"
+    ],
+    "date":"10/10/2022",
+    "id":"Rua do Medo 1666 – Parte 3"
+  },
+  {
+    "title":"Yellowstone Season 1 - 5",
+    "sinopse":"Yellowstone é uma série de televisão americana que segue a vida da família Dutton, proprietária do maior rancho contíguo dos Estados Unidos. A série explora os conflitos entre a família Dutton, os desenvolvedores de terras, os nativos americanos e o governo, enquanto eles lutam para proteger seu legado e território. A trama combina drama, ação e intriga política.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/4/4e/Yellowstone_title_card.jpg",
+    "rating":9,
+    "tags":[
+      "#Drama",
+      "#Ação",
+      "#Política"
+    ],
+    "date":"20/12/2024",
+    "id":"Yellowstone Season 1 - 5" 
+  },
+  {
+    "title":"Yellowjacket Season 1 - 3",
+    "sinopse":"Yellowjackets é uma série de televisão americana que segue a história de um time de futebol feminino que sobrevive a um acidente de avião no deserto canadense. A série alterna entre o passado, mostrando a luta pela sobrevivência das jovens, e o presente, onde as sobreviventes lidam com os traumas e segredos do evento. A trama combina drama, suspense e elementos de mistério.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/4/4e/Yellowjackets_title_card.jpg",
+    "rating":7,
+    "tags":[
+      "#Drama",
+      "#Suspense",
+      "#Mistério"
+    ],
+    "date":"15/06/2025",
+    "id":"Yellowjacket Season 1 - 3"
+  },
+  {
+    "title":"The mayor of Kingstown Season 1 - 3",
+    "sinopse":"The Mayor of Kingstown é uma série de televisão americana que segue a vida de Mike McLusky, o prefeito* de Kingstown, uma cidade fictícia em Michigan. A série explora os desafios enfrentados por Mike enquanto ele lida com a corrupção, o crime e os conflitos entre a polícia, os prisioneiros e a comunidade local. A trama combina drama, ação e intriga política.",
+    "img":"https://upload.wikimedia.org/wikipedia/en/4/4e/The_Mayor_of_Kingstown_title_card.jpg",
+    "rating":8,
+    "tags":[
+      "#Drama",
+      "#Ação",
+      "#Política"
+    ],
+    "date":"21/12/2025",
+    "id":"The mayor of Kingstown Season 1 - 3"
   }
 ]
