@@ -54,13 +54,18 @@ function cardHTML(item, options = {}) {
         .map(t => `<span class="tag" data-tag="${t}">${t}</span>`)
         .join("");
 
+    const ratingBadge =
+        item.rating !== undefined && item.rating !== null
+            ? `<span class="card-rating">⭐ ${item.rating}</span>`
+            : "";
+
     const cardInner = `
         <div class="media-card" data-tags="${tagsData}"${platformAttr}>
             <div class="card-image">
                 <img src="${item.img}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.classList.add('img-fallback');">
                 ${badge}
                 ${platformBadge}
-                <span class="card-rating">⭐ ${item.rating}</span>
+                ${ratingBadge}
             </div>
             <div class="card-content">
                 <h3>${item.title}</h3>
@@ -241,7 +246,11 @@ async function initDetailPage(containerSelector) {
 
         document.title = `${item.title} - Renan Magalhães`;
 
-        const platformInfo = item.platform ? ` · 🎮 ${item.platform}` : "";
+        const metaParts = [];
+        if (item.rating !== undefined && item.rating !== null) metaParts.push(`⭐ ${item.rating}`);
+        if (item.platform) metaParts.push(`🎮 ${item.platform}`);
+        metaParts.push(formatarData(item.date));
+
         const tagsHTML = item.tags.map(t => `<span class="tag">${t}</span>`).join("");
         const analiseHTML = item.analise
             ? `<h2>Minha análise</h2><p>${item.analise}</p>`
@@ -252,7 +261,7 @@ async function initDetailPage(containerSelector) {
                 <a class="voltar" href="${meta.page}">&larr; Voltar para ${meta.label}</a>
                 <img class="article-cover" src="${item.img}" alt="${item.title}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.classList.add('img-fallback');">
                 <h1>${item.title}</h1>
-                <p class="article-meta">⭐ ${item.rating}${platformInfo} · ${formatarData(item.date)}</p>
+                <p class="article-meta">${metaParts.join(" · ")}</p>
                 <div class="card-tags article-tags">${tagsHTML}</div>
                 <p>${item.sinopse}</p>
                 ${analiseHTML}
