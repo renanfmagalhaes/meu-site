@@ -4,6 +4,30 @@
    ============================================================ */
 
 /**
+ * Converte uma data em texto para um objeto Date, aceitando tanto o formato
+ * esperado (AAAA-MM-DD) quanto o formato brasileiro (DD/MM/AAAA), caso
+ * alguém digite errado no JSON sem querer.
+ */
+function parseData(dateStr) {
+    if (!dateStr) return new Date(0);
+
+    const br = dateStr.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (br) {
+        const [, dd, mm, yyyy] = br;
+        return new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
+    }
+
+    const iso = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (iso) {
+        return new Date(`${dateStr}T00:00:00`);
+    }
+
+    // Formato desconhecido: tenta do jeito padrão e avisa no console
+    console.warn(`Data em formato inesperado: "${dateStr}". Use AAAA-MM-DD.`);
+    return new Date(dateStr);
+}
+
+/**
  * Busca um arquivo JSON de dados e devolve os itens já ordenados
  * do mais recente para o mais antigo (usando o campo "date").
  */
@@ -13,7 +37,7 @@ async function loadItems(jsonPath) {
         throw new Error(`Não foi possível carregar ${jsonPath} (status ${res.status})`);
     }
     const items = await res.json();
-    items.sort((a, b) => new Date(b.date) - new Date(a.date));
+    items.sort((a, b) => parseData(b.date) - parseData(a.date));
     return items;
 }
 
@@ -30,13 +54,18 @@ function cardHTML(item, options = {}) {
         .map(t => `<span class="tag" data-tag="${t}">${t}</span>`)
         .join("");
 
+    const ratingBadge =
+        item.rating !== undefined && item.rating !== null
+            ? `<span class="card-rating">⭐ ${item.rating}</span>`
+            : "";
+
     const cardInner = `
         <div class="media-card" data-tags="${tagsData}"${platformAttr}>
             <div class="card-image">
-                <img src="${item.img}" alt="${item.title}" loading="lazy">
+                <img src="${item.img}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.classList.add('img-fallback');">
                 ${badge}
                 ${platformBadge}
-                <span class="card-rating">⭐ ${item.rating}</span>
+                ${ratingBadge}
             </div>
             <div class="card-content">
                 <h3>${item.title}</h3>
@@ -180,10 +209,9 @@ const CATEGORY_META = {
     fotos: { label: "Fotos", file: "fotos.json", page: "fotos.html" },
 };
 
-/** Formata "2026-07-18" como "18/07/2026". */
+/** Formata a data (AAAA-MM-DD ou DD/MM/AAAA) como "18/07/2026". */
 function formatarData(dateStr) {
-    const d = new Date(dateStr + "T00:00:00");
-    return d.toLocaleDateString("pt-BR");
+    return parseData(dateStr).toLocaleDateString("pt-BR");
 }
 
 /**
@@ -218,7 +246,11 @@ async function initDetailPage(containerSelector) {
 
         document.title = `${item.title} - Renan Magalhães`;
 
-        const platformInfo = item.platform ? ` · 🎮 ${item.platform}` : "";
+        const metaParts = [];
+        if (item.rating !== undefined && item.rating !== null) metaParts.push(`⭐ ${item.rating}`);
+        if (item.platform) metaParts.push(`🎮 ${item.platform}`);
+        metaParts.push(formatarData(item.date));
+
         const tagsHTML = item.tags.map(t => `<span class="tag">${t}</span>`).join("");
         const analiseHTML = item.analise
             ? `<h2>Minha análise</h2><p>${item.analise}</p>`
@@ -227,9 +259,9 @@ async function initDetailPage(containerSelector) {
         container.innerHTML = `
             <article class="article">
                 <a class="voltar" href="${meta.page}">&larr; Voltar para ${meta.label}</a>
-                <img class="article-cover" src="${item.img}" alt="${item.title}">
+                <img class="article-cover" src="${item.img}" alt="${item.title}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.classList.add('img-fallback');">
                 <h1>${item.title}</h1>
-                <p class="article-meta">⭐ ${item.rating}${platformInfo} · ${formatarData(item.date)}</p>
+                <p class="article-meta">${metaParts.join(" · ")}</p>
                 <div class="card-tags article-tags">${tagsHTML}</div>
                 <p>${item.sinopse}</p>
                 ${analiseHTML}
