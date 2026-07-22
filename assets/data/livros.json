@@ -1,26 +1,25 @@
 [
   {
-    "title": "Duna",
-    "sinopse": "Em um futuro distante, um jovem herdeiro se torna o centro de uma disputa por especiaria e poder no deserto de Arrakis.",
-    "img": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=600&q=80",
-    "rating": 9.7,
+    "title": "O Oitavo andar",
+    "sinopse": "Beatriz Freire é uma jovem universitária que está prestes a curtir as férias de verão na turística cidade de Gramado, na serra gaúcha. Quando chega na rodoviária para encontrar sua prima Bete, que vive há 6 meses na cidade, Bia é surpreendida por um crime. Da janela de seu ônibus, ela avista uma Kombi escolar velha e, entre os entulhos dos bancos traseiros, percebe o corpo de uma menina. A garota decide fazer a denúncia no mesmo dia, mas é flagrada pelo motorista enquanto tenta tirar fotos do veículo. O que era para ser uma viagem divertida de um mês na companhia da prima, se transforma em um pesadelo.Bia se vê em uma perseguição de gato e rato e conta com a ajuda de Fred, o belo namorado da prima e nativo da cidade, para virar o jogo. O que eles não esperavam, no entanto, é que o assassinato da menina fosse apenas uma peça em uma rede de segredos nebulosos, mentiras e criminosos que farão de tudo para abafar o caso. "O Oitavo Andar" é um suspense eletrizante, repleto de ações, paixões e tensões do primeiro ao último capítulo. Um romance de leitura rápida e cheio de surpresas.",
+    "img": "https://m.media-amazon.com/images/I/91xC68lWZsL._UF1000,1000_QL80_.jpg",
+    "rating": 7,
     "tags": [
-      "#SciFi",
-      "#Aventura"
-    ],
-    "date": "2026-07-05",
-    "id": "duna"
+      "#Suspense"
+   ],
+    "date": "2022-07-05",
+    "id": "o-oitavo-andar"
   },
   {
-    "title": "Neuromancer (livro)",
+    "title": "Raio de Sol",
     "sinopse": "A obra que definiu o gênero cyberpunk, seguindo um hacker decadente em busca de redenção digital.",
-    "img": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80",
-    "rating": 9.4,
+    "img": "https://m.media-amazon.com/images/I/91hgY48tFTL.jpg",
+    "rating": 9,
     "tags": [
-      "#Cyberpunk",
-      "#SciFi"
+      "#Romance"
+
     ],
-    "date": "2026-04-11",
-    "id": "neuromancer-livro"
+    "date": "2022-04-11",
+    "id": "raio-de-sol"
   }
 ]
