@@ -211,5 +211,32 @@
     ],
     "date":"21/12/2025",
     "id":"The mayor of Kingstown Season 1 - 3"
+  },
+  {
+    "title":"Black Bird",
+    "sinopse":"Black Bird é uma série de televisão americana que segue a história de Jimmy Keene, um jovem condenado a 10 anos de prisão por tráfico de drogas. Ele é oferecido a oportunidade de reduzir sua sentença se conseguir extrair uma confissão de um assassino em série, Larry Hall, que está cumprindo pena em uma prisão de segurança máxima. A série explora temas de crime, justiça e os limites da moralidade.",
+    "img":"https://m.media-amazon.com/images/M/MV5BNDIzMzRlZjMtN2IyZC00M2M5LWFkNTYtMDQyMTAwZTE2YzY2XkEyXkFqcGc@._V1_.jpg",
+    "rating":9.5,
+    "tags":[
+      "#Crime",
+      "#Drama",
+      "#Suspense",
+      "#Real"
+    ],
+    "date":"10/07/2022",
+    "id":"Black Bird"
+  },
+  {
+    "title":"Breakout Kings Season 1 - 2",
+    "sinopse":"Breakout Kings é uma série de televisão americana que segue um grupo de agentes do U.S. Marshals e prisioneiros que trabalham juntos para capturar fugitivos perigosos. Cada episódio apresenta um novo caso, enquanto os personagens lidam com suas próprias histórias pessoais e desafios. A série combina ação, drama e elementos de crime.",
+    "img":"https://m.media-amazon.com/images/M/MV5BMTcyNzUwNjMwM15BMl5BanBnXkFtZTcwOTgxNjk0Nw@@._V1_.jpg",
+    "rating":9.8,
+    "tags":[
+      "#Ação",
+      "#Drama",
+      "#Crime"
+    ],
+    "date":"15/06/2025",
+    "id":"Breakout Kings Season 1 - 2"  
   }
 ]
