@@ -193,14 +193,14 @@
     "tags": [
       "#Terror",
       "#Horror"
-    ], 
+    ],
     "platform": "PC",
     "date": "07/07/2026",
     "id": "Man_of_Medan"
   },
   {
     "title": "The Legend of Zelda: Spirit Tracks",
-    "sinopse": "The Legend of Zelda: Spirit Tracks se passa um século após Phantom Hourglass. A história segue Link, um jovem maquinista, e a Princesa Zelda em uma missão para salvar "Nova Hyrule". Eles precisam impedir que o lorde demônio Malladus seja ressuscitado por espíritos malignos após o misterioso desaparecimento dos Spirit Tracks (trilhos sagrados).",
+    "sinopse": "The Legend of Zelda: Spirit Tracks se passa um século após Phantom Hourglass. A história segue Link, um jovem maquinista, e a Princesa Zelda em uma missão para salvar (Nova Hyrule). Eles precisam impedir que o lorde demônio Malladus seja ressuscitado por espíritos malignos após o misterioso desaparecimento dos Spirit Tracks (trilhos sagrados).",
     "img": "https://sm.ign.com/ign_br/cover/t/the-legend/the-legend-of-zelda-spirit-tracks_ytd2.jpg",
     "rating": 9.0,
     "tags": [
@@ -212,4 +212,3 @@
     "date": "19/07/2026",
     "id": "The_Legend_of_Zelda_Spirit_Tracks"
   }
-]
