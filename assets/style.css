@@ -299,6 +299,24 @@ main {
     padding: 20px 0;
 }
 
+/* Quando uma imagem falha ao carregar, mostra um fundo neutro em vez do ícone quebrado */
+.card-image.img-fallback img,
+.article-cover.img-fallback {
+    opacity: 0;
+}
+
+.card-image.img-fallback::after {
+    content: "🖼️ Imagem indisponível";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a0a6b8;
+    font-size: 0.85rem;
+    background-color: #1a1d29;
+}
+
 /* Páginas de artigo (conteúdo de um tutorial individual) */
 .article {
     max-width: 760px;
