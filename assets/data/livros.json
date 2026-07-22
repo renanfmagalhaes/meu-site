@@ -315,7 +315,7 @@
   },
   {
     "title":"Batman One Bad Day The Riddler",
-    "sinopse":"he Riddler is one of Batman's most intellectual villains and the one who lays out his clues the most deliberately. The Riddler is always playing a game, there are always rules. But what happens when The Riddler kills someone in broad daylight for seemingly no reason? No game to play. No cypher to breakdown. Batman will reach his wit's end trying to figure out the Riddler's true motivation in this incredible thriller!.",
+    "sinopse":"The Riddler is one of Batman's most intellectual villains and the one who lays out his clues the most deliberately. The Riddler is always playing a game, there are always rules. But what happens when The Riddler kills someone in broad daylight for seemingly no reason? No game to play. No cypher to breakdown. Batman will reach his wit's end trying to figure out the Riddler's true motivation in this incredible thriller!.",
     "img":"https://m.media-amazon.com/images/I/91Hihg7DTuL._UF1000,1000_QL80_.jpg",
     "rating":7,
     "tags":[
@@ -620,4 +620,17 @@
     ],
     "date":"2023-03-01",
     "id":"batman-and-the-joker-the-deadly-duo-4"
+  },
+  {
+    "title":"Batman: One Bad Day: Clayface",
+    "sinopse":"After years of doing battle with Batman in Gotham City and distancing himself from his dream, Clayface goes out west to Los Angeles. Creating a new identity, he pursues his dream of acting only to find that Gotham City isn't the only place with an overwhelming sense of dread to it, and that he might not have what it takes to make it in the City of Angels. So he'll reshape the city to fit his needs in a deadly pursuit of stardom.",
+    "img":"https://m.media-amazon.com/images/I/81P0+tXQdSL._SY466_.jpg",
+    "rating":7,
+    "tags":[
+      "#Quadrinhos",
+      "#Ação"
+    ],
+    "date":"2023-03-01",
+    "id":"batman-one-bad-day-clayface"
+  }
 ]
