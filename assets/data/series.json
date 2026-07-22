@@ -2,7 +2,7 @@
   {
     "title": "Origem Season 1 - 4",
     "sinopse": "A série Origem (conhecida internacionalmente como From) acompanha pessoas que ficam presas em uma cidade misteriosa no meio-oeste americano. Toda estrada leva de volta ao mesmo lugar e, quando anoitece, a população precisa se trancar em casa para sobreviver a criaturas aterrorizantes que emergem da floresta.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/c/c0/From_%28s%C3%A9rie%29.jpg",
+    "img": "assets/img/series/origem.jpg",
     "rating": 10,
     "tags": [
       "#Terror",
@@ -28,7 +28,7 @@
   {
   "title": "Teacup",
     "sinopse": "Teacup: O Impostor acompanha um grupo isolado em um rancho na zona rural da Geórgia (EUA) que é forçado a deixar rivalidades de lado e unir forças para sobreviver a uma ameaça mortal e misteriosa. A trama mistura terror, ficção científica e suspense de forma claustrofóbica.",
-    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBgAB_HUeW-k5U1xriTEsGjIpf7y8uw1LgLSItMPEvoGMU8kLHQcqRA6pH&s=10",
+    "img": "assets/img/series/teacup.jpg",
     "rating": 6,
     "tags": [
       "#Sci-fi",
@@ -65,7 +65,7 @@
   {
     "title":"Panic",
     "sinopse":"Panic é uma série de televisão americana baseada no romance homônimo de Lauren Oliver. A história se passa em uma pequena cidade do Texas, onde os jovens participam de um jogo perigoso e secreto chamado 'Panic', que oferece uma grande recompensa em dinheiro para aqueles que conseguem completar os desafios. A série explora temas de amizade, coragem e os limites que as pessoas estão dispostas a ultrapassar para alcançar seus objetivos.",
-    "img":"https://upload.wikimedia.org/wikipedia/en/thumb/5/59/Panic_poster.jpg/250px-Panic_poster.jpg",
+    "img":"assets/img/series/panic.jpg",
     "rating":9,
     "tags":[
       "#Drama",
@@ -78,7 +78,7 @@
   {
     "title":"Game of Thrones Season 1 - 8",
     "sinopse":"Game of Thrones é uma série de televisão americana baseada na série de livros 'As Crônicas de Gelo e Fogo', de George R. R. Martin. A história se passa em um mundo fictício chamado Westeros, onde várias famílias nobres lutam pelo controle do Trono de Ferro e pelo poder sobre os Sete Reinos. A série é conhecida por sua narrativa complexa, personagens intrigantes e reviravoltas inesperadas.",
-    "img":"https://upload.wikimedia.org/wikipedia/pt/a/a4/Game_of_Thrones_Temporada_1_Poster.jpg",
+    "img":"assets/img/series/gameofthrones.jpg",
     "rating":10,
     "tags":[
       "#Drama",
@@ -91,7 +91,7 @@
   {
     "title":"How I Met Your Mother Season 1 - 9",
     "sinopse":"How I Met Your Mother é uma série de televisão americana que segue a vida de Ted Mosby e seus amigos em Nova York. A história é narrada por Ted no futuro, enquanto ele conta aos filhos como conheceu a mãe deles. A série combina comédia, romance e drama, explorando temas de amizade, amor e as complexidades da vida adulta.",
-    "img":"https://upload.wikimedia.org/wikipedia/pt/thumb/a/a1/How_I_Met_Your_Mother_DVD-8.jpg/250px-How_I_Met_Your_Mother_DVD-8.jpg",
+    "img":"assets/img/series/howimetyourmother.jpg",
     "rating":10,
     "tags":[
       "#Comédia",
@@ -104,7 +104,7 @@
   {
     "title":"Flaked Season 1 - 2",
     "sinopse":"Flaked é uma série de televisão americana que segue a vida de Chip, um homem carismático e problemático que vive em Venice, Califórnia. Ele é conhecido por ser um 'guru' local, oferecendo conselhos e apoio aos outros, mas luta com seus próprios vícios e problemas pessoais. A série explora temas de amizade, redenção e as complexidades das relações humanas.",
-    "img":"https://upload.wikimedia.org/wikipedia/en/4/4c/Flaked_poster.jpg",
+    "img":"assets/img/series/flaked.jpg",
     "rating":8,
     "tags":[
       "#Comédia",
@@ -176,7 +176,7 @@
   {
     "title":"Yellowstone Season 1 - 5",
     "sinopse":"Yellowstone é uma série de televisão americana que segue a vida da família Dutton, proprietária do maior rancho contíguo dos Estados Unidos. A série explora os conflitos entre a família Dutton, os desenvolvedores de terras, os nativos americanos e o governo, enquanto eles lutam para proteger seu legado e território. A trama combina drama, ação e intriga política.",
-    "img":"https://upload.wikimedia.org/wikipedia/fi/9/91/Yellowstone_tv-series_poster.jpg",
+    "img":"assets/img/series/yellowstone.jpg",
     "rating":9,
     "tags":[
       "#Drama",
@@ -189,7 +189,7 @@
   {
     "title":"Yellowjacket Season 1 - 3",
     "sinopse":"Yellowjackets é uma série de televisão americana que segue a história de um time de futebol feminino que sobrevive a um acidente de avião no deserto canadense. A série alterna entre o passado, mostrando a luta pela sobrevivência das jovens, e o presente, onde as sobreviventes lidam com os traumas e segredos do evento. A trama combina drama, suspense e elementos de mistério.",
-    "img":"https://upload.wikimedia.org/wikipedia/en/thumb/6/6b/Yellowjackets_season_3.jpg/250px-Yellowjackets_season_3.jpg",
+    "img":"assets/img/series/yellowjackets.jpg",
     "rating":7,
     "tags":[
       "#Drama",
@@ -242,7 +242,7 @@
   {
     "title":"The walking dead Season 1 - 11",
     "sinopse":"The Walking Dead é uma série de televisão americana baseada na série de quadrinhos homônima de Robert Kirkman. A história segue um grupo de sobreviventes em um mundo pós-apocalíptico dominado por zumbis, conhecidos como 'walkers'. A série explora temas de sobrevivência, moralidade e a luta pela humanidade em meio ao caos.",
-    "img":"https://upload.wikimedia.org/wikipedia/pt/a/a2/TheWalkingDead-P%C3%B4ster.jpg",
+    "img":"assets/img/series/theWalkingDead.jpg",
     "rating":8,
     "tags":[
       "#Drama",

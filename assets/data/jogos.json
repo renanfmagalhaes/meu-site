@@ -2,7 +2,7 @@
   {
     "title": "The Last of Us Part II",
     "sinopse": "The Last of Us Part II acompanha Ellie e Joel cinco anos após o primeiro jogo. Vivendo em paz na comunidade de Jackson, Wyoming, a rotina é bruscamente interrompida por um evento violento. Isso leva Ellie a embarcar em uma jornada incansável e brutal por Seattle em busca de justiça e vingança.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/9/96/The_Last_of_Us_2_capa.png",
+    "img": "assets/img/jogos/thelastofus2.jpg",
     "rating": 9.5,
     "tags": [
       "#Ação",
@@ -16,7 +16,7 @@
   {
     "title": "Alone in the Dark 2024",
     "sinopse": "O jogo é um remake de Alone in the Dark (1992), o primeiro jogo da franquia, o jogo segue Emily Hartwood (Jodie Comer) e o investigador particular Edward Carnby (David Harbour) enquanto eles viajam para Derceto Manor, um lar para deficientes mentais, para investigar o desaparecimento de Jeremy Hartwood, tio de Emily.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/1/1f/Alone_in_the_Dark_%282023%29.png",
+    "img": "assets/img/jogos/aloneinthedark.jpg",
     "rating": 9.0,
     "tags": [
       "#Survival",
@@ -29,7 +29,7 @@
   {
     "title": "Marvel's Spider-Man: Miles Morales",
     "sinopse": "Em Marvel's Spider-Man: Miles Morales, o jovem Miles assume o uniforme do Homem-Aranha para proteger Nova York enquanto Peter Parker viaja. Quando uma guerra entre a corporação de energia Roxxon e o grupo criminoso de alta tecnologia Underground ameaça destruir sua nova casa, o Harlem, Miles precisa provar seu valor e descobrir o verdadeiro significado de ser um herói.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/7/74/Spider-Man_Miles_Morales_capa.png",
+    "img": "assets/img/jogos/milesmorales.jpg",
     "rating": 9.5,
     "tags": [
       "#Ação",
@@ -43,7 +43,7 @@
   {
     "title": "Eriksholm: The Stolen Dream",
     "sinopse": "Experimente um jogo de furtividade isométrico baseado em narrativa e junte-se à aventura de Hanna na vibrante cidade de Eriksholm. O desaparecimento misterioso de seu irmão, Herman, desencadeia uma série de eventos catastróficos que mudarão para sempre suas vidas e o destino de toda a cidade.",
-    "img": "https://upload.wikimedia.org/wikipedia/en/8/88/Eriksholm_%E2%80%94_The_Stolen_Dream_cover_art.png",
+    "img": "assets/img/jogos/eriksholm.jpg",
     "rating": 9.5,
     "tags": [
       "#Aventura",
@@ -58,7 +58,7 @@
   {
     "title": "Battletoads",
     "sinopse": "Battletoads (2020) acompanha os sapos guerreiros Rash, Zitz e Pimple, que retornam após 26 anos presos em uma realidade ilusória onde eram super celebridades. Ao voltarem à vida real, ninguém mais se lembra deles. Frustrados, eles se aliam à sua antiga arqui-inimiga, a Dark Queen, para derrotar os Topians, divindades alienígenas que estão causando o caos no universo.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/c/c7/Battletoads_2020_cover.jpg",
+    "img": "assets/img/jogos/batletoads.jpg",
     "rating": 0,
     "tags": [
       "#beat 'em up"
@@ -70,7 +70,7 @@
   {
     "title": "FINAL FANTASY VII REMAKE INTERGRADE",
     "sinopse": "Cloud Strife, ex-agente da SOLDIER, chega a Midgar, a cidade movida a energia de mako. O clássico atemporal FINAL FANTASY VII renasceu, com gráficos de última geração, um novo sistema de combate e uma aventura adicional com Yuffie Kisaragi.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/0/09/Final_Fantasy_VII_Remake_capa.png",
+    "img": "assets/img/jogos/ff7remake.png",
     "rating": 9.0,
     "tags": [
       "#Aventura",
@@ -86,7 +86,7 @@
   {
     "title": "Marvel's Spider-man 2",
     "sinopse": "Em Marvel's Spider-Man 2, Peter Parker e Miles Morales lutam para equilibrar suas vidas pessoais com o dever de proteger Nova York. A chegada de Kraven, o Caçador, transforma a cidade em um campo de batalha, enquanto Peter é corrompido pelo simbionte Venom, forçando os dois heróis a enfrentarem ameaças épicas.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/6/64/Spider-Man_2_2023_capa.jpg",
+    "img": "assets/img/jogos/spiderman2.jpg",
     "rating": 9.0,
     "tags": [
       "#Ação",
@@ -100,7 +100,7 @@
   {
     "title": "Alan Wake 2",
     "sinopse": "Em Alan Wake 2, uma série de assassinatos ritualísticos ameaça a pequena cidade de Bright Falls. Saga Anderson, uma talentosa agente do FBI, chega para investigar os crimes, mas seu caso se torna um pesadelo quando ela descobre páginas de uma história de terror que começam a se tornar realidade.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/e/ed/Alan_Wake_2_box_art.jpg",
+    "img": "assets/img/jogos/alanwake2.jpg",
     "rating": 9.2,
     "tags": [
       "#Terror",
@@ -116,7 +116,7 @@
   {
     "title": "Resident Evil: Requiem",
     "sinopse": "Em Resident Evil: Requiem (também conhecido como Resident Evil 9), a história acompanha a analista do FBI Grace Ashcroft e o lendário agente federal Leon S. Kennedy. Juntos, eles investigam uma série de mortes misteriosas e surtos zumbis que os levam de volta a Raccoon City, agora em ruínas e isolada pelo governo americano.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/1/15/Resident_Evil_Requiem_Cover_Art.jpg",
+    "img": "assets/img/jogos/requiem.jpg",
     "rating": 9.5,
     "tags": [
       "#Terror",
@@ -131,7 +131,7 @@
   {
     "title": "Pragmata",
     "sinopse": "Pragmata é um jogo de ação e aventura de ficção científica da Capcom. A história acompanha Hugh, um astronauta, e Diana, uma androide solitária, que devem sobreviver em uma estação de pesquisa lunar abandonada. Juntos, eles enfrentam os mistérios da base e uma inteligência artificial hostil enquanto tentam retornar à Terra.",
-    "img": "https://upload.wikimedia.org/wikipedia/commons/f/fb/Pragmata_cover.jpg",
+    "img": "assets/img/jogos/pragmata.jpg",
     "rating": 9.5,
     "tags": [
       "#Aventura",
@@ -146,7 +146,7 @@
   {
     "title": "LEGO® Batman™: Legacy of the Dark Knight",
     "sinopse": "Nesta aventura de ação em mundo aberto do premiado estúdio TT Games (LEGO Star Wars™: A Saga Skywalker), você acompanhará a jornada de Batman, desde o treinamento de Bruce Wayne com a Liga das Sombras até se tornar o icônico protetor de Gotham City. Forme uma nova família de aliados com Jim Gordon, Mulher-gato, Robin, Asa Noturna e Batgirl para ajudar o Cavaleiro das Trevas a enfrentar elementos infames da Galeria dos Vilões, incluindo o Coringa, o Pinguim, o Senhor Frio, Hera Venenosa, Bane e muitos mais.Construa o legado do Cavaleiro das Trevas",
-    "img": "https://upload.wikimedia.org/wikipedia/en/8/83/Lego_Batman_Legacy_of_the_Dark_Knight_cover_art.jpg",
+    "img": "assets/img/jogos/batmanlego.jpg",
     "rating": 9.5,
     "tags": [
       "#Ação",
@@ -161,7 +161,7 @@
   {
     "title": "Forza Horizon 6",
     "sinopse": "Em Forza Horizon 6, o lendário Festival Horizon desembarca no Japão, convidando os jogadores a se tornarem lendas das corridas em um mundo aberto gigante. A sinopse gira em torno de explorar os contrastes das paisagens urbanas e rurais, descobrindo carros raros e mergulhando na autêntica cultura automotiva japonesa.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/0/03/Forza_Horizon_6.jpg",
+    "img": "assets/img/jogos/forzahorizon6.jpg",
     "rating": 9.0,
     "tags": [
       "#Ação",
@@ -175,7 +175,7 @@
   {
     "title": "007 First Light",
     "sinopse": "007 First Light é um jogo de ação e aventura que conta a história de origem de James Bond. Ele acompanha um jovem aviador naval que, após um ato heroico, entra no MI6 e ganha a chance de se juntar ao programa 00. Quando uma missão dá errado, ele precisa deter um golpe de Estado ao lado de seu mentor, Greenway.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/2/2b/007_First_Light_%282026%29_cover.jpg",
+    "img": "assets/img/jogos/007.jpg",
     "rating": 9.0,
     "tags": [
       "#Ação",
@@ -188,7 +188,7 @@
   {
     "title": "Man of Medan",
     "sinopse": "Em Man of Medan, cinco amigos embarcam em uma viagem de mergulho no Oceano Pacífico para encontrar um naufrágio da Segunda Guerra Mundial. Após serem feitos reféns por piratas, uma tempestade os obriga a subir a bordo de um navio fantasma abandonado, onde enfrentam alucinações mortais e segredos sombrios.",
-    "img": "https://upload.wikimedia.org/wikipedia/pt/f/f8/Poster_Man_of_Medan.png",
+    "img": "assets/img/jogos/manofmedan.jpg",
     "rating": 9.0,
     "tags": [
       "#Terror",
