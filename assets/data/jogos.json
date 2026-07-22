@@ -16,7 +16,7 @@
   {
     "title": "Alone in the Dark 2024",
     "sinopse": "O jogo é um remake de Alone in the Dark (1992), o primeiro jogo da franquia, o jogo segue Emily Hartwood (Jodie Comer) e o investigador particular Edward Carnby (David Harbour) enquanto eles viajam para Derceto Manor, um lar para deficientes mentais, para investigar o desaparecimento de Jeremy Hartwood, tio de Emily.",
-    "img": "assets/img/jogos/aloneinthedark.jpg",
+    "img": "assets/img/jogos/aloneinthedark.png",
     "rating": 9.0,
     "tags": [
       "#Survival",
@@ -161,7 +161,7 @@
   {
     "title": "Forza Horizon 6",
     "sinopse": "Em Forza Horizon 6, o lendário Festival Horizon desembarca no Japão, convidando os jogadores a se tornarem lendas das corridas em um mundo aberto gigante. A sinopse gira em torno de explorar os contrastes das paisagens urbanas e rurais, descobrindo carros raros e mergulhando na autêntica cultura automotiva japonesa.",
-    "img": "assets/img/jogos/forzahorizon6.jpg",
+    "img": "assets/img/jogos/forzahorizon6.png",
     "rating": 9.0,
     "tags": [
       "#Ação",
@@ -188,7 +188,7 @@
   {
     "title": "Man of Medan",
     "sinopse": "Em Man of Medan, cinco amigos embarcam em uma viagem de mergulho no Oceano Pacífico para encontrar um naufrágio da Segunda Guerra Mundial. Após serem feitos reféns por piratas, uma tempestade os obriga a subir a bordo de um navio fantasma abandonado, onde enfrentam alucinações mortais e segredos sombrios.",
-    "img": "assets/img/jogos/manofmedan.jpg",
+    "img": "assets/img/jogos/manofmedan.png",
     "rating": 9.0,
     "tags": [
       "#Terror",
