@@ -57,7 +57,7 @@ function cardHTML(item, options = {}) {
     const cardInner = `
         <div class="media-card" data-tags="${tagsData}"${platformAttr}>
             <div class="card-image">
-                <img src="${item.img}" alt="${item.title}" loading="lazy">
+                <img src="${item.img}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.classList.add('img-fallback');">
                 ${badge}
                 ${platformBadge}
                 <span class="card-rating">⭐ ${item.rating}</span>
@@ -250,7 +250,7 @@ async function initDetailPage(containerSelector) {
         container.innerHTML = `
             <article class="article">
                 <a class="voltar" href="${meta.page}">&larr; Voltar para ${meta.label}</a>
-                <img class="article-cover" src="${item.img}" alt="${item.title}">
+                <img class="article-cover" src="${item.img}" alt="${item.title}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.classList.add('img-fallback');">
                 <h1>${item.title}</h1>
                 <p class="article-meta">⭐ ${item.rating}${platformInfo} · ${formatarData(item.date)}</p>
                 <div class="card-tags article-tags">${tagsHTML}</div>
