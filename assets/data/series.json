@@ -238,5 +238,19 @@
     ],
     "date":"15/06/2013",
     "id":"Breakout Kings Season 1 - 2"  
+  },
+  {
+    "title":"The walking dead Season 1 - 11",
+    "sinopse":"The Walking Dead é uma série de televisão americana baseada na série de quadrinhos homônima de Robert Kirkman. A história segue um grupo de sobreviventes em um mundo pós-apocalíptico dominado por zumbis, conhecidos como 'walkers'. A série explora temas de sobrevivência, moralidade e a luta pela humanidade em meio ao caos.",
+    "img":"https://upload.wikimedia.org/wikipedia/pt/a/a2/TheWalkingDead-P%C3%B4ster.jpg",
+    "rating":9.5,
+    "tags":[
+      "#Drama",
+      "#Ação",
+      "#Suspense",
+      "#Zumbis"
+    ],
+    "date":"21/12/2022",
+    "id":"The walking dead Season 1 - 11"
   }
 ]
