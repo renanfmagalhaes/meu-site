@@ -211,5 +211,19 @@
     "platform": "DS",
     "date": "19/07/2026",
     "id": "The_Legend_of_Zelda_Spirit_Tracks"
-  }
+  },
+  {
+    "title":" Grand Theft Auto: Chinatown Wars",
+    "sinopse":"Grand Theft Auto: Chinatown Wars acompanha Huang Lee, um jovem que viaja para Liberty City após a morte de seu pai. Ele precisa entregar uma espada sagrada a seu tio Wu Lee, mas é baleado, deixado para morrer e tem a relíquia roubada.",
+    "img":"https://m.media-amazon.com/images/I/818SjSPLrES.jpg",
+    "rating": 8,
+    "tags":[
+      "#Ação",
+      "#Mundo Aberto"
+    ],
+    "platform":"DS",
+    "date": "26/07/2026",
+    "id":"Grand_Theft_Auto:_Chinatown_Wars"
+    }
+
 ]
