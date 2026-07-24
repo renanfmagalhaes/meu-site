@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clonando um repositório e editando pelo VS Code - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="../index.html">Início</a>
+            <a href="../filmes.html">Filmes</a>
+            <a href="../series.html">Séries</a>
+            <a href="../livros.html">Livros</a>
+            <a href="../musicas.html">Músicas</a>
+            <a href="../jogos.html">Jogos</a>
+            <a href="../tutoriais.html" class="active">Tutoriais</a>
+            <a href="../fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <article class="article">
+            <a class="voltar" href="../tutoriais.html">&larr; Voltar para Tutoriais</a>
+            <img class="article-cover" src="https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=1000&q=80" alt="Clonando um repositório e editando pelo VS Code">
+            <h1>Clonando um repositório e editando pelo VS Code</h1>
+            <p class="article-meta">Publicado em 24/07/2026 · #Git #VSCode</p>
+
+        <p>"Clonar" é só o nome técnico pra "baixar uma cópia completa do repositório
+        pro seu computador". Depois disso, você edita os arquivos normalmente, como
+        qualquer pasta, e manda as mudanças de volta pro GitHub quando quiser — sem
+        precisar usar o site do GitHub pra editar nada.</p>
+
+        <h2>1. Instalar o Git</h2>
+        <p>O VS Code já vem com controle de versão embutido, mas ele depende do
+        <strong>Git</strong> (o "motor" por trás) estar instalado no sistema. Baixe em
+        <code>git-scm.com/downloads</code> e instale com as opções padrão — pode clicar
+        "Next" em tudo.</p>
+
+        <h2>2. Clonar o repositório</h2>
+        <ol>
+            <li>Abra o VS Code</li>
+            <li><code>Ctrl+Shift+P</code> → digite <strong>"Git: Clone"</strong> → Enter</li>
+            <li>Cole a URL do repositório, no formato
+                <code>https://github.com/seu-usuario/seu-repositorio.git</code></li>
+            <li>Escolha uma pasta no seu computador pra salvar</li>
+            <li>Quando perguntar, clique em <strong>"Open"</strong></li>
+        </ol>
+        <p>Pronto — o projeto inteiro agora existe também localmente, como uma pasta comum.</p>
+
+        <h2>3. Configurar nome e e-mail (uma vez só)</h2>
+        <p>O Git precisa saber quem está fazendo as alterações. Se aparecer um aviso
+        pedindo pra configurar <code>user.name</code> e <code>user.email</code>, crie ou
+        edite o arquivo <code>.gitconfig</code> na pasta do seu usuário do Windows
+        (<code>%USERPROFILE%</code>) com:</p>
+        <pre><code>[user]
+    name = Seu Nome
+    email = seu-email@exemplo.com</code></pre>
+
+        <h2>4. Editar, salvar, e enviar as mudanças</h2>
+        <ol>
+            <li>Edite qualquer arquivo do projeto normalmente e salve (<code>Ctrl+S</code>)</li>
+            <li>Abra o painel <strong>Source Control</strong> (<code>Ctrl+Shift+G</code>)</li>
+            <li>Escreva uma mensagem curta descrevendo o que mudou</li>
+            <li>Clique em <strong>Commit</strong></li>
+            <li>Clique em <strong>Sync Changes</strong> (ou "Push")</li>
+        </ol>
+        <p>Na primeira vez que enviar, o VS Code pode abrir uma aba do navegador pedindo
+        pra você autorizar o acesso à sua conta do GitHub — é só logar e autorizar uma
+        única vez.</p>
+
+        <h2>5. Trazer mudanças feitas pelo site do GitHub</h2>
+        <p>Se você editar algum arquivo direto pela interface do GitHub (pelo navegador),
+        seu computador não atualiza sozinho. Pra trazer essas mudanças pro VS Code:</p>
+        <ol>
+            <li>Painel <strong>Source Control</strong> → três pontinhos "..." → <strong>Pull</strong></li>
+        </ol>
+        <p>Ou clique no ícone de setas circulares 🔄 no rodapé do VS Code, que faz
+        Pull e Push ao mesmo tempo.</p>
+
+        <h2>Dica</h2>
+        <p>Não precisa clonar de novo toda vez que abrir o VS Code — o clone é só a
+        primeira vez. Nas próximas, é só <strong>File → Open Folder</strong> e escolher
+        a mesma pasta, ou pegar nos "Recentes".</p>
+
+        <h2>Cuidado</h2>
+        <p>Evite editar o mesmo arquivo ao mesmo tempo pelo site do GitHub e localmente
+        sem sincronizar entre um passo e outro — isso pode gerar um conflito, onde o Git
+        não sabe qual versão manter. O ideal é sempre editar em um lugar por vez.</p>
+        
+        </article>
+    </main>
+</body>
+</html>
