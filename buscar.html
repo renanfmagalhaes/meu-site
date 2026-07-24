@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buscar conteúdo automaticamente</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background-color:#0f111a;
+        color:#f1f1f1;
+        font-family:'Poppins', sans-serif;
+        padding:30px 20px 80px;
+    }
+    .wrap { max-width: 900px; margin:0 auto; }
+    h1 { font-size:1.5rem; margin-bottom:6px; }
+    .subtitulo { color:#a0a6b8; font-size:0.9rem; margin-bottom:30px; }
+    section {
+        background-color:#1a1d29;
+        border:1px solid #252a3d;
+        border-radius:12px;
+        padding:20px;
+        margin-bottom:20px;
+    }
+    section h2 {
+        font-size:1rem;
+        color:#38bdf8;
+        margin-bottom:14px;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+    }
+    label {
+        display:block;
+        font-size:0.8rem;
+        color:#a0a6b8;
+        margin-bottom:5px;
+        margin-top:12px;
+    }
+    label:first-child { margin-top:0; }
+    input[type=text], input[type=password], input[type=number], textarea, select {
+        width:100%;
+        background-color:#0f111a;
+        border:1px solid #252a3d;
+        border-radius:8px;
+        color:#f1f1f1;
+        padding:10px 12px;
+        font-family:inherit;
+        font-size:0.9rem;
+    }
+    textarea { resize:vertical; min-height:80px; }
+    .linha { display:flex; gap:12px; flex-wrap:wrap; }
+    .linha > div { flex:1; min-width:180px; }
+    button {
+        background-color:#38bdf8;
+        color:#0f111a;
+        border:none;
+        border-radius:8px;
+        padding:10px 18px;
+        font-weight:600;
+        font-size:0.9rem;
+        cursor:pointer;
+        margin-top:14px;
+    }
+    button:hover { opacity:0.9; }
+    button.secundario {
+        background-color:#252a3d;
+        color:#38bdf8;
+    }
+    button.perigo {
+        background-color:#252a3d;
+        color:#f87171;
+    }
+    .msg { font-size:0.85rem; color:#a0a6b8; margin-top:10px; }
+    .msg.erro { color:#f87171; }
+    .msg.sucesso { color:#4ade80; }
+    .resultados {
+        display:grid;
+        grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+        gap:12px;
+        margin-top:16px;
+    }
+    .resultado-card {
+        background-color:#0f111a;
+        border:1px solid #252a3d;
+        border-radius:8px;
+        overflow:hidden;
+        cursor:pointer;
+        transition:border-color 0.2s;
+    }
+    .resultado-card:hover { border-color:#38bdf8; }
+    .resultado-card img {
+        width:100%;
+        height:150px;
+        object-fit:cover;
+        background-color:#1a1d29;
+        display:block;
+    }
+    .resultado-card .info { padding:8px; }
+    .resultado-card .info strong { font-size:0.8rem; display:block; }
+    .resultado-card .info span { font-size:0.75rem; color:#a0a6b8; }
+    #loteArea { white-space:pre; font-family:'Courier New', monospace; font-size:0.8rem; }
+    .tabs { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+    .tabs button {
+        margin-top:0;
+        background-color:#252a3d;
+        color:#a0a6b8;
+    }
+    .tabs button.ativo {
+        background-color:#38bdf8;
+        color:#0f111a;
+    }
+    .aviso {
+        background-color:#251a1a;
+        border:1px solid #3d2525;
+        color:#f4a0a0;
+        border-radius:8px;
+        padding:12px 16px;
+        font-size:0.85rem;
+        margin-bottom:20px;
+    }
+    .contador {
+        display:inline-block;
+        background-color:#38bdf8;
+        color:#0f111a;
+        border-radius:20px;
+        padding:2px 10px;
+        font-size:0.75rem;
+        font-weight:700;
+        margin-left:8px;
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>🔍 Buscar conteúdo automaticamente</h1>
+    <p class="subtitulo">Ferramenta pessoal — não faz parte do site público. Busca sinopse, capa, nota e tags e monta o JSON pronto pra colar nos arquivos de <code>assets/data/</code>.</p>
+
+    <div class="aviso">
+        Ferramenta pra uso local. As chaves de API ficam salvas só no seu navegador (localStorage), nunca são enviadas pra mim nem pra ninguém além do próprio serviço (TMDb / RAWG).
+    </div>
+
+    <section>
+        <h2>1. Chaves de API (uma vez só)</h2>
+        <div class="linha">
+            <div>
+                <label>Chave TMDb (Filmes e Séries) — grátis em themoviedb.org/settings/api</label>
+                <input type="password" id="chaveTMDb" placeholder="Cole sua chave aqui">
+            </div>
+            <div>
+                <label>Chave RAWG (Jogos) — grátis em rawg.io/apidocs</label>
+                <input type="password" id="chaveRAWG" placeholder="Cole sua chave aqui">
+            </div>
+        </div>
+        <p class="msg">Livros usa o Google Books, que não exige chave.</p>
+        <button onclick="salvarChaves()">Salvar chaves</button>
+        <span id="msgChaves" class="msg"></span>
+    </section>
+
+    <section>
+        <h2>2. Buscar</h2>
+        <div class="tabs" id="tabsCategoria">
+            <button data-cat="filme" class="ativo">Filme</button>
+            <button data-cat="serie">Série</button>
+            <button data-cat="jogo">Jogo</button>
+            <button data-cat="livro">Livro</button>
+        </div>
+        <div class="linha">
+            <div style="flex:3">
+                <label>Título</label>
+                <input type="text" id="campoBusca" placeholder="Ex: A Origem">
+            </div>
+        </div>
+        <button onclick="buscar()">Buscar</button>
+        <p id="msgBusca" class="msg"></p>
+        <div class="resultados" id="resultados"></div>
+    </section>
+
+    <section id="secaoForm" style="display:none;">
+        <h2>3. Conferir e ajustar</h2>
+        <label>Título</label>
+        <input type="text" id="fTitulo">
+
+        <label>Sinopse</label>
+        <textarea id="fSinopse"></textarea>
+        <button type="button" class="secundario" onclick="traduzirSinopse()" id="btnTraduzir">🌐 Traduzir sinopse (EN → PT)</button>
+
+        <label>Imagem (URL)</label>
+        <input type="text" id="fImagem">
+
+        <div class="linha">
+            <div>
+                <label>Nota (deixe vazio pra não mostrar estrela)</label>
+                <input type="text" id="fNota">
+            </div>
+            <div>
+                <label>Data (AAAA-MM-DD)</label>
+                <input type="text" id="fData">
+            </div>
+            <div id="blocoPlataforma" style="display:none;">
+                <label>Plataforma</label>
+                <select id="fPlataforma"></select>
+            </div>
+        </div>
+
+        <label>Tags (separadas por vírgula, sem #)</label>
+        <input type="text" id="fTags">
+
+        <label>ID (gerado automaticamente a partir do título)</label>
+        <input type="text" id="fId">
+
+        <button onclick="adicionarAoLote()">Adicionar ao lote ↓</button>
+    </section>
+
+    <section>
+        <h2>4. Lote acumulado <span class="contador" id="contadorLote">0</span></h2>
+        <p class="msg">Vá buscando e clicando em "Adicionar ao lote" pra cada item. Quando terminar, copie tudo de uma vez e cole dentro do array do JSON da categoria certa.</p>
+        <textarea id="loteArea" rows="10" readonly></textarea>
+        <button onclick="copiarLote()">Copiar tudo</button>
+        <button class="secundario" onclick="limparLote()">Limpar lote</button>
+        <p id="msgLote" class="msg"></p>
+    </section>
+</div>
+
+<script>
+let categoriaAtual = "filme";
+let lote = [];
+let ultimoResultadoBruto = null;
+
+const GENEROS_FILME = {28:"Ação",12:"Aventura",16:"Animação",35:"Comédia",80:"Crime",99:"Documentário",18:"Drama",10751:"Família",14:"Fantasia",36:"História",27:"Terror",10402:"Música",9648:"Mistério",10749:"Romance",878:"FicçãoCientífica",10770:"CinemaTV",53:"Thriller",10752:"Guerra",37:"Faroeste"};
+const GENEROS_SERIE = {10759:"AçãoAventura",16:"Animação",35:"Comédia",80:"Crime",99:"Documentário",18:"Drama",10751:"Família",10762:"Infantil",9648:"Mistério",10763:"News",10764:"Reality",10765:"FicçãoFantasia",10766:"Soap",10767:"Talk",10768:"GuerraPolítica",37:"Faroeste"};
+
+function slugify(text) {
+    return text
+        .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .toLowerCase();
+}
+
+function toTag(nome) {
+    return "#" + nome.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "");
+}
+
+// RAWG bloqueia chamadas diretas do navegador (CORS). Tenta uma lista de
+// proxies gratuitos em sequência — se um estiver fora do ar, tenta o próximo.
+const PROXIES_CORS = [
+    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
+
+async function fetchComProxy(url) {
+    let ultimoErro;
+    for (const construir of PROXIES_CORS) {
+        try {
+            const res = await fetch(construir(url));
+            if (res.ok) return res;
+            ultimoErro = new Error(`HTTP ${res.status}`);
+        } catch (err) {
+            ultimoErro = err;
+        }
+    }
+    throw new Error("Todos os proxies falharam. Tente novamente em alguns minutos. Detalhe: " + (ultimoErro ? ultimoErro.message : ""));
+}
+
+// Limpa a sinopse vinda das APIs: remove HTML, junta linhas quebradas
+// (sem cortar no primeiro parágrafo), e limita um tamanho máximo razoável.
+function limparTexto(str, max) {
+    if (!str) return "";
+    const semHtml = str.replace(/<[^>]*>/g, " ");
+    const juntado = semHtml
+        .replace(/\r/g, "")
+        .split("\n")
+        .map(s => s.trim())
+        .filter(Boolean)
+        .join(" ");
+    const semEspacosDuplos = juntado.replace(/\s{2,}/g, " ").trim();
+    return max ? semEspacosDuplos.slice(0, max) : semEspacosDuplos;
+}
+
+// Traduz o texto atual da sinopse (inglês -> português) usando a API
+// gratuita MyMemory, sem precisar de chave. Divide em pedaços pequenos
+// porque a API tem um limite de tamanho por requisição.
+function dividirEmPedacos(texto, max) {
+    const frases = texto.match(/[^.!?]+[.!?]*/g) || [texto];
+    const pedacos = [];
+    let atual = "";
+    for (const frase of frases) {
+        if ((atual + frase).length > max && atual) {
+            pedacos.push(atual.trim());
+            atual = "";
+        }
+        atual += frase;
+    }
+    if (atual.trim()) pedacos.push(atual.trim());
+    return pedacos;
+}
+
+async function traduzirSinopse() {
+    const textarea = document.getElementById("fSinopse");
+    const original = textarea.value.trim();
+    const btn = document.getElementById("btnTraduzir");
+
+    if (!original) { alert("Não há texto pra traduzir."); return; }
+
+    btn.disabled = true;
+    btn.textContent = "Traduzindo...";
+
+    try {
+        const pedacos = dividirEmPedacos(original, 450);
+        const traduzidos = [];
+        for (const pedaco of pedacos) {
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(pedaco)}&langpair=en|pt-BR`);
+            const data = await res.json();
+            traduzidos.push(
+                data.responseData && data.responseData.translatedText
+                    ? data.responseData.translatedText
+                    : pedaco
+            );
+        }
+        textarea.value = traduzidos.join(" ");
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao traduzir: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "🌐 Traduzir sinopse (EN → PT)";
+    }
+}
+
+function normalizarData(str) {
+    if (!str) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+    if (/^\d{4}-\d{2}$/.test(str)) return str + "-01";
+    if (/^\d{4}$/.test(str)) return str + "-01-01";
+    return str;
+}
+
+// ---------- Chaves ----------
+function carregarChaves() {
+    document.getElementById("chaveTMDb").value = localStorage.getItem("chave_tmdb") || "";
+    document.getElementById("chaveRAWG").value = localStorage.getItem("chave_rawg") || "";
+}
+function salvarChaves() {
+    localStorage.setItem("chave_tmdb", document.getElementById("chaveTMDb").value.trim());
+    localStorage.setItem("chave_rawg", document.getElementById("chaveRAWG").value.trim());
+    const msg = document.getElementById("msgChaves");
+    msg.textContent = "Chaves salvas neste navegador.";
+    msg.className = "msg sucesso";
+}
+carregarChaves();
+
+// ---------- Tabs ----------
+document.getElementById("tabsCategoria").addEventListener("click", e => {
+    if (!e.target.matches("button")) return;
+    categoriaAtual = e.target.dataset.cat;
+    document.querySelectorAll("#tabsCategoria button").forEach(b => b.classList.toggle("ativo", b === e.target));
+    document.getElementById("resultados").innerHTML = "";
+    document.getElementById("secaoForm").style.display = "none";
+});
+
+// ---------- Busca ----------
+async function buscar() {
+    const query = document.getElementById("campoBusca").value.trim();
+    const msgBusca = document.getElementById("msgBusca");
+    const resultadosEl = document.getElementById("resultados");
+    resultadosEl.innerHTML = "";
+    document.getElementById("secaoForm").style.display = "none";
+    msgBusca.className = "msg";
+
+    if (!query) { msgBusca.textContent = "Digite um título."; msgBusca.className = "msg erro"; return; }
+
+    msgBusca.textContent = "Buscando...";
+
+    try {
+        let itens = [];
+        if (categoriaAtual === "filme" || categoriaAtual === "serie") {
+            const chave = localStorage.getItem("chave_tmdb");
+            if (!chave) throw new Error("Cole sua chave do TMDb na seção 1 e clique em Salvar.");
+            const tipo = categoriaAtual === "filme" ? "movie" : "tv";
+            const res = await fetch(`https://api.themoviedb.org/3/search/${tipo}?api_key=${chave}&query=${encodeURIComponent(query)}&language=pt-BR`);
+            const data = await res.json();
+            if (data.status_code) throw new Error(data.status_message || "Erro na busca do TMDb.");
+            itens = (data.results || []).slice(0, 12).map(r => ({
+                id: r.id,
+                titulo: r.title || r.name,
+                ano: (r.release_date || r.first_air_date || "").slice(0, 4),
+                imagem: r.poster_path ? `https://image.tmdb.org/t/p/w300${r.poster_path}` : ""
+            }));
+        } else if (categoriaAtual === "jogo") {
+            const chave = localStorage.getItem("chave_rawg");
+            if (!chave) throw new Error("Cole sua chave do RAWG na seção 1 e clique em Salvar.");
+            const urlRawg = `https://api.rawg.io/api/games?key=${chave}&search=${encodeURIComponent(query)}&search_precise=true&page_size=12`;
+            const res = await fetchComProxy(urlRawg);
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+            itens = (data.results || []).map(r => ({
+                id: r.id,
+                titulo: r.name,
+                ano: (r.released || "").slice(0, 4),
+                imagem: r.background_image || ""
+            }));
+        } else if (categoriaAtual === "livro") {
+            const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&langRestrict=pt&maxResults=12`);
+            const data = await res.json();
+            itens = (data.items || []).map(r => ({
+                id: r.id,
+                titulo: r.volumeInfo.title,
+                ano: (r.volumeInfo.publishedDate || "").slice(0, 4),
+                imagem: r.volumeInfo.imageLinks ? r.volumeInfo.imageLinks.thumbnail.replace("http://", "https://") : ""
+            }));
+        }
+
+        if (itens.length === 0) {
+            msgBusca.textContent = "Nenhum resultado encontrado.";
+            msgBusca.className = "msg erro";
+            return;
+        }
+
+        msgBusca.textContent = `${itens.length} resultado(s). Clique no certo:`;
+        itens.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "resultado-card";
+            card.innerHTML = `
+                <img src="${item.imagem}" alt="${item.titulo}" onerror="this.style.opacity=0">
+                <div class="info">
+                    <strong>${item.titulo}</strong>
+                    <span>${item.ano || ""}</span>
+                </div>`;
+            card.addEventListener("click", () => selecionarItem(item.id));
+            resultadosEl.appendChild(card);
+        });
+    } catch (err) {
+        console.error(err);
+        msgBusca.textContent = "Erro: " + err.message;
+        msgBusca.className = "msg erro";
+    }
+}
+
+// ---------- Detalhes + preencher formulário ----------
+async function selecionarItem(id) {
+    const msgBusca = document.getElementById("msgBusca");
+    msgBusca.textContent = "Carregando detalhes...";
+
+    try {
+        let obj = null;
+
+        if (categoriaAtual === "filme" || categoriaAtual === "serie") {
+            const chave = localStorage.getItem("chave_tmdb");
+            const tipo = categoriaAtual === "filme" ? "movie" : "tv";
+            const res = await fetch(`https://api.themoviedb.org/3/${tipo}/${id}?api_key=${chave}&language=pt-BR`);
+            const d = await res.json();
+            const mapaGeneros = categoriaAtual === "filme" ? GENEROS_FILME : GENEROS_SERIE;
+            const tags = (d.genres || []).map(g => "#" + (g.name || "").replace(/\s+/g, ""));
+            obj = {
+                titulo: d.title || d.name,
+                sinopse: limparTexto(d.overview, 800),
+                imagem: d.poster_path ? `https://image.tmdb.org/t/p/w500${d.poster_path}` : "",
+                nota: d.vote_average ? d.vote_average.toFixed(1) : "",
+                data: normalizarData(d.release_date || d.first_air_date || ""),
+                tags: tags.join(", ")
+            };
+        } else if (categoriaAtual === "jogo") {
+            const chave = localStorage.getItem("chave_rawg");
+            const urlRawgDetalhe = `https://api.rawg.io/api/games/${id}?key=${chave}`;
+            const res = await fetchComProxy(urlRawgDetalhe);
+            const d = await res.json();
+            const tags = (d.genres || []).map(g => toTag(g.name));
+            const plataformas = [...new Set((d.platforms || []).map(p => p.platform.name))];
+            obj = {
+                titulo: d.name,
+                sinopse: limparTexto(d.description_raw, 800),
+                imagem: d.background_image || "",
+                nota: d.rating ? (d.rating * 2).toFixed(1) : "",
+                data: normalizarData(d.released || ""),
+                tags: tags.join(", "),
+                plataformas
+            };
+        } else if (categoriaAtual === "livro") {
+            const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+            const d = await res.json();
+            const info = d.volumeInfo || {};
+            const tags = (info.categories || []).map(c => toTag(c.split("/")[0].trim()));
+            obj = {
+                titulo: info.title || "",
+                sinopse: limparTexto(info.description, 800),
+                imagem: info.imageLinks ? info.imageLinks.thumbnail.replace("http://", "https://") : "",
+                nota: info.averageRating ? (info.averageRating * 2).toFixed(1) : "",
+                data: normalizarData(info.publishedDate || ""),
+                tags: tags.join(", ")
+            };
+        }
+
+        preencherFormulario(obj);
+        msgBusca.textContent = "Confira os campos abaixo e ajuste o que quiser.";
+    } catch (err) {
+        console.error(err);
+        msgBusca.textContent = "Erro ao carregar detalhes: " + err.message;
+        msgBusca.className = "msg erro";
+    }
+}
+
+function preencherFormulario(obj) {
+    document.getElementById("fTitulo").value = obj.titulo || "";
+    document.getElementById("fSinopse").value = obj.sinopse || "";
+    document.getElementById("fImagem").value = obj.imagem || "";
+    document.getElementById("fNota").value = obj.nota || "";
+    document.getElementById("fData").value = obj.data || "";
+    document.getElementById("fTags").value = obj.tags || "";
+    document.getElementById("fId").value = slugify(obj.titulo || "");
+
+    const blocoPlataforma = document.getElementById("blocoPlataforma");
+    if (categoriaAtual === "jogo") {
+        blocoPlataforma.style.display = "block";
+        const select = document.getElementById("fPlataforma");
+        select.innerHTML = "";
+        (obj.plataformas && obj.plataformas.length ? obj.plataformas : ["PC"]).forEach(p => {
+            const opt = document.createElement("option");
+            opt.value = p; opt.textContent = p;
+            select.appendChild(opt);
+        });
+    } else {
+        blocoPlataforma.style.display = "none";
+    }
+
+    document.getElementById("secaoForm").style.display = "block";
+    document.getElementById("secaoForm").scrollIntoView({ behavior: "smooth" });
+}
+
+// ---------- Lote ----------
+function adicionarAoLote() {
+    const titulo = document.getElementById("fTitulo").value.trim();
+    if (!titulo) { alert("Preencha ao menos o título."); return; }
+
+    const tags = document.getElementById("fTags").value
+        .split(",").map(t => t.trim()).filter(Boolean)
+        .map(t => t.startsWith("#") ? t : "#" + t);
+
+    const item = {
+        title: titulo,
+        sinopse: document.getElementById("fSinopse").value.trim(),
+        img: document.getElementById("fImagem").value.trim(),
+        tags,
+        date: document.getElementById("fData").value.trim() || new Date().toISOString().slice(0, 10),
+        id: document.getElementById("fId").value.trim() || slugify(titulo)
+    };
+
+    const nota = document.getElementById("fNota").value.trim();
+    if (nota) item.rating = parseFloat(nota);
+
+    if (categoriaAtual === "jogo") {
+        item.platform = document.getElementById("fPlataforma").value;
+    }
+
+    // Reordena pra ficar igual ao padrão usado nos JSON do site
+    const ordenado = { title: item.title, sinopse: item.sinopse, img: item.img };
+    if (item.rating !== undefined) ordenado.rating = item.rating;
+    ordenado.tags = item.tags;
+    if (item.platform) ordenado.platform = item.platform;
+    ordenado.date = item.date;
+    ordenado.id = item.id;
+
+    lote.push(ordenado);
+    atualizarLote();
+
+    document.getElementById("secaoForm").style.display = "none";
+    document.getElementById("resultados").innerHTML = "";
+    document.getElementById("campoBusca").value = "";
+    document.getElementById("msgBusca").textContent = `"${titulo}" adicionado ao lote.`;
+    document.getElementById("msgBusca").className = "msg sucesso";
+}
+
+function atualizarLote() {
+    document.getElementById("contadorLote").textContent = lote.length;
+    document.getElementById("loteArea").value = JSON.stringify(lote, null, 2);
+}
+
+function copiarLote() {
+    const texto = document.getElementById("loteArea").value;
+    if (!texto || lote.length === 0) {
+        document.getElementById("msgLote").textContent = "O lote está vazio.";
+        document.getElementById("msgLote").className = "msg erro";
+        return;
+    }
+    navigator.clipboard.writeText(texto).then(() => {
+        document.getElementById("msgLote").textContent = "Copiado! Cole dentro do array dessa categoria no JSON.";
+        document.getElementById("msgLote").className = "msg sucesso";
+    });
+}
+
+function limparLote() {
+    if (!confirm("Limpar tudo do lote atual?")) return;
+    lote = [];
+    atualizarLote();
+    document.getElementById("msgLote").textContent = "";
+}
+</script>
+</body>
+</html>
