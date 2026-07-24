@@ -39,8 +39,8 @@
         <h2>2. Criar as regras de hardware (Modelfile)</h2>
         <p>Abra o terminal na pasta onde deseja salvar suas configurações e execute os três comandos abaixo em sequência para gerar o arquivo <code>Modelfile</code>:</p>
         <pre><code>echo FROM hf.co/unsloth/gemma-4-12b-it-GGUF:UD-Q4_K_XL > Modelfile
-echo PARAMETER num_ctx 4096 >> Modelfile
-echo PARAMETER num_gpu 99 >> Modelfile</code></pre>
+ echo PARAMETER num_ctx 4096 >> Modelfile
+ echo PARAMETER num_gpu 99 >> Modelfile</code></pre>
         <p>O parâmetro <code>num_ctx 4096</code> impede que a janela de contexto cresça demais e force o transbordo para a memória RAM comum, enquanto o <code>num_gpu 99</code> obriga o Ollama a enviar todas as camadas do modelo para a placa de vídeo.</p>
 
         <h2>3. Compilar e rodar o modelo customizado</h2>
