@@ -183,6 +183,7 @@
 
         <label>Sinopse</label>
         <textarea id="fSinopse"></textarea>
+        <button type="button" class="secundario" onclick="traduzirSinopse()" id="btnTraduzir">🌐 Traduzir sinopse (EN → PT)</button>
 
         <label>Imagem (URL)</label>
         <input type="text" id="fImagem">
@@ -226,6 +227,23 @@ let categoriaAtual = "filme";
 let lote = [];
 let ultimoResultadoBruto = null;
 
+// ============================================================
+// Chave fixa (opcional): cole aqui se quiser que a busca funcione
+// sem precisar digitar nada na tela. Fica só aqui no código — o campo
+// da interface continua vazio normalmente, então quem abrir a página
+// sem saber disso vai simplesmente preencher o campo dele mesmo.
+// Se preencher aqui, essa chave só é usada quando o campo da tela
+// (e o localStorage) estiverem vazios.
+// ============================================================
+const CHAVE_TMDB_FIXA = "be950753c9b332291ec472f9cf79e33c";
+const CHAVE_RAWG_FIXA = "7ce56c8cd50b42b39463ce2bba0179d0";
+
+function obterChave(tipo) {
+    const salva = localStorage.getItem(`chave_${tipo}`);
+    if (salva) return salva;
+    return tipo === "tmdb" ? CHAVE_TMDB_FIXA : CHAVE_RAWG_FIXA;
+}
+
 const GENEROS_FILME = {28:"Ação",12:"Aventura",16:"Animação",35:"Comédia",80:"Crime",99:"Documentário",18:"Drama",10751:"Família",14:"Fantasia",36:"História",27:"Terror",10402:"Música",9648:"Mistério",10749:"Romance",878:"FicçãoCientífica",10770:"CinemaTV",53:"Thriller",10752:"Guerra",37:"Faroeste"};
 const GENEROS_SERIE = {10759:"AçãoAventura",16:"Animação",35:"Comédia",80:"Crime",99:"Documentário",18:"Drama",10751:"Família",10762:"Infantil",9648:"Mistério",10763:"News",10764:"Reality",10765:"FicçãoFantasia",10766:"Soap",10767:"Talk",10768:"GuerraPolítica",37:"Faroeste"};
 
@@ -239,6 +257,71 @@ function slugify(text) {
 
 function toTag(nome) {
     return "#" + nome.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "");
+}
+
+// Limpa a sinopse vinda das APIs: remove HTML, junta linhas quebradas
+// (sem cortar no primeiro parágrafo), e limita um tamanho máximo razoável.
+function limparTexto(str, max) {
+    if (!str) return "";
+    const semHtml = str.replace(/<[^>]*>/g, " ");
+    const juntado = semHtml
+        .replace(/\r/g, "")
+        .split("\n")
+        .map(s => s.trim())
+        .filter(Boolean)
+        .join(" ");
+    const semEspacosDuplos = juntado.replace(/\s{2,}/g, " ").trim();
+    return max ? semEspacosDuplos.slice(0, max) : semEspacosDuplos;
+}
+
+// Traduz o texto atual da sinopse (inglês -> português) usando a API
+// gratuita MyMemory, sem precisar de chave. Divide em pedaços pequenos
+// porque a API tem um limite de tamanho por requisição.
+function dividirEmPedacos(texto, max) {
+    const frases = texto.match(/[^.!?]+[.!?]*/g) || [texto];
+    const pedacos = [];
+    let atual = "";
+    for (const frase of frases) {
+        if ((atual + frase).length > max && atual) {
+            pedacos.push(atual.trim());
+            atual = "";
+        }
+        atual += frase;
+    }
+    if (atual.trim()) pedacos.push(atual.trim());
+    return pedacos;
+}
+
+async function traduzirSinopse() {
+    const textarea = document.getElementById("fSinopse");
+    const original = textarea.value.trim();
+    const btn = document.getElementById("btnTraduzir");
+
+    if (!original) { alert("Não há texto pra traduzir."); return; }
+
+    btn.disabled = true;
+    btn.textContent = "Traduzindo...";
+
+    try {
+        const pedacos = dividirEmPedacos(original, 450);
+        const traduzidos = [];
+        for (const pedaco of pedacos) {
+            const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(pedaco)}&langpair=en|pt-BR`);
+            const data = await res.json();
+            traduzidos.push(
+                data.responseData && data.responseData.translatedText
+                    ? data.responseData.translatedText
+                    : pedaco
+            );
+        }
+        textarea.value = traduzidos.join(" ");
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao traduzir: " + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = "🌐 Traduzir sinopse (EN → PT)";
+    }
 }
 
 function normalizarData(str) {
@@ -288,7 +371,7 @@ async function buscar() {
     try {
         let itens = [];
         if (categoriaAtual === "filme" || categoriaAtual === "serie") {
-            const chave = localStorage.getItem("chave_tmdb");
+            const chave = obterChave("tmdb");
             if (!chave) throw new Error("Cole sua chave do TMDb na seção 1 e clique em Salvar.");
             const tipo = categoriaAtual === "filme" ? "movie" : "tv";
             const res = await fetch(`https://api.themoviedb.org/3/search/${tipo}?api_key=${chave}&query=${encodeURIComponent(query)}&language=pt-BR`);
@@ -301,10 +384,10 @@ async function buscar() {
                 imagem: r.poster_path ? `https://image.tmdb.org/t/p/w300${r.poster_path}` : ""
             }));
         } else if (categoriaAtual === "jogo") {
-            const chave = localStorage.getItem("chave_rawg");
+            const chave = obterChave("rawg");
             if (!chave) throw new Error("Cole sua chave do RAWG na seção 1 e clique em Salvar.");
             const urlRawg = `https://api.rawg.io/api/games?key=${chave}&search=${encodeURIComponent(query)}&search_precise=true&page_size=12`;
-            const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(urlRawg)}`);
+            const res = await fetch(urlRawg);
             const data = await res.json();
             if (data.error) throw new Error(data.error);
             itens = (data.results || []).map(r => ({
@@ -359,7 +442,7 @@ async function selecionarItem(id) {
         let obj = null;
 
         if (categoriaAtual === "filme" || categoriaAtual === "serie") {
-            const chave = localStorage.getItem("chave_tmdb");
+            const chave = obterChave("tmdb");
             const tipo = categoriaAtual === "filme" ? "movie" : "tv";
             const res = await fetch(`https://api.themoviedb.org/3/${tipo}/${id}?api_key=${chave}&language=pt-BR`);
             const d = await res.json();
@@ -367,22 +450,22 @@ async function selecionarItem(id) {
             const tags = (d.genres || []).map(g => "#" + (g.name || "").replace(/\s+/g, ""));
             obj = {
                 titulo: d.title || d.name,
-                sinopse: d.overview || "",
+                sinopse: limparTexto(d.overview, 800),
                 imagem: d.poster_path ? `https://image.tmdb.org/t/p/w500${d.poster_path}` : "",
                 nota: d.vote_average ? d.vote_average.toFixed(1) : "",
                 data: normalizarData(d.release_date || d.first_air_date || ""),
                 tags: tags.join(", ")
             };
         } else if (categoriaAtual === "jogo") {
-            const chave = localStorage.getItem("chave_rawg");
+            const chave = obterChave("rawg");
             const urlRawgDetalhe = `https://api.rawg.io/api/games/${id}?key=${chave}`;
-            const res = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(urlRawgDetalhe)}`);
+            const res = await fetch(urlRawgDetalhe);
             const d = await res.json();
             const tags = (d.genres || []).map(g => toTag(g.name));
             const plataformas = [...new Set((d.platforms || []).map(p => p.platform.name))];
             obj = {
                 titulo: d.name,
-                sinopse: (d.description_raw || "").split("\n")[0].slice(0, 500),
+                sinopse: limparTexto(d.description_raw, 800),
                 imagem: d.background_image || "",
                 nota: d.rating ? (d.rating * 2).toFixed(1) : "",
                 data: normalizarData(d.released || ""),
@@ -396,7 +479,7 @@ async function selecionarItem(id) {
             const tags = (info.categories || []).map(c => toTag(c.split("/")[0].trim()));
             obj = {
                 titulo: info.title || "",
-                sinopse: info.description || "",
+                sinopse: limparTexto(info.description, 800),
                 imagem: info.imageLinks ? info.imageLinks.thumbnail.replace("http://", "https://") : "",
                 nota: info.averageRating ? (info.averageRating * 2).toFixed(1) : "",
                 data: normalizarData(info.publishedDate || ""),
