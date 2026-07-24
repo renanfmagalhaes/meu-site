@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como forçar 100% de GPU no Ollama - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="../index.html">Início</a>
+            <a href="../filmes.html">Filmes</a>
+            <a href="../series.html">Séries</a>
+            <a href="../livros.html">Livros</a>
+            <a href="../musicas.html">Músicas</a>
+            <a href="../jogos.html">Jogos</a>
+            <a href="../tutoriais.html" class="active">Tutoriais</a>
+            <a href="../fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <article class="article">
+            <a class="voltar" href="../tutoriais.html">&larr; Voltar para Tutoriais</a>
+            <img class="article-cover" src="https://unsplash.com" alt="Como forçar 100% de GPU no Ollama">
+            <h1>Como forçar 100% de GPU no Ollama</h1>
+            <p class="article-meta">Publicado em 23/07/2026 · #InteligenciaArtificial #Hardware #Ollama</p>
+
+        <p>Ao carregar modelos de 12B com capacidades de visão (como o Gemma 4) em placas de vídeo de 8 GB, o Ollama frequentemente divide o processamento com a CPU (ex: 32% CPU / 68% GPU). Isso acontece porque o modelo somado ao cache de contexto estoura a VRAM, deixando a leitura de imagens extremamente lenta. Dá para resolver isso limitando o contexto e proibindo o uso da CPU via Modelfile.</p>
+
+        <h2>1. Baixar o modelo base otimizado</h2>
+        <p>O primeiro passo é baixar uma versão quantizada estável. Execute o comando abaixo no terminal para puxar o arquivo diretamente do Hugging Face. O Ollama fará o download de aproximadamente 7 GB e iniciará o chat automaticamente:</p>
+        <pre><code>ollama run hf.co/unsloth/gemma-4-12b-it-GGUF:UD-Q4_K_XL</code></pre>
+        <p>Assim que o download terminar, feche esse chat inicial no terminal para liberar a memória para os próximos passos.</p>
+
+        <h2>2. Criar as regras de hardware (Modelfile)</h2>
+        <p>Abra o terminal na pasta onde deseja salvar suas configurações e execute os três comandos abaixo em sequência para gerar o arquivo <code>Modelfile</code>:</p>
+        <pre><code>echo FROM hf.co/unsloth/gemma-4-12b-it-GGUF:UD-Q4_K_XL > Modelfile
+echo PARAMETER num_ctx 4096 >> Modelfile
+echo PARAMETER num_gpu 99 >> Modelfile</code></pre>
+        <p>O parâmetro <code>num_ctx 4096</code> impede que a janela de contexto cresça demais e force o transbordo para a memória RAM comum, enquanto o <code>num_gpu 99</code> obriga o Ollama a enviar todas as camadas do modelo para a placa de vídeo.</p>
+
+        <h2>3. Compilar e rodar o modelo customizado</h2>
+        <p>Com o arquivo criado, gere a nova versão otimizada no repositório local do seu Ollama:</p>
+        <pre><code>ollama create gemma4-gpu -f ./Modelfile</code></pre>
+        <p>Agora, para iniciar o modelo travado permanentemente em sua placa de vídeo com respostas instantâneas, basta rodar:</p>
+        <pre><code>ollama run gemma4-gpu</code></pre>
+
+        <h2>Como validar</h2>
+        <p>Para ter certeza de que funcionou, abra um segundo terminal enquanto faz uma pergunta com imagem e digite <code>ollama ps</code>. A coluna do processador deverá exibir obrigatoriamente 100% GPU.</p>
+        
+        </article>
+    </main>
+</body>
+</html>
