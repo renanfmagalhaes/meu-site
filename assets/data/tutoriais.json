@@ -12,15 +12,17 @@
     "link": "tutoriais/como-montar-bento-grid.html"
   },
   {
-    "title": "Publicando um site no GitHub Pages",
-    "sinopse": "Guia rápido para colocar seu site pessoal no ar gratuitamente usando o GitHub Pages.",
-    "img": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=80",
-    "rating": 8.9,
-    "tags": [
-      "#Git",
-      "#Deploy"
+    "title":"Como forçar 100% GPU no Ollama com Modelfile",
+    "sinopse":"Forçar uso 100% da GPU",
+    "img":"https://miro.medium.com/v2/resize:fit:1400/1*LZiZggyabn7elCqSRlFsoQ.png",
+    "tags":[
+      "#Ollama",
+      "#I.A",
+      "GPU",
+      "#Gemma",
+      "#Gemma-4"
     ],
-    "date": "2026-04-22",
-    "link": "tutoriais/publicando-no-github-pages.html"
+    "date":"23/07/2026",
+    "link":"tutoriais/Forçar100%GPUnoOllamacomModelfile.html"
   }
 ]

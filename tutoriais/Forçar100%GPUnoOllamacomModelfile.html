@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como Forçar 100% de GPU no Ollama com Modelfile</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-color: #58a6ff;
+            --border-color: #30363d;
+            --code-bg: #010409;
+            --cmd-color: #7ee787;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        p {
+            margin: 15px 0;
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 1.4rem;
+            margin-top: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 25px;
+        }
+
+        .code-container {
+            position: relative;
+            margin: 12px 0;
+        }
+
+        .code-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            padding-right: 70px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-block code {
+            color: var(--text-color);
+        }
+
+        .code-block.terminal code {
+            color: var(--cmd-color);
+        }
+
+        .code-block.terminal::before {
+            content: "$ ";
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            color: #ffffff;
+            border-color: var(--text-muted);
+        }
+
+        .badge {
+            background-color: rgba(88, 166, 255, 0.15);
+            color: var(--accent-color);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .note {
+            background-color: rgba(210, 153, 34, 0.1);
+            border-left: 4px solid #d29922;
+            padding: 15px;
+            border-radius: 0 6px 6px 0;
+            margin: 20px 0;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #d29922;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Como Forçar 100% de GPU no Ollama (Modelfile)</h1>
+        <div class="meta">Dica de otimização local para LLMs multimodais em placas de 8 GB de VRAM</div>
+    </header>
+
+    <main>
+        <p>Ao carregar modelos de 12B com capacidades de visão (como o Gemma 4) em GPUs de 8 GB, o Ollama frequentemente divide o processamento com a CPU (ex: 32% CPU / 68% GPU). Isso ocorre porque o tamanho do modelo somado ao cache de contexto estoura os limites físicos da VRAM, gerando lentidão extrema no processamento de imagens.</p>
+        
+        <p>A solução definitiva envolve baixar o modelo correto e criar uma versão customizada utilizando um <span class="badge">Modelfile</span> para congelar os limites de memória e proibir o uso da CPU.</p>
+
+        <h2>Passo a Passo</h2>
+
+        <ol>
+            <li>
+                <strong>Baixe o modelo base da Unsloth:</strong>
+                <p>Execute o comando abaixo no terminal para puxar o arquivo quantizado diretamente do Hugging Face. O Ollama fará o download automático dos mais de 7 GB e iniciará o chat assim que concluir:</p>
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    <pre class="code-block terminal"><code>ollama run hf.co/unsloth/gemma-4-12b-it-GGUF:UD-Q4_K_XL</code></pre>
+                </div>
+            </li>
+
+            <li>
+                <strong>Crie o arquivo de configuração (Modelfile):</strong>
+                <p>Feche o chat anterior e, na mesma pasta de sua preferência, execute os comandos abaixo para gerar as instruções de hardware:</p>
+                
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    <pre class="code-block terminal"><code>echo FROM hf.co/unsloth/gemma-4-12b-it-GGUF:UD-Q4_K_XL > Modelfile</code></pre>
+                </div>
+                
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    <pre class="code-block terminal"><code>echo PARAMETER num_ctx 4096 >> Modelfile</code></pre>
+                </div>
+                
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    <pre class="code-block terminal"><code>echo PARAMETER num_gpu 99 >> Modelfile</code></pre>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">Entendendo os parâmetros:</div>
+                    • <span class="badge">num_ctx 4096</span>: Reduz a janela de contexto para 4k. Janelas maiores criam um cache de memória gigante que força o transbordo para a CPU ao ler imagens.<br>
+                    • <span class="badge">num_gpu 99</span>: Força o Ollama a enviar todas as camadas possíveis do modelo para a placa de vídeo, bloqueando a divisão de processamento.
+                </div>
+            </li>
+
+            <li>
+                <strong>Compile o novo modelo otimizado:</strong>
+                <p>Gere uma nova tag no repositório local do seu Ollama apontando para o arquivo criado:</p>
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    <pre class="code-block terminal"><code>ollama create gemma4-gpu -f ./Modelfile</code></pre>
+                </div>
+            </li>
+
+            <li>
+                <strong>Execute o modelo 100% na GPU:</strong>
+                <p>Pronto! Agora basta iniciar o novo modelo customizado. A leitura de prints e imagens passará a ser praticamente instantânea:</p>
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                    <pre class="code-block terminal"><code>ollama run gemma4-gpu</code></pre>
+                </div>
+            </li>
+        </ol>
+
+        <h2>Como Validar</h2>
+        <p>Se quiser verificar a alocação de hardware enquanto faz uma pergunta ou envia um print, abra um segundo terminal em paralelo e digite:</p>
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+            <pre class="code-block terminal"><code>ollama ps</code></pre>
+        </div>
+        <p>A coluna <span class="badge">PROCESSOR</span> deve exibir obrigatoriamente <span class="badge" style="color: #7ee787; background-color: rgba(126, 231, 135, 0.15);">100% GPU</span>.</p>
+    </main>
+</div>
+
+<script>
+    function copyCode(button) {
+        const pre = button.nextElementSibling;
+        const codeText = pre.querySelector('code').innerText;
+        
+        navigator.clipboard.writeText(codeText).then(() => {
+            button.innerText = 'Copiado!';
+            button.style.color = '#7ee787';
+            button.style.borderColor = '#7ee787';
+            
+            setTimeout(() => {
+                button.innerText = 'Copiar';
+                button.style.color = 'var(--text-muted)';
+                button.style.borderColor = 'var(--border-color)';
+            }, 2000);
+        });
+    }
+</script>
+
+</body>
+</html>
