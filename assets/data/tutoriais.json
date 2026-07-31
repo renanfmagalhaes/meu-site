@@ -35,16 +35,5 @@
     "date": "2026-07-24",
     "link": "tutoriais/clonar-repositorio-vscode.html",
     "id": "clonando-um-repositorio-e-editando-pelo-vs-code"
-  },
-  {
-    "title":"teste",
-    "sinopse":"testando a inclusão de um novo item na lista de tutoriais.",
-    "img":"https://images.unsplash.com/photo-1",
-    "tags":[
-      "#Teste"
-      ],
-      "date":"2026-07-31"
-  }
-]
   }
 ]
