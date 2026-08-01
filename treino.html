@@ -255,6 +255,31 @@
   .hist-item span:first-child{color:var(--text-dim);}
   .hist-empty{color:var(--text-faint); font-style:italic;}
 
+  /* ---------- RPE info panel ---------- */
+  .rpe-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 16px; margin-bottom:12px;
+  }
+  .rpe-title{
+    font-family:'Bebas Neue',sans-serif; font-size:19px; letter-spacing:0.03em; color:var(--composto);
+    margin:0 0 8px;
+  }
+  .rpe-p{font-size:13px; color:var(--text-dim); line-height:1.6; margin:0 0 8px;}
+  .rpe-p:last-child{margin-bottom:0;}
+  .rpe-p b{color:var(--text); font-weight:700;}
+  .rpe-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .rpe-table thead th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--text-faint); font-weight:700; padding:0 0 8px; border-bottom:1px solid var(--border);
+  }
+  .rpe-table tbody td{
+    padding:9px 0; border-top:1px solid var(--border); color:var(--text-dim); line-height:1.4; vertical-align:top;
+  }
+  .rpe-table tbody tr:first-child td{border-top:none;}
+  .rpe-num{
+    font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--composto); width:52px; letter-spacing:0.02em;
+  }
+
   .footer-note{
     text-align:center; color:var(--text-faint); font-size:11px; padding:20px 24px 4px; line-height:1.6;
   }
@@ -318,7 +343,7 @@
 ============================================================ */
 const DAYS = {
   seg: { label:"Segunda", sub:"Perna A", note:"", exercises:[
-    {name:"Aquecimento: bike ou esteira leve", tier:"padrao", steps:[
+    {name:"Aquecimento: bike ou esteira leve", tier:"cardio", steps:[
       {etapa:"Padrão", sr:"1 x 5-8 min", desc:"-", rpe:"3-4", obs:""}]},
     {name:"Leg press", tier:"composto", steps:[
       {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
@@ -430,6 +455,7 @@ const DAYS = {
     {name:"Descanso completo", tier:"padrao", steps:[
       {etapa:"Padrão", sr:"—", desc:"-", rpe:"-", obs:"Fique à vontade para caminhar, fazer uma atividade leve ou simplesmente descansar."}]},
   ]},
+  rpe: { label:"RPE", sub:"Guia rápido", isInfo:true },
 };
 const TIER_LABEL = {composto:"Composto principal", sec:"Composto secundário", isolador:"Isolador", protecao:"Proteção", padrao:"Padrão", cardio:"Cardio"};
 const TIER_VAR = {composto:"--composto", sec:"--sec", isolador:"--isolador", protecao:"--protecao", padrao:"--padrao", cardio:"--cardio"};
@@ -614,6 +640,42 @@ async function renderDay(){
   const main = document.getElementById("main");
   const day = DAYS[currentDay];
   main.innerHTML = "";
+
+  if(day.isInfo){
+    main.innerHTML = `
+      <div class="rpe-card">
+        <h2 class="rpe-title">O que é RPE?</h2>
+        <p class="rpe-p"><b>RPE</b> (Rate of Perceived Exertion — Taxa de Esforço Percebido) é uma escala subjetiva de quão perto da falha muscular você chegou numa série.</p>
+        <p class="rpe-p">Vai de 1 a 10, mas na prática de musculação só se usa a faixa de ~5 a 10:</p>
+      </div>
+
+      <div class="rpe-card">
+        <table class="rpe-table">
+          <thead>
+            <tr><th>RPE</th><th>Sensação</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="rpe-num">10</td><td>Falha total — impossível fazer mais uma repetição</td></tr>
+            <tr><td class="rpe-num">9</td><td>Conseguiria fazer só mais 1 rep</td></tr>
+            <tr><td class="rpe-num">8</td><td>Conseguiria fazer mais 2 reps</td></tr>
+            <tr><td class="rpe-num">7</td><td>Conseguiria fazer mais 3 reps</td></tr>
+            <tr><td class="rpe-num">5-6</td><td>Esforço leve/moderado — sobra bastante repetição</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rpe-card">
+        <h2 class="rpe-title">RPE x RIR</h2>
+        <p class="rpe-p">É basicamente o inverso do <b>RIR</b> (Reps in Reserve — repetições de reserva): RPE 8 e RIR 2 significam a mesma coisa, só que RPE conta "de cima pra baixo" (o quanto você chegou perto do limite) e RIR conta "de baixo pra cima" (quantas reps ainda sobrariam). A tabela de conversão entre os dois está no rodapé das suas planilhas.</p>
+      </div>
+
+      <div class="rpe-card">
+        <h2 class="rpe-title">Na prática</h2>
+        <p class="rpe-p">É o critério que você usa pra decidir quando parar uma série — em vez de contar reps fixas, você para quando a sensação de esforço bate com o RPE alvo daquele exercício. É por isso que, no app, o RPE é sempre o critério final, mesmo quando a faixa de reps sugerida (tipo "8-12") não bate exatamente com o que você conseguiu fazer.</p>
+      </div>
+    `;
+    return;
+  }
 
   if(day.note){
     const n = document.createElement("div");
