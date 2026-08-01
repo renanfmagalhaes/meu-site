@@ -26,8 +26,8 @@
     --protecao-bg:#332818;
     --padrao:#4FB088;
     --padrao-bg:#182B24;
-    --cardio:#C084FC;
-    --cardio-bg:#2A1F38;
+    --cardio:#D77979;
+    --cardio-bg:rgba(215,121,121,0.16);
 
     --danger:#E2665A;
     --radius:14px;
@@ -344,7 +344,7 @@
 ============================================================ */
 const DAYS = {
   seg: { label:"Segunda", sub:"Perna A", note:"", exercises:[
-    {name:"Aquecimento: bike ou esteira leve", tier:"cardio", steps:[
+    {name:"Aquecimento: bike ou esteira leve", tier:"padrao", steps:[
       {etapa:"Padrão", sr:"1 x 5-8 min", desc:"-", rpe:"3-4", obs:""}]},
     {name:"Leg press", tier:"composto", steps:[
       {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
@@ -465,7 +465,7 @@ const TIER_BG = {composto:"--composto-bg", sec:"--sec-bg", isolador:"--isolador-
 let SETTINGS = { feederPct: 70, backoffPct: 15 };
 let currentDay = "seg";
 
-const DEFAULT_COLORS = { composto:"#5FA8FF", sec:"#4F86C2", isolador:"#9AA2AC", protecao:"#E7A85F", padrao:"#4FB088", cardio:"#C084FC" };
+const DEFAULT_COLORS = { composto:"#5FA8FF", sec:"#4F86C2", isolador:"#9AA2AC", protecao:"#E7A85F", padrao:"#4FB088", cardio:"#D77979" };
 let COLORS = { ...DEFAULT_COLORS };
 
 function hexToRgba(hex, alpha){
