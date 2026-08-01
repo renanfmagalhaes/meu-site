@@ -54,10 +54,11 @@
   }
   .app-title h1{
     font-family:'Bebas Neue',sans-serif;
-    font-size:28px; letter-spacing:0.05em; margin:0; color:var(--text);
-    line-height:1;
+    font-size:22px; letter-spacing:0.04em; margin:0; color:var(--text);
+    line-height:1; display:flex; align-items:baseline; gap:7px; flex-wrap:wrap;
   }
   .app-title h1 span{color:var(--composto);}
+  .app-title h1 .divider{color:var(--text-faint); font-size:16px;}
   .gear{
     background:var(--surface); border:1px solid var(--border); color:var(--text-dim);
     width:36px; height:36px; border-radius:10px; font-size:16px;
@@ -296,7 +297,7 @@
 
 <header class="app">
   <div class="app-title">
-    <h1>LOW<span>VOLUME</span></h1>
+    <h1>Renan<span> Magalhães</span><span class="divider">·</span>LOW<span>VOLUME</span></h1>
     <button class="gear" id="gearBtn" aria-label="Ajustes">⚙</button>
   </div>
   <div class="daytabs" id="dayTabs"></div>
@@ -343,7 +344,7 @@
 ============================================================ */
 const DAYS = {
   seg: { label:"Segunda", sub:"Perna A", note:"", exercises:[
-    {name:"Aquecimento: bike ou esteira leve", tier:"cardio", steps:[
+    {name:"Aquecimento: bike ou esteira leve", tier:"padrao", steps:[
       {etapa:"Padrão", sr:"1 x 5-8 min", desc:"-", rpe:"3-4", obs:""}]},
     {name:"Leg press", tier:"composto", steps:[
       {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
