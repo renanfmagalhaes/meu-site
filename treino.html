@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Low Volume — Treino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#121417;
+    --surface:#1B1F24;
+    --surface-2:#22272D;
+    --border:#2C333A;
+    --text:#ECEEF1;
+    --text-dim:#8E97A1;
+    --text-faint:#5D6570;
+
+    --composto:#5FA8FF;
+    --composto-bg:#1B2A3D;
+    --sec:#4F86C2;
+    --sec-bg:#1A2733;
+    --isolador:#9AA2AC;
+    --isolador-bg:#20242A;
+    --protecao:#E7A85F;
+    --protecao-bg:#332818;
+    --padrao:#4FB088;
+    --padrao-bg:#182B24;
+    --cardio:#C084FC;
+    --cardio-bg:#2A1F38;
+
+    --danger:#E2665A;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:40px;
+  }
+  .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.04em;}
+
+  /* ---------- Top bar ---------- */
+  header.app{
+    position:sticky; top:0; z-index:20;
+    background:linear-gradient(180deg, var(--bg) 80%, transparent);
+    padding:18px 16px 8px;
+  }
+  .app-title{
+    display:flex; align-items:baseline; justify-content:space-between; gap:10px;
+  }
+  .app-title h1{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:28px; letter-spacing:0.05em; margin:0; color:var(--text);
+    line-height:1;
+  }
+  .app-title h1 span{color:var(--composto);}
+  .gear{
+    background:var(--surface); border:1px solid var(--border); color:var(--text-dim);
+    width:36px; height:36px; border-radius:10px; font-size:16px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .gear:active{background:var(--surface-2);}
+
+  .daytabs{
+    display:flex; gap:6px; overflow-x:auto; margin-top:14px; padding-bottom:4px;
+    scrollbar-width:none;
+  }
+  .daytabs::-webkit-scrollbar{display:none;}
+  .daytab{
+    flex:0 0 auto;
+    font-family:'Inter'; font-weight:700; font-size:12.5px; letter-spacing:0.02em;
+    color:var(--text-dim); background:var(--surface); border:1px solid var(--border);
+    padding:9px 13px; border-radius:999px; white-space:nowrap;
+  }
+  .daytab.active{
+    background:var(--composto-bg); color:var(--composto); border-color:var(--composto);
+  }
+
+  /* ---------- Settings drawer ---------- */
+  .settings{
+    margin:10px 16px 0; background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:14px; display:none;
+  }
+  .settings.open{display:block;}
+  .settings h3{margin:0 0 10px; font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); font-weight:700;}
+  .settings-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 0;}
+  .settings-row label{font-size:13.5px; color:var(--text);}
+  .settings-row input{
+    width:64px; background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    border-radius:8px; padding:7px 8px; font-size:14px; text-align:center; font-family:'Inter';
+  }
+  .settings-note{font-size:11.5px; color:var(--text-faint); margin-top:4px; line-height:1.5;}
+  .backup-actions{display:flex; gap:8px; margin-top:4px;}
+  .backup-btn{
+    flex:1; text-align:center; background:var(--surface-2); border:1px solid var(--border);
+    color:var(--text); font-size:12.5px; font-weight:700; font-family:'Inter';
+    border-radius:9px; padding:10px 6px; cursor:pointer; display:block;
+  }
+  .backup-btn:active{background:var(--border);}
+  .color-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0;}
+  .color-row label{font-size:13px; color:var(--text);}
+  .color-row input[type=color]{
+    width:38px; height:32px; border:1px solid var(--border); border-radius:8px; background:var(--surface-2);
+    padding:2px; cursor:pointer;
+  }
+
+  /* ---------- Day section ---------- */
+  main{padding:14px 16px 0;}
+  .day-sub{
+    font-size:12.5px; color:var(--text-dim); margin:2px 0 16px; line-height:1.5;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px;
+  }
+
+  /* ---------- Exercise card ---------- */
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    margin-bottom:12px; overflow:hidden;
+  }
+  .card-head{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:13px 14px 10px; border-left:4px solid var(--tier-color, var(--isolador));
+  }
+  .card-name{font-size:15px; font-weight:700; color:var(--text); line-height:1.25;}
+  .head-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
+  .tier-badge{
+    font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+    padding:3px 8px; border-radius:999px; white-space:nowrap; flex-shrink:0;
+  }
+  .edit-btn{
+    width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:var(--surface-2);
+    color:var(--text-dim); font-size:13px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .edit-btn:active{background:var(--border);}
+  .edit-btn.active{background:var(--tier-color); color:#10131a; border-color:var(--tier-color);}
+
+  .edit-panel{
+    padding:0 14px 14px; border-top:1px solid var(--border); margin-top:2px; padding-top:12px;
+  }
+  .edit-field{margin-bottom:12px;}
+  .edit-field label{display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; font-weight:700; margin-bottom:6px;}
+  .edit-field input[type=text], .edit-field select{
+    width:100%; background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    border-radius:9px; padding:10px 11px; font-size:14px; font-family:'Inter'; font-weight:600;
+  }
+  .edit-field input[type=text]:focus, .edit-field select:focus{outline:none; border-color:var(--tier-color);}
+  .toggle-row{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .toggle-row .toggle-text{font-size:13px; color:var(--text); line-height:1.4;}
+  .toggle-row .toggle-text small{display:block; color:var(--text-faint); font-size:11px; margin-top:2px; font-weight:400;}
+  .switch{
+    position:relative; width:44px; height:26px; flex-shrink:0; background:var(--surface-2);
+    border:1px solid var(--border); border-radius:999px; cursor:pointer;
+  }
+  .switch .knob{
+    position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%;
+    background:var(--text-faint); transition:all .18s ease;
+  }
+  .switch.on{background:var(--tier-color); border-color:var(--tier-color);}
+  .switch.on .knob{left:20px; background:#10131a;}
+  .edit-actions{display:flex; gap:8px; margin-top:4px;}
+  .edit-actions button{
+    flex:1; border:none; border-radius:9px; padding:10px 0; font-size:13px; font-weight:800; font-family:'Inter';
+  }
+  .btn-save{background:var(--tier-color); color:#10131a;}
+  .btn-cancel{background:var(--surface-2); color:var(--text-dim); border:1px solid var(--border) !important;}
+
+  .step-edit{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:11px;
+    padding:11px; margin-bottom:10px;
+  }
+  .step-edit .step-edit-title{
+    font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--tier-color); margin-bottom:8px;
+  }
+  .step-edit-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+  .step-edit-grid .full{grid-column:1 / -1;}
+  .step-edit label{display:block; font-size:10px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:4px; font-weight:700;}
+  .step-edit input, .step-edit textarea{
+    width:100%; background:var(--surface); border:1px solid var(--border); color:var(--text);
+    border-radius:8px; padding:8px 9px; font-size:12.5px; font-family:'Inter'; font-weight:500;
+  }
+  .step-edit textarea{resize:vertical; min-height:38px; line-height:1.4;}
+  .step-edit input:focus, .step-edit textarea:focus{outline:none; border-color:var(--tier-color);}
+
+  .btn-remove{
+    width:100%; margin-top:10px; background:transparent; border:1px solid var(--border);
+    color:var(--text-faint); font-size:12px; font-weight:700; border-radius:9px; padding:10px 0;
+    font-family:'Inter';
+  }
+  .btn-remove.armed{background:var(--danger); border-color:var(--danger); color:#1a1414;}
+
+  .add-exercise-btn{
+    width:100%; margin:6px 0 18px; background:var(--surface); border:1.5px dashed var(--border);
+    color:var(--text-dim); font-size:13.5px; font-weight:700; font-family:'Inter';
+    border-radius:var(--radius); padding:14px 0; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .add-exercise-btn span{font-size:18px; line-height:1; color:var(--composto);}
+  .add-exercise-btn:active{background:var(--surface-2);}
+
+  /* load stack (feeder/top/backoff bars) */
+  .loadstack{padding:0 14px 12px;}
+  .stack-row{display:flex; align-items:center; gap:8px; margin-bottom:6px;}
+  .stack-label{font-size:10.5px; color:var(--text-dim); width:52px; flex-shrink:0; text-align:right;}
+  .stack-track{flex:1; background:var(--surface-2); border-radius:6px; height:20px; overflow:hidden; position:relative;}
+  .stack-fill{height:100%; border-radius:6px 0 0 6px; display:flex; align-items:center;}
+  .stack-val{
+    font-size:11px; font-weight:700; color:var(--bg); margin-left:8px; white-space:nowrap;
+  }
+  .stack-val.outside{color:var(--text); margin-left:6px;}
+
+  .weight-input-row{
+    display:flex; align-items:center; gap:8px; padding:2px 14px 12px;
+  }
+  .weight-input-row label{font-size:12px; color:var(--text-dim); flex-shrink:0;}
+  .weight-input-row input{
+    flex:1; background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    border-radius:9px; padding:9px 10px; font-size:15px; font-weight:700; font-family:'Inter';
+  }
+  .weight-input-row input:focus{outline:none; border-color:var(--tier-color);}
+  .weight-input-row .unit{font-size:12px; color:var(--text-faint);}
+
+  /* steps table (mobile: stacked rows) */
+  .steps{border-top:1px solid var(--border);}
+  .step{
+    display:grid; grid-template-columns: 92px 1fr; gap:2px 10px;
+    padding:9px 14px; font-size:12px; border-top:1px solid var(--border);
+  }
+  .step:first-child{border-top:none;}
+  .step .etapa{font-weight:700; color:var(--tier-color); align-self:start;}
+  .step .meta{display:flex; flex-wrap:wrap; gap:4px 10px; color:var(--text-dim); font-size:11.5px;}
+  .step .meta b{color:var(--text); font-weight:600;}
+  .step .obs{grid-column:1 / -1; color:var(--text-dim); font-size:11.5px; margin-top:3px; line-height:1.4;}
+
+  /* log row */
+  .logrow{
+    display:flex; align-items:center; gap:8px; padding:10px 14px 14px; border-top:1px solid var(--border);
+  }
+  .dor-select{display:flex; gap:4px; flex:1;}
+  .dor-chip{
+    flex:1; text-align:center; font-size:11px; padding:7px 0; border-radius:7px;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text-dim); font-weight:700;
+  }
+  .dor-chip.sel{background:var(--danger); border-color:var(--danger); color:#1A1414;}
+  .save-btn{
+    flex-shrink:0; background:var(--tier-color); color:#10131a; font-weight:800; font-size:12px;
+    border:none; border-radius:9px; padding:9px 14px;
+  }
+  .save-btn:active{opacity:0.8;}
+
+  .hist{padding:0 14px 14px; font-size:11px; color:var(--text-faint);}
+  .hist-item{display:flex; justify-content:space-between; padding:5px 0; border-top:1px dashed var(--border);}
+  .hist-item span:first-child{color:var(--text-dim);}
+  .hist-empty{color:var(--text-faint); font-style:italic;}
+
+  .footer-note{
+    text-align:center; color:var(--text-faint); font-size:11px; padding:20px 24px 4px; line-height:1.6;
+  }
+  .toast{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(12px);
+    background:var(--surface-2); border:1px solid var(--border); color:var(--text);
+    padding:10px 16px; border-radius:10px; font-size:13px; font-weight:600;
+    opacity:0; pointer-events:none; transition:all .25s ease; z-index:50;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<header class="app">
+  <div class="app-title">
+    <h1>LOW<span>VOLUME</span></h1>
+    <button class="gear" id="gearBtn" aria-label="Ajustes">⚙</button>
+  </div>
+  <div class="daytabs" id="dayTabs"></div>
+</header>
+
+<div class="settings" id="settingsPanel">
+  <h3>Ajustes de cálculo</h3>
+  <div class="settings-row">
+    <label>Feeder (% da carga do top set)</label>
+    <input type="number" id="feederPct" min="30" max="95" step="1">
+  </div>
+  <div class="settings-row">
+    <label>Back-off (% de redução)</label>
+    <input type="number" id="backoffPct" min="5" max="40" step="1">
+  </div>
+  <div class="settings-note">Padrão: feeder em 70% da carga do top set, back-off com 15% a menos. Ajuste conforme sua sensação nas sessões — o critério final sempre é o RPE alvo indicado em cada etapa, não o número exato.</div>
+
+  <h3 style="margin-top:16px;">Cores por categoria</h3>
+  <div id="colorRows"></div>
+  <button class="backup-btn" id="resetColorsBtn" style="margin-top:6px;">Restaurar cores padrão</button>
+
+  <h3 style="margin-top:16px;">Backup</h3>
+  <div class="backup-actions">
+    <button class="backup-btn" id="exportBtn">⭳ Exportar dados (.json)</button>
+    <label class="backup-btn" for="importInput">⭱ Importar backup</label>
+    <input type="file" id="importInput" accept="application/json" style="display:none;">
+  </div>
+  <div class="settings-note">Exporta cargas, histórico, exercícios adicionados/removidos e nomes editados num arquivo. Como os dados ficam presos a este navegador, use o backup para levá-los a outro aparelho ou navegador.</div>
+</div>
+
+<main id="main"></main>
+
+<div class="footer-note">
+  Baseado na planilha original de treino de perna com proteção de pubalgia e na lógica do método Low Volume (feeder, top set, back-off, microloading). Não substitui avaliação de profissional de educação física ou orientação médica.
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DADOS — mesmo padrão do PDF: Exercício / Etapa / Séries x Reps / Descanso / RPE alvo / Observação
+   tier: composto | sec | isolador | protecao | padrao
+   step.calc: 'feeder' | 'top' | 'backoff' | null
+============================================================ */
+const DAYS = {
+  seg: { label:"Segunda", sub:"Perna A", note:"", exercises:[
+    {name:"Aquecimento: bike ou esteira leve", tier:"padrao", steps:[
+      {etapa:"Padrão", sr:"1 x 5-8 min", desc:"-", rpe:"3-4", obs:""}]},
+    {name:"Leg press", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 8-12", desc:"90-120s", rpe:"8-9", obs:"Progredir carga a cada semana — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 10-14", desc:"90s", rpe:"8", obs:"Reduzir carga, manter controle", calc:"backoff"}]},
+    {name:"Agachamento no smith", tier:"sec", steps:[
+      {etapa:"Top set", sr:"1 x 6-10", desc:"120s", rpe:"8", obs:"Amplitude completa", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 8-12", desc:"90-120s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Afundo com halteres", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-12/lado", desc:"75-90s", rpe:"8", obs:"Vindo do treino de Domingo (removido)"}]},
+    {name:"Cadeira extensora", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60-90s", rpe:"9", obs:"Drop set na última série"}]},
+    {name:"Cadeira adutora", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60s", rpe:"8", obs:"Carga progressiva — trocou a isometria protetora"}]},
+    {name:"Panturrilha em pé", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"45-60s", rpe:"9", obs:""}]},
+  ]},
+  ter: { label:"Terça", sub:"Peito + Bíceps", note:"", exercises:[
+    {name:"Supino reto", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 6-8 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 6-10", desc:"90-120s", rpe:"8-9", obs:"Progredir carga — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 8-10", desc:"90s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Supino inclinado com halteres", tier:"sec", steps:[
+      {etapa:"Top set", sr:"1 x 8-12", desc:"90s", rpe:"8", obs:"", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 10-12", desc:"75-90s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Crucifixo máquina/cabo", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"60s", rpe:"9", obs:"Squeeze no topo"}]},
+    {name:"Máquina peitoral ou paralela assistida", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75-90s", rpe:"8-9", obs:""}]},
+    {name:"Rosca direta", tier:"sec", steps:[
+      {etapa:"Top set", sr:"1 x 6-10", desc:"75-90s", rpe:"8-9", obs:"Sem balanço", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 8-10", desc:"60-75s", rpe:"8-9", obs:"Última série pode ir até a falha, se estiver sem dor", calc:"backoff"}]},
+    {name:"Rosca inclinada", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"60-75s", rpe:"8", obs:""}]},
+    {name:"Rosca martelo", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-12", desc:"60s", rpe:"9", obs:"+1 série em relação à versão anterior"}]},
+  ]},
+  qua: { label:"Quarta", sub:"Recuperação Ativa + Core", note:"Sem exercícios de força pesada — foco em mobilidade e core.", exercises:[
+    {name:"Caminhada leve ou bike", tier:"padrao", steps:[
+      {etapa:"Padrão", sr:"1 x 15-20 min", desc:"-", rpe:"4-5", obs:""}]},
+    {name:"Mobilidade geral de quadril", tier:"padrao", steps:[
+      {etapa:"Padrão", sr:"1 x 8-10 min", desc:"-", rpe:"3-4", obs:""}]},
+    {name:"Prancha frontal", tier:"protecao", steps:[
+      {etapa:"Padrão (core)", sr:"3 x 30-45s", desc:"45s", rpe:"7", obs:"Adicionada — antes só havia prancha lateral"}]},
+    {name:"Prancha lateral", tier:"protecao", steps:[
+      {etapa:"Padrão (core)", sr:"3 x 30-45s/lado", desc:"45s", rpe:"7", obs:""}]},
+    {name:"Elevação de pernas", tier:"protecao", steps:[
+      {etapa:"Padrão (core)", sr:"3 x 12-15", desc:"45-60s", rpe:"7-8", obs:"Adicionada"}]},
+  ]},
+  qui: { label:"Quinta", sub:"Perna B", note:"", exercises:[
+    {name:"Terra romeno", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 6-8 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 6-10", desc:"120s", rpe:"8", obs:"Progredir carga — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 8-10", desc:"90-120s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Leg press pés altos", tier:"sec", steps:[
+      {etapa:"Top set", sr:"1 x 10-12", desc:"90s", rpe:"8", obs:"Vindo do treino de Domingo (removido) — ênfase posterior", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12-14", desc:"75-90s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Mesa flexora", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60-90s", rpe:"9", obs:""}]},
+    {name:"Flexora sentada", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60-90s", rpe:"8-9", obs:""}]},
+    {name:"Hip thrust", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 8-12", desc:"90-120s", rpe:"8-9", obs:"Pico de contração 1-2s — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 10-14", desc:"90-120s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Ponte de glúteo unilateral", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-12/lado", desc:"60s", rpe:"8", obs:"Progrediu de bilateral para unilateral"}]},
+    {name:"Abdutora máquina", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 15-20", desc:"45-60s", rpe:"8-9", obs:"Substituiu o Dead bug"}]},
+    {name:"Panturrilha sentada", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"45-60s", rpe:"9", obs:"Substituiu a 2ª prancha lateral"}]},
+  ]},
+  sex: { label:"Sexta", sub:"Costas", note:"", exercises:[
+    {name:"Puxada alta pegada neutra", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 6-10", desc:"90-120s", rpe:"8-9", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 8-12", desc:"90-120s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Remada baixa triângulo", tier:"sec", steps:[
+      {etapa:"Top set", sr:"1 x 8-12", desc:"90s", rpe:"8-9", obs:"", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 10-14", desc:"75-90s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Remada unilateral apoiada", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-12", desc:"75-90s", rpe:"8", obs:""}]},
+    {name:"Pulldown braço reto", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"60s", rpe:"8-9", obs:""}]},
+    {name:"Face pull", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"60s", rpe:"8-9", obs:""}]},
+    {name:"Hiperextensão", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"60s", rpe:"8", obs:"+1 série, carga normal (não precisa mais ser leve)"}]},
+  ]},
+  sab: { label:"Sábado", sub:"Ombro + Tríceps", note:"", exercises:[
+    {name:"Desenvolvimento sentado", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 6-8 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 6-10", desc:"90-120s", rpe:"8-9", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 8-12", desc:"90s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+    {name:"Elevação lateral", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"45-60s", rpe:"9", obs:""}]},
+    {name:"Elevação lateral no cabo", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"45-60s", rpe:"8-9", obs:""}]},
+    {name:"Crucifixo inverso", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"60s", rpe:"8-9", obs:""}]},
+    {name:"Tríceps corda", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60s", rpe:"9", obs:""}]},
+    {name:"Tríceps testa", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75s", rpe:"8-9", obs:""}]},
+    {name:"Mergulho máquina", tier:"isolador", steps:[
+      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75s", rpe:"8-9", obs:"+1 série em relação à versão anterior"}]},
+  ]},
+  dom: { label:"Domingo", sub:"Descanso completo", note:"Sem treino de força. O treino de Domingo foi removido nesta versão — o que agregava algo novo migrou para Segunda e Quinta; o resto era redundante e saiu de vez.", exercises:[
+    {name:"Descanso completo", tier:"padrao", steps:[
+      {etapa:"Padrão", sr:"—", desc:"-", rpe:"-", obs:"Fique à vontade para caminhar, fazer uma atividade leve ou simplesmente descansar."}]},
+  ]},
+};
+const TIER_LABEL = {composto:"Composto principal", sec:"Composto secundário", isolador:"Isolador", protecao:"Proteção", padrao:"Padrão", cardio:"Cardio"};
+const TIER_VAR = {composto:"--composto", sec:"--sec", isolador:"--isolador", protecao:"--protecao", padrao:"--padrao", cardio:"--cardio"};
+const TIER_BG = {composto:"--composto-bg", sec:"--sec-bg", isolador:"--isolador-bg", protecao:"--protecao-bg", padrao:"--padrao-bg", cardio:"--cardio-bg"};
+
+let SETTINGS = { feederPct: 70, backoffPct: 15 };
+let currentDay = "seg";
+
+const DEFAULT_COLORS = { composto:"#5FA8FF", sec:"#4F86C2", isolador:"#9AA2AC", protecao:"#E7A85F", padrao:"#4FB088", cardio:"#C084FC" };
+let COLORS = { ...DEFAULT_COLORS };
+
+function hexToRgba(hex, alpha){
+  const h = hex.replace('#','');
+  const full = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
+  const n = parseInt(full, 16);
+  const r = (n>>16)&255, g=(n>>8)&255, b=n&255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+function applyColors(){
+  Object.keys(TIER_VAR).forEach(tier=>{
+    const hex = COLORS[tier] || DEFAULT_COLORS[tier];
+    document.documentElement.style.setProperty(TIER_VAR[tier], hex);
+    document.documentElement.style.setProperty(TIER_BG[tier], hexToRgba(hex, 0.16));
+  });
+}
+function renderColorRows(){
+  const wrap = document.getElementById("colorRows");
+  wrap.innerHTML = "";
+  Object.keys(TIER_LABEL).forEach(tier=>{
+    const row = document.createElement("div");
+    row.className = "color-row";
+    row.innerHTML = `<label>${TIER_LABEL[tier]}</label>`;
+    const input = document.createElement("input");
+    input.type = "color";
+    input.value = COLORS[tier] || DEFAULT_COLORS[tier];
+    input.addEventListener("input", async ()=>{
+      COLORS[tier] = input.value;
+      applyColors();
+      await saveColors();
+    });
+    row.appendChild(input);
+    wrap.appendChild(row);
+  });
+}
+
+/* ---------- storage helpers (localStorage — funciona em qualquer site estático, ex: GitHub Pages) ---------- */
+const LS_PREFIX = "lowvolume:";
+function lsGet(key){
+  try{ const v = localStorage.getItem(LS_PREFIX + key); return v; }
+  catch(e){ return null; }
+}
+function lsSet(key, value){
+  try{ localStorage.setItem(LS_PREFIX + key, value); return true; }
+  catch(e){ console.error(e); return false; }
+}
+
+async function loadSettings(){
+  const v = lsGet("settings");
+  if(v){ try{ SETTINGS = JSON.parse(v); }catch(e){ /* ignore */ } }
+  document.getElementById("feederPct").value = SETTINGS.feederPct;
+  document.getElementById("backoffPct").value = SETTINGS.backoffPct;
+}
+async function saveSettings(){
+  lsSet("settings", JSON.stringify(SETTINGS));
+}
+async function loadColors(){
+  const v = lsGet("colors");
+  if(v){ try{ COLORS = { ...DEFAULT_COLORS, ...JSON.parse(v) }; }catch(e){ /* ignore */ } }
+  applyColors();
+  renderColorRows();
+}
+async function saveColors(){
+  lsSet("colors", JSON.stringify(COLORS));
+}
+function exKey(dayId, idx){ return `top:${dayId}:${idx}`; }
+function histKey(dayId, idx){ return `hist:${dayId}:${idx}`; }
+function customKey(dayId, idx){ return `custom:${dayId}:${idx}`; }
+
+async function loadCustom(dayId, idx){
+  const v = lsGet(customKey(dayId, idx));
+  return v ? JSON.parse(v) : {};
+}
+async function saveCustom(dayId, idx, data){
+  return lsSet(customKey(dayId, idx), JSON.stringify(data));
+}
+
+async function loadWeight(dayId, idx){
+  const v = lsGet(exKey(dayId, idx));
+  return v ? JSON.parse(v) : null;
+}
+async function saveWeight(dayId, idx, val){
+  lsSet(exKey(dayId, idx), JSON.stringify(val));
+}
+async function loadHist(dayId, idx){
+  const v = lsGet(histKey(dayId, idx));
+  return v ? JSON.parse(v) : [];
+}
+async function pushHist(dayId, idx, entry){
+  const h = await loadHist(dayId, idx);
+  h.unshift(entry);
+  const trimmed = h.slice(0, 6);
+  lsSet(histKey(dayId, idx), JSON.stringify(trimmed));
+  return trimmed;
+}
+
+function addedKey(dayId){ return `added:${dayId}`; }
+function removedKey(dayId){ return `removed:${dayId}`; }
+
+async function loadAdded(dayId){
+  const v = lsGet(addedKey(dayId));
+  return v ? JSON.parse(v) : [];
+}
+async function saveAdded(dayId, arr){
+  return lsSet(addedKey(dayId), JSON.stringify(arr));
+}
+async function loadRemoved(dayId){
+  const v = lsGet(removedKey(dayId));
+  return v ? JSON.parse(v) : [];
+}
+async function saveRemoved(dayId, arr){
+  return lsSet(removedKey(dayId), JSON.stringify(arr));
+}
+
+let autoOpenIdKey = null; // idKey to auto-open in edit mode right after a fresh render (used after "add exercise")
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._h);
+  showToast._h = setTimeout(()=>t.classList.remove("show"), 1600);
+}
+
+/* ---------- rendering ---------- */
+function renderTabs(){
+  const wrap = document.getElementById("dayTabs");
+  wrap.innerHTML = "";
+  Object.keys(DAYS).forEach(id=>{
+    const b = document.createElement("button");
+    b.className = "daytab" + (id===currentDay ? " active" : "");
+    b.textContent = DAYS[id].label;
+    b.onclick = ()=>{ currentDay = id; renderTabs(); renderDay(); };
+    wrap.appendChild(b);
+  });
+}
+
+function fmtVal(v, unit){
+  if(v === null || v === undefined || isNaN(v)) return "—";
+  return (Math.round(v*10)/10).toString().replace(".0","") + " " + unit;
+}
+function fmtKg(v){ return fmtVal(v, "kg"); }
+
+function stepMeta(step){
+  return `<b>${step.sr}</b><span>·</span><span>Descanso ${step.desc}</span><span>·</span><span>RPE ${step.rpe}</span>`;
+}
+
+function loadStackHTML(tier, topVal){
+  const feederVal = topVal ? topVal * SETTINGS.feederPct/100 : null;
+  const backoffVal = topVal ? topVal * (1 - SETTINGS.backoffPct/100) : null;
+  const colorVar = `var(${TIER_VAR[tier]})`;
+  function row(label, val, pct){
+    const width = topVal ? Math.min(100, pct) : 0;
+    const inside = width > 26;
+    return `<div class="stack-row">
+      <div class="stack-label">${label}</div>
+      <div class="stack-track">
+        <div class="stack-fill" style="width:${topVal? width : 0}%; background:${colorVar};">
+          ${inside ? `<span class="stack-val">${fmtKg(val)}</span>` : ``}
+        </div>
+        ${!inside ? `<span class="stack-val outside" style="position:absolute; left:${Math.max(width+3,4)}%; top:50%; transform:translateY(-50%);">${topVal? fmtKg(val): '—'}</span>` : ``}
+      </div>
+    </div>`;
+  }
+  return `<div class="loadstack">
+    ${row("Feeder", feederVal, SETTINGS.feederPct)}
+    ${row("Top set", topVal, 100)}
+    ${row("Back-off", backoffVal, 100 - SETTINGS.backoffPct)}
+  </div>`;
+}
+
+async function renderDay(){
+  const main = document.getElementById("main");
+  const day = DAYS[currentDay];
+  main.innerHTML = "";
+
+  if(day.note){
+    const n = document.createElement("div");
+    n.className = "day-sub";
+    n.textContent = day.note;
+    main.appendChild(n);
+  }
+
+  const removed = await loadRemoved(currentDay);
+  const added = await loadAdded(currentDay);
+
+  const items = [];
+  day.exercises.forEach((ex, i)=>{
+    if(!removed.includes(i)) items.push({ ex, idKey:String(i), isAdded:false, baseIdx:i });
+  });
+  added.forEach((ex, i)=>{
+    items.push({ ex, idKey:'a'+i, isAdded:true, addedIdx:i });
+  });
+
+  for(const item of items){
+    const { ex, idKey } = item;
+    const custom = item.isAdded ? { name: ex.name, showCalc: ex.showCalc, steps: ex.steps, tier: ex.tier } : await loadCustom(currentDay, idKey);
+    const defaultHasCalc = ex.steps.some(s=>s.calc==="top");
+    const displayName = custom.name || ex.name;
+    const showCalc = custom.showCalc !== undefined ? custom.showCalc : defaultHasCalc;
+    const effTier = custom.tier || ex.tier;
+    const effSteps = ex.steps.map((s, i)=> ({...s, ...((custom.steps && custom.steps[i]) || {})}));
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.setProperty("--tier-color", `var(${TIER_VAR[effTier]})`);
+
+    const head = document.createElement("div");
+    head.className = "card-head";
+    head.innerHTML = `
+      <div class="card-name">${displayName}</div>
+      <div class="head-right">
+        <div class="tier-badge" style="background:var(${TIER_BG[effTier]}); color:var(${TIER_VAR[effTier]});">${TIER_LABEL[effTier]}</div>
+        <button class="edit-btn" title="Editar exercício">✎</button>
+      </div>
+    `;
+    card.appendChild(head);
+
+    // ---- edit panel (hidden by default) ----
+    const editPanel = document.createElement("div");
+    editPanel.className = "edit-panel";
+    editPanel.style.display = "none";
+    editPanel.innerHTML = `
+      <div class="edit-field">
+        <label>Nome do exercício</label>
+        <input type="text" class="name-input" value="${displayName.replace(/"/g,'&quot;')}">
+      </div>
+      <div class="edit-field">
+        <label>Categoria</label>
+        <select class="tier-select">
+          ${Object.keys(TIER_LABEL).map(t=>`<option value="${t}" ${t===effTier?'selected':''}>${TIER_LABEL[t]}</option>`).join('')}
+        </select>
+      </div>
+      <div class="edit-field">
+        <div class="toggle-row">
+          <div class="toggle-text">Mostrar cálculo de feeder / top set / back-off
+            <small>Liga o campo de carga e a barra de estimativa para este exercício</small>
+          </div>
+          <div class="switch ${showCalc ? 'on':''}"><div class="knob"></div></div>
+        </div>
+      </div>
+      <div class="steps-edit-wrap"></div>
+      <div class="edit-actions">
+        <button class="btn-cancel">Cancelar</button>
+        <button class="btn-save">Salvar</button>
+      </div>
+      <button class="btn-remove">Remover exercício deste dia</button>
+    `;
+    card.appendChild(editPanel);
+
+    const stepsEditWrap = editPanel.querySelector(".steps-edit-wrap");
+    effSteps.forEach((s, i)=>{
+      const se = document.createElement("div");
+      se.className = "step-edit";
+      se.innerHTML = `
+        <div class="step-edit-title">Etapa ${i+1}</div>
+        <div class="step-edit-grid">
+          <div>
+            <label>Etapa</label>
+            <input type="text" data-field="etapa" value="${(s.etapa||'').replace(/"/g,'&quot;')}">
+          </div>
+          <div>
+            <label>Séries x Reps</label>
+            <input type="text" data-field="sr" value="${(s.sr||'').replace(/"/g,'&quot;')}">
+          </div>
+          <div>
+            <label>Descanso</label>
+            <input type="text" data-field="desc" value="${(s.desc||'').replace(/"/g,'&quot;')}">
+          </div>
+          <div>
+            <label>RPE alvo</label>
+            <input type="text" data-field="rpe" value="${(s.rpe||'').replace(/"/g,'&quot;')}">
+          </div>
+          <div class="full">
+            <label>Observação</label>
+            <textarea data-field="obs">${(s.obs||'')}</textarea>
+          </div>
+        </div>
+      `;
+      stepsEditWrap.appendChild(se);
+    });
+
+    let pendingShowCalc = showCalc;
+    const sw = editPanel.querySelector(".switch");
+    sw.onclick = ()=>{
+      pendingShowCalc = !pendingShowCalc;
+      sw.classList.toggle("on", pendingShowCalc);
+    };
+    head.querySelector(".edit-btn").onclick = ()=>{
+      const open = editPanel.style.display !== "none";
+      editPanel.style.display = open ? "none" : "block";
+      head.querySelector(".edit-btn").classList.toggle("active", !open);
+    };
+    editPanel.querySelector(".btn-cancel").onclick = ()=>{
+      editPanel.style.display = "none";
+      head.querySelector(".edit-btn").classList.remove("active");
+      editPanel.querySelector(".name-input").value = displayName;
+      editPanel.querySelector(".tier-select").value = effTier;
+      pendingShowCalc = showCalc;
+      sw.classList.toggle("on", pendingShowCalc);
+      stepsEditWrap.querySelectorAll(".step-edit").forEach((se, i)=>{
+        se.querySelector('[data-field="etapa"]').value = effSteps[i].etapa || "";
+        se.querySelector('[data-field="sr"]').value = effSteps[i].sr || "";
+        se.querySelector('[data-field="desc"]').value = effSteps[i].desc || "";
+        se.querySelector('[data-field="rpe"]').value = effSteps[i].rpe || "";
+        se.querySelector('[data-field="obs"]').value = effSteps[i].obs || "";
+      });
+    };
+    editPanel.querySelector(".btn-save").onclick = async ()=>{
+      const newName = editPanel.querySelector(".name-input").value.trim() || ex.name;
+      const newTier = editPanel.querySelector(".tier-select").value;
+      const newSteps = Array.from(stepsEditWrap.querySelectorAll(".step-edit")).map(se=>({
+        etapa: se.querySelector('[data-field="etapa"]').value.trim(),
+        sr: se.querySelector('[data-field="sr"]').value.trim(),
+        desc: se.querySelector('[data-field="desc"]').value.trim(),
+        rpe: se.querySelector('[data-field="rpe"]').value.trim(),
+        obs: se.querySelector('[data-field="obs"]').value.trim(),
+      }));
+      let ok;
+      if(item.isAdded){
+        const list = await loadAdded(currentDay);
+        list[item.addedIdx] = { ...list[item.addedIdx], name:newName, tier:newTier, showCalc:pendingShowCalc, steps:newSteps };
+        ok = await saveAdded(currentDay, list);
+      }else{
+        ok = await saveCustom(currentDay, idKey, { name: newName, tier: newTier, showCalc: pendingShowCalc, steps: newSteps });
+      }
+      editPanel.style.display = "none";
+      head.querySelector(".edit-btn").classList.remove("active");
+      showToast(ok ? "Alterações salvas" : "Não foi possível salvar");
+      renderDay();
+    };
+
+    const removeBtn = editPanel.querySelector(".btn-remove");
+    let removeArmed = false;
+    removeBtn.onclick = async ()=>{
+      if(!removeArmed){
+        removeArmed = true;
+        removeBtn.textContent = "Toque de novo para confirmar";
+        removeBtn.classList.add("armed");
+        setTimeout(()=>{
+          if(removeArmed){ removeArmed = false; removeBtn.textContent = "Remover exercício deste dia"; removeBtn.classList.remove("armed"); }
+        }, 3000);
+        return;
+      }
+      if(item.isAdded){
+        const list = await loadAdded(currentDay);
+        list.splice(item.addedIdx, 1);
+        await saveAdded(currentDay, list);
+      }else{
+        const list = await loadRemoved(currentDay);
+        list.push(item.baseIdx);
+        await saveRemoved(currentDay, list);
+      }
+      showToast("Exercício removido deste dia");
+      renderDay();
+    };
+
+    const savedTop = await loadWeight(currentDay, idKey);
+    let stackDiv = null;
+    if(showCalc){
+      stackDiv = document.createElement("div");
+      stackDiv.innerHTML = loadStackHTML(effTier, savedTop);
+      card.appendChild(stackDiv);
+    }
+
+    const isCardio = effTier === "cardio";
+    const unitLabel = isCardio ? "min" : "kg";
+    const fieldLabel = isCardio ? "Tempo" : (showCalc ? "Carga do top set" : "Carga usada");
+    const placeholderVal = isCardio ? "ex: 20" : "ex: 80";
+
+    const inputRow = document.createElement("div");
+    inputRow.className = "weight-input-row";
+    inputRow.innerHTML = `
+      <label>${fieldLabel}</label>
+      <input type="number" inputmode="decimal" step="0.5" placeholder="${placeholderVal}" value="${savedTop ?? ''}">
+      <span class="unit">${unitLabel}</span>
+    `;
+    const weightInput = inputRow.querySelector("input");
+    weightInput.addEventListener("input", async ()=>{
+      const v = parseFloat(weightInput.value);
+      const valid = !isNaN(v) && v > 0;
+      if(stackDiv) stackDiv.innerHTML = loadStackHTML(effTier, valid ? v : null);
+      await saveWeight(currentDay, idKey, valid ? v : null);
+    });
+    card.appendChild(inputRow);
+
+    const steps = document.createElement("div");
+    steps.className = "steps";
+    effSteps.forEach(s=>{
+      const row = document.createElement("div");
+      row.className = "step";
+      row.innerHTML = `
+        <div class="etapa">${s.etapa}</div>
+        <div class="meta">${stepMeta(s)}</div>
+        <div class="obs">${s.obs}</div>
+      `;
+      steps.appendChild(row);
+    });
+    card.appendChild(steps);
+
+    {
+      const hist = await loadHist(currentDay, idKey);
+      const logrow = document.createElement("div");
+      logrow.className = "logrow";
+      let selectedDor = null;
+      const dorWrap = document.createElement("div");
+      dorWrap.className = "dor-select";
+      [0,1,2,3,4,5].forEach(v=>{
+        const chip = document.createElement("div");
+        chip.className = "dor-chip";
+        chip.textContent = v===5 ? "5+" : v;
+        chip.onclick = ()=>{
+          selectedDor = v;
+          dorWrap.querySelectorAll(".dor-chip").forEach(c=>c.classList.remove("sel"));
+          chip.classList.add("sel");
+        };
+        dorWrap.appendChild(chip);
+      });
+      const saveBtn = document.createElement("button");
+      saveBtn.className = "save-btn";
+      saveBtn.textContent = "Salvar";
+      saveBtn.onclick = async ()=>{
+        const w = await loadWeight(currentDay, idKey);
+        if(!w){ showToast(isCardio ? "Preencha o tempo primeiro" : "Preencha a carga usada primeiro"); return; }
+        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, dor: selectedDor };
+        const updated = await pushHist(currentDay, idKey, entry);
+        renderHistList(histList, updated, unitLabel);
+        showToast("Registrado no histórico");
+      };
+      logrow.appendChild(dorWrap);
+      logrow.appendChild(saveBtn);
+      card.appendChild(logrow);
+
+      const histList = document.createElement("div");
+      histList.className = "hist";
+      renderHistList(histList, hist, unitLabel);
+      card.appendChild(histList);
+    }
+
+    main.appendChild(card);
+
+    if(autoOpenIdKey === idKey){
+      autoOpenIdKey = null;
+      editPanel.style.display = "block";
+      head.querySelector(".edit-btn").classList.add("active");
+      const nameInput = editPanel.querySelector(".name-input");
+      nameInput.focus();
+      nameInput.select();
+      card.scrollIntoView({ behavior:"smooth", block:"center" });
+    }
+  }
+
+  const addBtn = document.createElement("button");
+  addBtn.className = "add-exercise-btn";
+  addBtn.innerHTML = `<span>+</span> Adicionar exercício`;
+  addBtn.onclick = async ()=>{
+    const list = await loadAdded(currentDay);
+    list.push({
+      name: "Novo exercício",
+      tier: "isolador",
+      showCalc: false,
+      steps: [{ etapa:"Série válida", sr:"2 x 10-15", desc:"60s", rpe:"8", obs:"" }]
+    });
+    await saveAdded(currentDay, list);
+    autoOpenIdKey = 'a' + (list.length - 1);
+    renderDay();
+  };
+  main.appendChild(addBtn);
+}
+
+function renderHistList(el, hist, unit){
+  unit = unit || "kg";
+  if(!hist || hist.length===0){
+    el.innerHTML = `<div class="hist-empty">Sem histórico ainda — salve a primeira sessão.</div>`;
+    return;
+  }
+  el.innerHTML = hist.map(h=>`
+    <div class="hist-item">
+      <span>${h.date}</span>
+      <span>${fmtVal(h.weight, unit)}${h.dor!==null && h.dor!==undefined ? ` · dor ${h.dor===5?'5+':h.dor}` : ''}</span>
+    </div>
+  `).join("");
+}
+
+/* ---------- backup: exportar / importar ---------- */
+function downloadJSON(payload){
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `treino-backup-${stamp}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function exportData(){
+  const data = {};
+  for(let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith(LS_PREFIX)){
+      data[k.slice(LS_PREFIX.length)] = localStorage.getItem(k);
+    }
+  }
+  downloadJSON({ app:"lowvolume-treino", version:1, exportedAt:new Date().toISOString(), data });
+  showToast("Backup baixado");
+}
+
+async function importDataFromFile(file){
+  try{
+    const text = await file.text();
+    const payload = JSON.parse(text);
+    if(!payload || typeof payload.data !== "object") throw new Error("formato inválido");
+    Object.keys(payload.data).forEach(k=>{
+      localStorage.setItem(LS_PREFIX + k, payload.data[k]);
+    });
+    showToast("Backup importado");
+    await loadSettings();
+    renderTabs();
+    await renderDay();
+  }catch(err){
+    console.error(err);
+    showToast("Não foi possível importar esse arquivo");
+  }
+}
+
+/* ---------- settings drawer ---------- */
+document.getElementById("gearBtn").onclick = ()=>{
+  document.getElementById("settingsPanel").classList.toggle("open");
+};
+document.getElementById("exportBtn").onclick = exportData;
+document.getElementById("importInput").addEventListener("change", (e)=>{
+  const file = e.target.files[0];
+  if(file) importDataFromFile(file);
+  e.target.value = "";
+});
+document.getElementById("feederPct").addEventListener("change", async (e)=>{
+  const v = parseFloat(e.target.value);
+  if(!isNaN(v)){ SETTINGS.feederPct = v; await saveSettings(); renderDay(); }
+});
+document.getElementById("backoffPct").addEventListener("change", async (e)=>{
+  const v = parseFloat(e.target.value);
+  if(!isNaN(v)){ SETTINGS.backoffPct = v; await saveSettings(); renderDay(); }
+});
+document.getElementById("resetColorsBtn").onclick = async ()=>{
+  COLORS = { ...DEFAULT_COLORS };
+  applyColors();
+  renderColorRows();
+  await saveColors();
+  showToast("Cores padrão restauradas");
+};
+
+/* ---------- init ---------- */
+(async function init(){
+  await loadSettings();
+  await loadColors();
+  renderTabs();
+  await renderDay();
+})();
+</script>
+</body>
+</html>
