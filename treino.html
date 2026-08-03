@@ -126,6 +126,14 @@
     padding:13px 14px 10px; border-left:4px solid var(--tier-color, var(--isolador));
   }
   .card-name{font-size:15px; font-weight:700; color:var(--text); line-height:1.25;}
+  .card-name .ex-link{
+    color:var(--text); text-decoration:none; display:inline-flex; align-items:baseline; gap:6px;
+    border-bottom:1px dashed var(--border);
+  }
+  .card-name .ex-link .play-ic{
+    color:var(--tier-color, var(--isolador)); font-size:10px;
+  }
+  .card-name .ex-link:active{opacity:0.6;}
   .head-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
   .tier-badge{
     font-size:10px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
@@ -711,8 +719,9 @@ async function renderDay(){
 
     const head = document.createElement("div");
     head.className = "card-head";
+    const howToUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(displayName + " execução técnica")}`;
     head.innerHTML = `
-      <div class="card-name">${displayName}</div>
+      <div class="card-name"><a class="ex-link" href="${howToUrl}" target="_blank" rel="noopener"><span class="play-ic">▶</span> ${displayName}</a></div>
       <div class="head-right">
         <div class="tier-badge" style="background:var(${TIER_BG[effTier]}); color:var(${TIER_VAR[effTier]});">${TIER_LABEL[effTier]}</div>
         <button class="edit-btn" title="Editar exercício">✎</button>
