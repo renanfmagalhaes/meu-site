@@ -102,6 +102,8 @@
     border-radius:9px; padding:10px 6px; cursor:pointer; display:block;
   }
   .backup-btn:active{background:var(--border);}
+  .backup-btn.danger{background:transparent; border-color:var(--danger); color:var(--danger);}
+  .backup-btn.danger.armed{background:var(--danger); color:#1A1414;}
   .color-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0;}
   .color-row label{font-size:13px; color:var(--text);}
   .color-row input[type=color]{
@@ -334,6 +336,9 @@
     <input type="file" id="importInput" accept="application/json" style="display:none;">
   </div>
   <div class="settings-note">Exporta cargas, histórico, exercícios adicionados/removidos e nomes editados num arquivo. Como os dados ficam presos a este navegador, use o backup para levá-los a outro aparelho ou navegador.</div>
+
+  <button class="backup-btn danger" id="deleteDataBtn" style="margin-top:10px;">🗑 Excluir todos os dados</button>
+  <div class="settings-note">Apaga cargas, histórico, exercícios adicionados/removidos, nomes editados, cores e ajustes salvos neste navegador. Isso não pode ser desfeito — faça um backup antes, se quiser guardar algo. Toque duas vezes para confirmar.</div>
 </div>
 
 <main id="main"></main>
@@ -347,7 +352,7 @@
 <script>
 /* ============================================================
    DADOS — mesmo padrão do PDF: Exercício / Etapa / Séries x Reps / Descanso / RPE alvo / Observação
-   tier: composto | sec | isolador | protecao | padrao
+   tier: composto | sec | isolador | protecao | padrao | cardio
    step.calc: 'feeder' | 'top' | 'backoff' | null
 ============================================================ */
 const DAYS = {
@@ -370,8 +375,8 @@ const DAYS = {
     {name:"Panturrilha em pé", tier:"isolador", steps:[
       {etapa:"Série válida", sr:"1-2 x 10-15", desc:"45-60s", rpe:"9", obs:""}]},
     {name:"Agachamento búlgaro", tier:"sec", steps:[
-      {etapa:"Série válida", sr:"3 x 8-15", desc:"90s", rpe:"7-8", obs:""}]},  
-      
+      {etapa:"Série válida", sr:"3 x 8-15", desc:"90s", rpe:"7-8", obs:""}]},
+
     ]},
   ter: { label:"Terça", sub:"Peito + Bíceps", note:"", exercises:[
     {name:"Supino reto", tier:"composto", steps:[
@@ -998,7 +1003,7 @@ function renderHistList(el, hist, unit){
   `).join("");
 }
 
-/* ---------- backup: exportar / importar ---------- */
+/* ---------- backup: exportar / importar / excluir ---------- */
 function downloadJSON(payload){
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
   const url = URL.createObjectURL(blob);
@@ -1031,12 +1036,33 @@ async function importDataFromFile(file){
     });
     showToast("Backup importado");
     await loadSettings();
+    await loadColors();
     renderTabs();
     await renderDay();
   }catch(err){
     console.error(err);
     showToast("Não foi possível importar esse arquivo");
   }
+}
+
+function deleteAllData(){
+  const keys = [];
+  for(let i=0; i<localStorage.length; i++){
+    const k = localStorage.key(i);
+    if(k && k.startsWith(LS_PREFIX)) keys.push(k);
+  }
+  keys.forEach(k=>localStorage.removeItem(k));
+
+  // reset in-memory state back to defaults
+  SETTINGS = { feederPct: 70, backoffPct: 15 };
+  COLORS = { ...DEFAULT_COLORS };
+  applyColors();
+  renderColorRows();
+  document.getElementById("feederPct").value = SETTINGS.feederPct;
+  document.getElementById("backoffPct").value = SETTINGS.backoffPct;
+
+  showToast("Todos os dados foram excluídos");
+  renderDay();
 }
 
 /* ---------- settings drawer ---------- */
@@ -1063,6 +1089,25 @@ document.getElementById("resetColorsBtn").onclick = async ()=>{
   renderColorRows();
   await saveColors();
   showToast("Cores padrão restauradas");
+};
+
+let deleteArmed = false;
+const deleteBtn = document.getElementById("deleteDataBtn");
+deleteBtn.onclick = ()=>{
+  if(!deleteArmed){
+    deleteArmed = true;
+    deleteBtn.textContent = "Toque de novo para confirmar exclusão";
+    deleteBtn.classList.add("armed");
+    clearTimeout(deleteBtn._h);
+    deleteBtn._h = setTimeout(()=>{
+      if(deleteArmed){ deleteArmed = false; deleteBtn.textContent = "🗑 Excluir todos os dados"; deleteBtn.classList.remove("armed"); }
+    }, 3000);
+    return;
+  }
+  deleteArmed = false;
+  deleteBtn.textContent = "🗑 Excluir todos os dados";
+  deleteBtn.classList.remove("armed");
+  deleteAllData();
 };
 
 /* ---------- init ---------- */
