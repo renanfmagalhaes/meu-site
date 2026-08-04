@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Sinopse de Músicas - Renan Magalhães</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* Estilos específicos desta ferramenta — reaproveitam a paleta do site */
+        .tool-box {
+            background-color: #1a1d29;
+            border: 1px solid #252a3d;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .tool-box h2 {
+            font-size: 1.1rem;
+            color: #38bdf8;
+            margin-bottom: 6px;
+        }
+        .tool-box .hint {
+            color: #a0a6b8;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        #rows { display: flex; flex-direction: column; gap: 12px; }
+        .music-row {
+            display: grid;
+            grid-template-columns: 34px 1fr 1fr 34px;
+            gap: 10px;
+            align-items: center;
+        }
+        .music-row .num {
+            color: #a0a6b8;
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 600;
+        }
+        .music-row input {
+            background-color: #0f111a;
+            border: 1px solid #252a3d;
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: #f1f1f1;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            width: 100%;
+        }
+        .music-row input:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+        .music-row input.link-input {
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem;
+        }
+        .remove-row {
+            background: transparent;
+            border: 1px solid #252a3d;
+            color: #a0a6b8;
+            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1;
+            transition: all 0.2s;
+        }
+        .remove-row:hover {
+            background-color: #e2665a;
+            border-color: #e2665a;
+            color: #0f111a;
+        }
+        .actions-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 11px 18px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secondary {
+            background-color: #252a3d;
+            color: #38bdf8;
+        }
+        .btn-secondary:hover { background-color: #2f3549; }
+        .btn-primary {
+            background-color: #38bdf8;
+            color: #0f111a;
+        }
+        .btn-primary:hover { background-color: #5cc9fa; }
+        .btn-copy {
+            background-color: #1a1d29;
+            color: #38bdf8;
+            border: 1px solid #38bdf8;
+        }
+        .btn-copy:hover { background-color: #38bdf8; color: #0f111a; }
+        .btn-copy.copied { background-color: #4fb088; border-color: #4fb088; color: #0f111a; }
+
+        .output-wrap { margin-top: 10px; }
+        .output-wrap label {
+            display: block;
+            font-size: 0.8rem;
+            color: #a0a6b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        textarea#output {
+            width: 100%;
+            min-height: 160px;
+            background-color: #0f111a;
+            border: 1px solid #252a3d;
+            border-radius: 8px;
+            padding: 14px;
+            color: #d3d6e0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem;
+            line-height: 1.5;
+            resize: vertical;
+        }
+        .preview {
+            margin-top: 18px;
+            background-color: #0f111a;
+            border: 1px solid #252a3d;
+            border-radius: 8px;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #d3d6e0;
+            line-height: 1.6;
+        }
+        .preview a { color: #38bdf8; }
+        .mode-toggle {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .mode-btn {
+            background-color: #0f111a;
+            border: 1px solid #252a3d;
+            color: #a0a6b8;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+        .mode-btn.active {
+            background-color: #38bdf8;
+            color: #0f111a;
+            border-color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Renan Magalhães</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="filmes.html">Filmes</a>
+            <a href="series.html">Séries</a>
+            <a href="livros.html">Livros</a>
+            <a href="musicas.html">Músicas</a>
+            <a href="jogos.html">Jogos</a>
+            <a href="tutoriais.html">Tutoriais</a>
+            <a href="fotos.html">Fotos</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1 class="page-title">Criar Sinopse de Músicas</h1>
+
+        <div class="tool-box">
+            <h2>Top 10/11 do mês</h2>
+            <div class="hint">
+                Preencha o nome da música e o link do YouTube em cada linha. Clique em <b>Gerar código</b> e cole o resultado no campo <code>"sinopse"</code> do <code>assets/data/musicas.json</code>.
+            </div>
+
+            <div id="rows"></div>
+
+            <div class="actions-row">
+                <button class="btn btn-secondary" id="addRowBtn">+ Adicionar música</button>
+                <button class="btn btn-primary" id="generateBtn">Gerar código</button>
+            </div>
+        </div>
+
+        <div class="tool-box" id="resultBox" style="display:none;">
+            <h2>Código gerado</h2>
+            <div class="hint">Escolha o formato de acordo com onde vai colar.</div>
+
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="modeJson">Para colar no JSON</button>
+                <button class="mode-btn" id="modeHtml">HTML puro</button>
+            </div>
+
+            <div class="output-wrap">
+                <label>Copie o texto abaixo</label>
+                <textarea id="output" readonly></textarea>
+            </div>
+
+            <div class="actions-row">
+                <button class="btn btn-copy" id="copyBtn">Copiar código</button>
+            </div>
+
+            <div class="output-wrap">
+                <label>Pré-visualização</label>
+                <div class="preview" id="preview"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const rowsWrap = document.getElementById("rows");
+        const addRowBtn = document.getElementById("addRowBtn");
+        const generateBtn = document.getElementById("generateBtn");
+        const resultBox = document.getElementById("resultBox");
+        const output = document.getElementById("output");
+        const preview = document.getElementById("preview");
+        const copyBtn = document.getElementById("copyBtn");
+        const modeJson = document.getElementById("modeJson");
+        const modeHtml = document.getElementById("modeHtml");
+
+        let mode = "json"; // "json" ou "html"
+        let lastHtml = ""; // guarda o HTML puro gerado, pra alternar de modo sem reconstruir
+
+        function renumberRows(){
+            rowsWrap.querySelectorAll(".music-row").forEach((row, i)=>{
+                row.querySelector(".num").textContent = i + 1;
+            });
+        }
+
+        function addRow(){
+            const row = document.createElement("div");
+            row.className = "music-row";
+            row.innerHTML = `
+                <div class="num"></div>
+                <input type="text" class="name-input" placeholder="Nome da música (ex: Artista - Título)">
+                <input type="text" class="link-input" placeholder="Link do YouTube">
+                <button class="remove-row" title="Remover">✕</button>
+            `;
+            row.querySelector(".remove-row").onclick = ()=>{
+                row.remove();
+                renumberRows();
+            };
+            rowsWrap.appendChild(row);
+            renumberRows();
+        }
+
+        // começa com 10 linhas prontas
+        for(let i=0; i<10; i++) addRow();
+
+        addRowBtn.onclick = ()=> addRow();
+
+        function escapeHtml(str){
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        function buildHtml(){
+            const rows = Array.from(rowsWrap.querySelectorAll(".music-row"));
+            const entries = rows
+                .map(row=>({
+                    name: row.querySelector(".name-input").value.trim(),
+                    link: row.querySelector(".link-input").value.trim()
+                }))
+                .filter(e=> e.name || e.link);
+
+            if(entries.length === 0) return null;
+
+            return entries.map((e, i)=>{
+                const num = i + 1;
+                const safeName = escapeHtml(e.name || "Sem nome");
+                if(e.link){
+                    return `${num} - ${safeName} - <a href="${e.link}" target="_blank" rel="noopener">assistir</a>`;
+                }
+                return `${num} - ${safeName}`;
+            }).join("<br><br>");
+        }
+
+        function renderOutput(){
+            if(!lastHtml) return;
+            if(mode === "json"){
+                // escapa aspas duplas pra poder colar dentro de "sinopse": "..."
+                output.value = lastHtml.replace(/"/g, '\\"');
+            }else{
+                output.value = lastHtml;
+            }
+            preview.innerHTML = lastHtml;
+        }
+
+        generateBtn.onclick = ()=>{
+            const html = buildHtml();
+            if(!html){
+                alert("Preencha pelo menos o nome de uma música antes de gerar.");
+                return;
+            }
+            lastHtml = html;
+            resultBox.style.display = "block";
+            renderOutput();
+            copyBtn.classList.remove("copied");
+            copyBtn.textContent = "Copiar código";
+            resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
+
+        modeJson.onclick = ()=>{
+            mode = "json";
+            modeJson.classList.add("active");
+            modeHtml.classList.remove("active");
+            renderOutput();
+        };
+        modeHtml.onclick = ()=>{
+            mode = "html";
+            modeHtml.classList.add("active");
+            modeJson.classList.remove("active");
+            renderOutput();
+        };
+
+        copyBtn.onclick = async ()=>{
+            try{
+                await navigator.clipboard.writeText(output.value);
+                copyBtn.textContent = "Copiado!";
+                copyBtn.classList.add("copied");
+                setTimeout(()=>{
+                    copyBtn.textContent = "Copiar código";
+                    copyBtn.classList.remove("copied");
+                }, 1800);
+            }catch(err){
+                output.select();
+                document.execCommand("copy");
+            }
+        };
+    </script>
+</body>
+</html>
