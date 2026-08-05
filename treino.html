@@ -183,9 +183,16 @@
     padding:11px; margin-bottom:10px;
   }
   .step-edit .step-edit-title{
+    display:flex; align-items:center; justify-content:space-between;
     font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em;
     color:var(--tier-color); margin-bottom:8px;
   }
+  .step-edit .btn-remove-step{
+    background:transparent; border:1px solid var(--border); color:var(--text-faint);
+    width:22px; height:22px; border-radius:6px; font-size:11px; line-height:1;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .step-edit .btn-remove-step:active{background:var(--danger); border-color:var(--danger); color:#1a1414;}
   .step-edit-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
   .step-edit-grid .full{grid-column:1 / -1;}
   .step-edit label{display:block; font-size:10px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:4px; font-weight:700;}
@@ -195,6 +202,13 @@
   }
   .step-edit textarea{resize:vertical; min-height:38px; line-height:1.4;}
   .step-edit input:focus, .step-edit textarea:focus{outline:none; border-color:var(--tier-color);}
+
+  .btn-add-step{
+    width:100%; margin:2px 0 12px; background:var(--surface-2); border:1.5px dashed var(--border);
+    color:var(--text-dim); font-size:12.5px; font-weight:700; font-family:'Inter';
+    border-radius:10px; padding:10px 0;
+  }
+  .btn-add-step:active{background:var(--border);}
 
   .btn-remove{
     width:100%; margin-top:10px; background:transparent; border:1px solid var(--border);
@@ -357,7 +371,8 @@
 ============================================================ */
 const DAYS = {
   seg: { label:"Segunda", sub:"Perna A", note:"", exercises:[
-    
+    {name:"Aquecimento: bike ou esteira leve", tier:"cardio", steps:[
+      {etapa:"Padrão", sr:"1 x 5-8 min", desc:"-", rpe:"3-4", obs:""}]},
     {name:"Leg press", tier:"composto", steps:[
       {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 8-12", desc:"90-120s", rpe:"8-9", obs:"Progredir carga a cada semana — registrar carga", calc:"top"},
@@ -375,8 +390,6 @@ const DAYS = {
       {etapa:"Série válida", sr:"1-2 x 10-15", desc:"45-60s", rpe:"9", obs:""}]},
     {name:"Agachamento búlgaro", tier:"sec", steps:[
       {etapa:"Série válida", sr:"3 x 8-15", desc:"90s", rpe:"7-8", obs:""}]},
-    {name:"Cardio depois do treino", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"60 min", obs:""}]},  
 
     ]},
   ter: { label:"Terça", sub:"Peito + Bíceps", note:"", exercises:[
@@ -398,12 +411,10 @@ const DAYS = {
       {etapa:"Série válida", sr:"1-2 x 8-12", desc:"60-75s", rpe:"8", obs:""}]},
     {name:"Rosca martelo", tier:"isolador", steps:[
       {etapa:"Série válida", sr:"1-2 x 10-12", desc:"60s", rpe:"9", obs:"+1 série em relação à versão anterior"}]},
-    {name:"Cardio depois do treino", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"60 min", obs:""}]},    
   ]},
   qua: { label:"Quarta", sub:"Recuperação Ativa + Core", note:"Sem exercícios de força pesada — foco em mobilidade e core.", exercises:[
     {name:"Caminhada leve ou bike", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"60 min", obs:""}]},
+      {etapa:"Padrão", sr:"1 x 15-20 min", desc:"-", rpe:"4-5", obs:""}]},
     {name:"Mobilidade geral de quadril", tier:"padrao", steps:[
       {etapa:"Padrão", sr:"1 x 8-10 min", desc:"-", rpe:"3-4", obs:""}]},
     {name:"Prancha frontal", tier:"protecao", steps:[
@@ -435,8 +446,6 @@ const DAYS = {
       {etapa:"Série válida", sr:"1-2 x 15-20", desc:"45-60s", rpe:"8-9", obs:"Substituiu o Dead bug"}]},
     {name:"Panturrilha sentada", tier:"isolador", steps:[
       {etapa:"Série válida", sr:"1-2 x 12-20", desc:"45-60s", rpe:"9", obs:"Substituiu a 2ª prancha lateral"}]},
-    {name:"Cardio depois do treino", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"20 min", obs:""}]},  
   ]},
   sex: { label:"Sexta", sub:"Costas", note:"", exercises:[
     {name:"Puxada alta pegada neutra", tier:"composto", steps:[
@@ -454,8 +463,6 @@ const DAYS = {
       {etapa:"Série válida", sr:"1-2 x 12-20", desc:"60s", rpe:"8-9", obs:""}]},
     {name:"Hiperextensão", tier:"isolador", steps:[
       {etapa:"Série válida", sr:"1-2 x 12-15", desc:"60s", rpe:"8", obs:"+1 série, carga normal (não precisa mais ser leve)"}]},
-    {name:"Cardio depois do treino", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"60 min", obs:""}]},    
   ]},
   sab: { label:"Sábado", sub:"Ombro + Tríceps", note:"", exercises:[
     {name:"Desenvolvimento sentado", tier:"composto", steps:[
@@ -474,8 +481,6 @@ const DAYS = {
       {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75s", rpe:"8-9", obs:""}]},
     {name:"Mergulho máquina", tier:"isolador", steps:[
       {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75s", rpe:"8-9", obs:"+1 série em relação à versão anterior"}]},
-    {name:"Cardio depois do treino", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"60 min", obs:""}]},    
   ]},
   dom: { label:"Domingo", sub:"Descanso completo", note:"Sem treino de força. O treino de Domingo foi removido nesta versão — o que agregava algo novo migrou para Segunda e Quinta; o resto era redundante e saiu de vez.", exercises:[
     {name:"Descanso completo", tier:"padrao", steps:[
@@ -770,6 +775,7 @@ async function renderDay(){
         </div>
       </div>
       <div class="steps-edit-wrap"></div>
+      <button class="btn-add-step">+ Adicionar etapa</button>
       <div class="edit-actions">
         <button class="btn-cancel">Cancelar</button>
         <button class="btn-save">Salvar</button>
@@ -779,11 +785,18 @@ async function renderDay(){
     card.appendChild(editPanel);
 
     const stepsEditWrap = editPanel.querySelector(".steps-edit-wrap");
-    effSteps.forEach((s, i)=>{
+
+    function renumberSteps(){
+      stepsEditWrap.querySelectorAll(".step-edit").forEach((se, i)=>{
+        se.querySelector(".step-edit-title span").textContent = `Etapa ${i+1}`;
+      });
+    }
+
+    function makeStepBlock(s){
       const se = document.createElement("div");
       se.className = "step-edit";
       se.innerHTML = `
-        <div class="step-edit-title">Etapa ${i+1}</div>
+        <div class="step-edit-title"><span>Etapa</span><button class="btn-remove-step" title="Remover etapa">✕</button></div>
         <div class="step-edit-grid">
           <div>
             <label>Etapa</label>
@@ -807,8 +820,29 @@ async function renderDay(){
           </div>
         </div>
       `;
-      stepsEditWrap.appendChild(se);
-    });
+      se.querySelector(".btn-remove-step").onclick = ()=>{
+        if(stepsEditWrap.querySelectorAll(".step-edit").length <= 1){
+          showToast("O exercício precisa de ao menos uma etapa");
+          return;
+        }
+        se.remove();
+        renumberSteps();
+      };
+      return se;
+    }
+
+    function renderStepBlocks(steps){
+      stepsEditWrap.innerHTML = "";
+      steps.forEach(s=> stepsEditWrap.appendChild(makeStepBlock(s)));
+      renumberSteps();
+    }
+
+    renderStepBlocks(effSteps);
+
+    editPanel.querySelector(".btn-add-step").onclick = ()=>{
+      stepsEditWrap.appendChild(makeStepBlock({ etapa:"Nova etapa", sr:"", desc:"", rpe:"", obs:"" }));
+      renumberSteps();
+    };
 
     let pendingShowCalc = showCalc;
     const sw = editPanel.querySelector(".switch");
@@ -828,13 +862,7 @@ async function renderDay(){
       editPanel.querySelector(".tier-select").value = effTier;
       pendingShowCalc = showCalc;
       sw.classList.toggle("on", pendingShowCalc);
-      stepsEditWrap.querySelectorAll(".step-edit").forEach((se, i)=>{
-        se.querySelector('[data-field="etapa"]').value = effSteps[i].etapa || "";
-        se.querySelector('[data-field="sr"]').value = effSteps[i].sr || "";
-        se.querySelector('[data-field="desc"]').value = effSteps[i].desc || "";
-        se.querySelector('[data-field="rpe"]').value = effSteps[i].rpe || "";
-        se.querySelector('[data-field="obs"]').value = effSteps[i].obs || "";
-      });
+      renderStepBlocks(effSteps);
     };
     editPanel.querySelector(".btn-save").onclick = async ()=>{
       const newName = editPanel.querySelector(".name-input").value.trim() || ex.name;
