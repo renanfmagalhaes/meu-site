@@ -29,5 +29,15 @@
     ],
     "date": "21/07/2026",
     "id": "AnaLivia4anos"
+  },
+  {
+    "title":"Academia 13/08/2026",
+    "sinopse": "Academia",
+    "img": "assets/img/fotos/imagem4.jpg",
+    "tags": [
+      "#Academia"
+    ],
+    "date": "13/08/2026",
+    "id": "academia3"
   }
 ]
