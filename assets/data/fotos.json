@@ -39,5 +39,15 @@
     ],
     "date": "13/08/2026",
     "id": "academia3"
+  },
+  {
+    "title":"Dia dos Pais 26",
+    "sinopse": "",
+    "img": "assets/img/fotos/diadospais.jpg",
+    "tags": [
+      "#DiadosPais"
+    ],
+    "date": "09/08/2026",
+    "id": "diadospais26"
   }
 ]
