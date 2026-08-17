@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerar Devaneio (JSON)</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+        background-color:#0f111a;
+        color:#f1f1f1;
+        font-family:'Poppins', sans-serif;
+        padding:30px 20px 80px;
+    }
+    .wrap { max-width: 760px; margin:0 auto; }
+    h1 { font-size:1.5rem; margin-bottom:6px; }
+    .subtitulo { color:#a0a6b8; font-size:0.9rem; margin-bottom:26px; }
+    section {
+        background-color:#1a1d29;
+        border:1px solid #252a3d;
+        border-radius:12px;
+        padding:20px;
+        margin-bottom:20px;
+    }
+    section h2 {
+        font-size:1rem;
+        color:#38bdf8;
+        margin-bottom:14px;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+    }
+    label {
+        display:block;
+        font-size:0.8rem;
+        color:#a0a6b8;
+        margin-bottom:5px;
+        margin-top:12px;
+    }
+    label:first-child { margin-top:0; }
+    textarea, input[type=date], input[type=text] {
+        width:100%;
+        background-color:#0f111a;
+        border:1px solid #252a3d;
+        border-radius:8px;
+        color:#f1f1f1;
+        padding:12px 14px;
+        font-family:inherit;
+        font-size:1rem;
+    }
+    textarea {
+        resize:vertical;
+        min-height:140px;
+        line-height:1.6;
+    }
+    button {
+        background-color:#38bdf8;
+        color:#0f111a;
+        border:none;
+        border-radius:8px;
+        padding:10px 18px;
+        font-weight:600;
+        font-size:0.9rem;
+        cursor:pointer;
+        margin-top:14px;
+    }
+    button:hover { opacity:0.9; }
+    button.secundario {
+        background-color:#252a3d;
+        color:#38bdf8;
+    }
+    .msg { font-size:0.85rem; color:#a0a6b8; margin-top:10px; }
+    .msg.sucesso { color:#4ade80; }
+    .msg.erro { color:#f87171; }
+    #loteArea {
+        white-space:pre;
+        font-family:'Courier New', monospace;
+        font-size:0.8rem;
+    }
+    .contador {
+        display:inline-block;
+        background-color:#38bdf8;
+        color:#0f111a;
+        border-radius:20px;
+        padding:2px 10px;
+        font-size:0.75rem;
+        font-weight:700;
+        margin-left:8px;
+    }
+    .preview {
+        margin-top:16px;
+        padding:16px 20px;
+        background-color:#0f111a;
+        border:1px solid #252a3d;
+        border-left:3px solid #38bdf8;
+        border-radius:8px;
+        white-space:pre-wrap;
+        font-size:0.95rem;
+        line-height:1.6;
+        color:#f1f1f1;
+    }
+    .preview-label {
+        font-size:0.75rem;
+        color:#a0a6b8;
+        text-transform:uppercase;
+        letter-spacing:0.5px;
+        margin-top:16px;
+        margin-bottom:6px;
+    }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>💭 Gerar Devaneio</h1>
+    <p class="subtitulo">Escreva normalmente, com Enter à vontade — a ferramenta cuida da formatação certa pro JSON. Ferramenta pessoal, não faz parte do site público.</p>
+
+    <section>
+        <h2>1. Escrever</h2>
+        <label>Texto (pode usar Enter pra quebrar linha e criar parágrafos)</label>
+        <textarea id="campoTexto" placeholder="Escreva seu pensamento aqui..."></textarea>
+
+        <label>Data</label>
+        <input type="date" id="campoData">
+
+        <div class="preview-label">Como vai aparecer no site:</div>
+        <div class="preview" id="preview">A prévia aparece aqui conforme você escreve...</div>
+
+        <button onclick="adicionarAoLote()">Adicionar ao lote ↓</button>
+        <p id="msgForm" class="msg"></p>
+    </section>
+
+    <section>
+        <h2>2. Lote acumulado <span class="contador" id="contadorLote">0</span></h2>
+        <p class="msg">Escreva quantos quiser e adicione um a um. No fim, copie tudo e cole dentro do array do <code>devaneio.json</code>.</p>
+        <textarea id="loteArea" rows="10" readonly></textarea>
+        <button onclick="copiarLote()">Copiar tudo</button>
+        <button class="secundario" onclick="limparLote()">Limpar lote</button>
+        <p id="msgLote" class="msg"></p>
+    </section>
+</div>
+
+<script>
+let lote = [];
+
+function slugify(text) {
+    return text
+        .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .toLowerCase();
+}
+
+// Data de hoje como padrão
+document.getElementById("campoData").value = new Date().toISOString().slice(0, 10);
+
+// Atualiza a prévia em tempo real
+document.getElementById("campoTexto").addEventListener("input", atualizarPreview);
+function atualizarPreview() {
+    const texto = document.getElementById("campoTexto").value;
+    document.getElementById("preview").textContent = texto || "A prévia aparece aqui conforme você escreve...";
+}
+
+function adicionarAoLote() {
+    const texto = document.getElementById("campoTexto").value.trim();
+    const data = document.getElementById("campoData").value;
+    const msgForm = document.getElementById("msgForm");
+
+    if (!texto) {
+        msgForm.textContent = "Escreva alguma coisa primeiro.";
+        msgForm.className = "msg erro";
+        return;
+    }
+    if (!data) {
+        msgForm.textContent = "Escolha uma data.";
+        msgForm.className = "msg erro";
+        return;
+    }
+
+    // ID a partir das primeiras palavras do texto + data, pra evitar duplicar
+    const primeirasPalavras = texto.split(/\s+/).slice(0, 6).join(" ");
+    const id = slugify(primeirasPalavras) + "-" + data;
+
+    lote.push({ text: texto, date: data, id: id });
+    atualizarLote();
+
+    document.getElementById("campoTexto").value = "";
+    atualizarPreview();
+    msgForm.textContent = "Adicionado ao lote.";
+    msgForm.className = "msg sucesso";
+}
+
+function atualizarLote() {
+    document.getElementById("contadorLote").textContent = lote.length;
+    document.getElementById("loteArea").value = JSON.stringify(lote, null, 2);
+}
+
+function copiarLote() {
+    const texto = document.getElementById("loteArea").value;
+    if (!texto || lote.length === 0) {
+        document.getElementById("msgLote").textContent = "O lote está vazio.";
+        document.getElementById("msgLote").className = "msg erro";
+        return;
+    }
+    navigator.clipboard.writeText(texto).then(() => {
+        document.getElementById("msgLote").textContent = "Copiado! Cole dentro do array do devaneio.json.";
+        document.getElementById("msgLote").className = "msg sucesso";
+    });
+}
+
+function limparLote() {
+    if (!confirm("Limpar tudo do lote atual?")) return;
+    lote = [];
+    atualizarLote();
+    document.getElementById("msgLote").textContent = "";
+}
+</script>
+</body>
+</html>
