@@ -29,6 +29,7 @@
             <a href="jogos.html">Jogos</a>
             <a href="tutoriais.html">Tutoriais</a>
             <a href="fotos.html">Fotos</a>
+            <a href="devaneio.html">Devaneio</a>
         </nav>
     </header>
 
@@ -76,7 +77,9 @@
     "link": "fotos.html"
   }
 ];
-        initHomePage(categoriasHome, '#home-sections');
+        initHomePage(categoriasHome, '#home-sections').then(() => {
+            initHomeDevaneio('assets/data/devaneio.json', '#home-sections', 'devaneio.html');
+        });
     </script>
 </body>
 </html>
