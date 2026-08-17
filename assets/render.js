@@ -271,3 +271,61 @@ async function initDetailPage(containerSelector) {
         container.innerHTML = '<p class="empty-state">Erro ao carregar o item. Verifique o arquivo JSON.</p>';
     }
 }
+
+/**
+ * Monta a página de Devaneio: blocos simples empilhados (não é um grid de
+ * cards), sem imagem, sem clique — cada bloco só cresce/encolhe conforme
+ * o tamanho do texto.
+ */
+async function initDevaneioPage(jsonPath, containerSelector) {
+    const container = document.querySelector(containerSelector);
+    container.innerHTML = '<p class="loading-state">Carregando...</p>';
+
+    try {
+        const itens = await loadItems(jsonPath);
+
+        if (itens.length === 0) {
+            container.innerHTML = '<p class="empty-state">Nenhum devaneio ainda.</p>';
+            return;
+        }
+
+        const blocos = itens.map(item => `
+            <div class="devaneio-bloco">
+                <p class="devaneio-texto">${item.text}</p>
+                <p class="devaneio-data">${formatarData(item.date)}</p>
+            </div>`);
+
+        container.innerHTML = `<div class="devaneio-lista">${blocos.join("")}</div>`;
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="empty-state">Erro ao carregar os devaneios. Verifique o arquivo JSON.</p>';
+    }
+}
+
+/**
+ * Adiciona, no final da home, um destaque em formato de texto com o
+ * devaneio mais recente — diferente dos outros cards (sem imagem).
+ */
+async function initHomeDevaneio(jsonPath, containerSelector, link) {
+    const container = document.querySelector(containerSelector);
+
+    try {
+        const itens = await loadItems(jsonPath);
+        if (itens.length === 0) return;
+
+        const ultimo = itens[0];
+        const bloco = document.createElement("div");
+        bloco.className = "home-item";
+        bloco.style.marginTop = "10px";
+        bloco.innerHTML = `
+            <h2>Último Devaneio</h2>
+            <div class="devaneio-bloco">
+                <p class="devaneio-texto">${ultimo.text}</p>
+                <p class="devaneio-data">${formatarData(ultimo.date)}</p>
+            </div>
+            <a class="ver-todos" href="${link}">Ver todos &rarr;</a>`;
+        container.appendChild(bloco);
+    } catch (err) {
+        console.error(err);
+    }
+}
