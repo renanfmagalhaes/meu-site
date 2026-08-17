@@ -289,13 +289,13 @@ async function initDevaneioPage(jsonPath, containerSelector) {
             return;
         }
 
-        const blocos = itens.map(item => `
-            <div class="devaneio-bloco">
-                <p class="devaneio-texto">${item.text}</p>
-                <p class="devaneio-data">${formatarData(item.date)}</p>
-            </div>`);
+        const cards = itens.map(item => `
+            <article class="devaneio-card">
+                <p>${item.text}</p>
+                <span>${formatarData(item.date)}</span>
+            </article>`);
 
-        container.innerHTML = `<div class="devaneio-lista">${blocos.join("")}</div>`;
+        container.innerHTML = `<div class="devaneio-grid">${cards.join("")}</div>`;
     } catch (err) {
         console.error(err);
         container.innerHTML = '<p class="empty-state">Erro ao carregar os devaneios. Verifique o arquivo JSON.</p>';
