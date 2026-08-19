@@ -224,6 +224,18 @@
     "platform":"DS",
     "date": "26/07/2026",
     "id":"Grand_Theft_Auto:_Chinatown_Wars"
-    }
+    },
+  {
+    "title": "Monster Hunter Stories Remastered",
+    "sinopse": "In Monster Hunter Stories, set off on an adventure as a monster rider and bond with your monsters along the way. Venture into monster nests to collect eggs and hatch a wide array of species with uniquely powerful skills. Form teams, battle alongside monsters, crush opponents with combo attacks, and ride into the sunset a champion. The downloadable demo lets you play through the first few hours of the game, and all of your progress, including the monsters and items you collect, can be transferred over to the main game after purchasing it. Get a head start on your adventure! The Nintendo eShop demo officially launches August 10th.",
+    "img": "https://media.rawg.io/media/games/bd4/bd421b42dc973ed6f9a6e47d41dfc52f.jpg",
+    "rating": 9,
+    "tags": [
+      "#RPG"
+    ],
+    "platform": "PC",
+    "date": "19/08/2026",
+    "id": "monster-hunter-stories-remastered"
+  }
 
 ]
