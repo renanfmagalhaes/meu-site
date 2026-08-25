@@ -57,7 +57,27 @@
     "tags": [
       "#."
     ],
-    "date": "25/08/2026",
+    "date": "21/08/2026",
     "id": "250826.jpg"
+  },
+  {
+    "title":"Raiz",
+    "sinopse": "...",
+    "img": "assets/img/fotos/2.jpg",
+    "tags": [
+      "#Academia"
+    ],
+    "date": "22/08/2026",
+    "id": "k7220826"
+  },
+  {
+    "title":"Bruna Viola",
+    "sinopse": "...",
+    "img": "assets/img/fotos/3.png",
+    "tags": [
+      "#Show"
+    ],
+    "date": "22/08/2026",
+    "id": "showbrunaviola26"
   }
 ]
