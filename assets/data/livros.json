@@ -632,5 +632,14 @@
     ],
     "date":"2023-03-01",
     "id":"batman-one-bad-day-clayface"
+  },
+  {
+    "title": "O futuro da humanidade",
+    "sinopse": "Primeiro romance do psiquiatra Augusto Cury, O futuro da humanidade oferece uma rara oportunidade de repensar a sociedade e o rumo de nossas vidas.",
+    "img": "https://books.google.com/books/content?id=xsTuAAAAMAAJ&printsec=frontcover&img=1&zoom=1&imgtk=AFLRE732CC9sjhDsZFKlcPe5UUxwnE8ta_WXirdvS1xGt5QvIBknUHKMl5wmWxeW43XROKQp8FXeo0O_gTkqvY3m2DU2G1ej8MTIc_0dB2p31S8Sd47UFM8mLQc2qN1CbFUZJ9JHg70p&source=gbs_api",
+    "rating": 9,
+    "tags": [],
+    "date": "05/06/2014",
+    "id": "o-futuro-da-humanidade"
   }
 ]
