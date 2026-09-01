@@ -248,6 +248,19 @@
     "platform": "Genesis",
     "date": "25/08/2026",
     "id": "castle-of-illusion-starring-mickey-mouse-1990"
+  },
+  {
+    "title": "Resonance: A Plague Tale Legacy",
+    "sinopse": "Situado 15 anos antes de A Plague Tale: Requiem, jogue como Sophia, uma jovem saqueadora feroz, em fuga, mas determinada a descobrir os segredos de seu passado. Mergulhe em uma história original que mistura combate, mito e destino com uma nova visão do universo de A Plague Tale. A jornada de Sophia leva à Ilha do Minotauro, onde ela enfrenta provações mortais, percorre trilhas traiçoeiras, resolve quebra-cabeças, tudo isso enquanto luta e fica um passo à frente do exército que a persegue. Mas o verdadeiro desafio aguarda, pois a criatura aterrorizante escondida atrás do mito logo ressoará com ela...",
+    "img": "https://cdn1.epicgames.com/spt-assets/4e573b1b397348d385d12ddc640fc894/resonance-a-plague-tale-legacy-1vz91.jpg",
+    "rating": 10,
+    "tags": [
+      "#Action",
+      "#Adventure"
+    ],
+    "platform": "PlayStation 5",
+    "date": "2026-08-27",
+    "id": "resonance-a-plague-tale-legacy"
   }
 
 ]
