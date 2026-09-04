@@ -231,6 +231,38 @@ main {
     background-color: #000;
 }
 
+/* Modo "tela cheia" via CSS puro — funciona em qualquer navegador, inclusive
+   onde a Fullscreen API nativa não é suportada em divs (ex: Safari no iPhone) */
+.tela-cheia-css {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 999999 !important;
+    background-color: #000;
+    border-radius: 0 !important;
+}
+
+body.travar-scroll {
+    overflow: hidden;
+}
+
+.fechar-tela-cheia {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+}
+
 /* Selo de plataforma (jogos): SNES, Mega Drive, PC etc. */
 .card-platform {
     position: absolute;

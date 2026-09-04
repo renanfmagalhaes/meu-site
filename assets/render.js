@@ -138,23 +138,60 @@ function carregarYoutubeApi() {
 let ytPlayerContador = 0;
 
 /** Pede tela cheia pro elemento, direto no gesto do usuário (exigência dos navegadores). */
-function pedirTelaCheia(el) {
+function pedirTelaCheiaNativa(el) {
     const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
     if (!req) return;
     try {
         const resultado = req.call(el);
         if (resultado && resultado.catch) resultado.catch(() => {});
     } catch (e) {
-        // Navegador recusou (ex: fora de um gesto do usuário) — segue tocando mesmo assim
+        // Navegador recusou (ex: iOS Safari não suporta em divs) — o modo CSS abaixo garante a experiência mesmo assim
     }
 }
 
-/** Pausa o vídeo automaticamente quando o usuário sai da tela cheia (Esc, etc). */
-function pausarAoSairDaTelaCheia(player) {
+/** Ativa a "tela cheia" via CSS puro — cobre a tela inteira mesmo em navegadores
+ *  (como o Safari do iPhone) que não suportam a Fullscreen API nativa em divs. */
+function ativarModoTelaCheiaCss(el) {
+    el.classList.add("tela-cheia-css");
+    document.body.classList.add("travar-scroll");
+}
+
+/** Cria (ou reaproveita) o botão de fechar sobre o player em tela cheia. */
+function anexarBotaoFechar(el, player) {
+    let botao = el.querySelector(".fechar-tela-cheia");
+    if (!botao) {
+        botao = document.createElement("button");
+        botao.className = "fechar-tela-cheia";
+        botao.setAttribute("aria-label", "Fechar vídeo");
+        botao.textContent = "✕";
+        el.appendChild(botao);
+    }
+    botao.onclick = ev => {
+        ev.stopPropagation();
+        sairDoModoTelaCheia(el, player);
+    };
+}
+
+/** Sai do modo tela cheia (CSS e nativo, se algum estiver ativo) e pausa o vídeo. */
+function sairDoModoTelaCheia(el, player) {
+    el.classList.remove("tela-cheia-css");
+    document.body.classList.remove("travar-scroll");
+    if (document.fullscreenElement || document.webkitFullscreenElement) {
+        const sair = document.exitFullscreen || document.webkitExitFullscreen;
+        if (sair) {
+            const resultado = sair.call(document);
+            if (resultado && resultado.catch) resultado.catch(() => {});
+        }
+    }
+    if (player) player.pauseVideo();
+}
+
+/** Se o modo nativo do navegador realmente engatou, encerra tudo (CSS incluso) quando ele terminar. */
+function monitorarSaidaTelaCheiaNativa(el, player) {
     const aoMudar = () => {
-        const emTelaCheia = document.fullscreenElement || document.webkitFullscreenElement;
-        if (!emTelaCheia) {
-            player.pauseVideo();
+        const ativo = document.fullscreenElement || document.webkitFullscreenElement;
+        if (!ativo) {
+            sairDoModoTelaCheia(el, player);
             document.removeEventListener("fullscreenchange", aoMudar);
             document.removeEventListener("webkitfullscreenchange", aoMudar);
         }
@@ -203,7 +240,9 @@ function criarPlayerBlindado(containerEl, videoId, { autoplay = true } = {}) {
             if (tocando) {
                 player.pauseVideo();
             } else {
-                pedirTelaCheia(containerEl);
+                pedirTelaCheiaNativa(containerEl);
+                ativarModoTelaCheiaCss(containerEl);
+                anexarBotaoFechar(containerEl, player);
                 player.playVideo();
             }
             tocando = !tocando;
@@ -217,11 +256,14 @@ function reproduzirVideoNoCard(cardImageEl) {
     if (!videoId || cardImageEl.classList.contains("playing")) return;
     cardImageEl.classList.add("playing");
 
-    // Pede tela cheia já dentro do clique do usuário (precisa ser síncrono com o gesto)
-    pedirTelaCheia(cardImageEl);
+    // Tenta o modo nativo do navegador já dentro do clique (exige o gesto do usuário)
+    pedirTelaCheiaNativa(cardImageEl);
+    // Reforço via CSS puro: cobre a tela inteira mesmo onde o modo nativo falha (iOS Safari)
+    ativarModoTelaCheiaCss(cardImageEl);
 
     criarPlayerBlindado(cardImageEl, videoId, { autoplay: true }).then(player => {
-        pausarAoSairDaTelaCheia(player);
+        anexarBotaoFechar(cardImageEl, player);
+        monitorarSaidaTelaCheiaNativa(cardImageEl, player);
     });
 }
 
@@ -426,7 +468,11 @@ async function initDetailPage(containerSelector) {
             </article>`;
 
         if (videoId) {
-            criarPlayerBlindado(document.getElementById("video-embed-detalhe"), videoId, { autoplay: true });
+            const elVideo = document.getElementById("video-embed-detalhe");
+            criarPlayerBlindado(elVideo, videoId, { autoplay: true }).then(player => {
+                ativarModoTelaCheiaCss(elVideo);
+                anexarBotaoFechar(elVideo, player);
+            });
         }
     } catch (err) {
         console.error(err);
