@@ -119,7 +119,7 @@ function reproduzirVideoNoCard(cardImageEl) {
 
     cardImageEl.classList.add("playing");
     cardImageEl.innerHTML = `<iframe
-        src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0"
         title="Vídeo"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
@@ -313,7 +313,7 @@ async function initDetailPage(containerSelector) {
         const videoId = item.youtube ? extractYoutubeId(item.youtube) : null;
         const midiaHTML = videoId
             ? `<div class="video-embed-wrap">
-                   <iframe src="https://www.youtube.com/embed/${videoId}" title="${item.title}"
+                   <iframe src="https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0" title="${item.title}"
                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                        loading="lazy" allowfullscreen></iframe>
                </div>`
