@@ -221,6 +221,16 @@ main {
     background: transparent;
 }
 
+/* Quando o card ou o player de detalhe entram em tela cheia, preenchem a tela toda */
+.card-image:fullscreen,
+.card-image:-webkit-full-screen,
+.video-embed-wrap:fullscreen,
+.video-embed-wrap:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+}
+
 /* Selo de plataforma (jogos): SNES, Mega Drive, PC etc. */
 .card-platform {
     position: absolute;

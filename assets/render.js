@@ -137,12 +137,39 @@ function carregarYoutubeApi() {
 
 let ytPlayerContador = 0;
 
+/** Pede tela cheia pro elemento, direto no gesto do usuário (exigência dos navegadores). */
+function pedirTelaCheia(el) {
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (!req) return;
+    try {
+        const resultado = req.call(el);
+        if (resultado && resultado.catch) resultado.catch(() => {});
+    } catch (e) {
+        // Navegador recusou (ex: fora de um gesto do usuário) — segue tocando mesmo assim
+    }
+}
+
+/** Pausa o vídeo automaticamente quando o usuário sai da tela cheia (Esc, etc). */
+function pausarAoSairDaTelaCheia(player) {
+    const aoMudar = () => {
+        const emTelaCheia = document.fullscreenElement || document.webkitFullscreenElement;
+        if (!emTelaCheia) {
+            player.pauseVideo();
+            document.removeEventListener("fullscreenchange", aoMudar);
+            document.removeEventListener("webkitfullscreenchange", aoMudar);
+        }
+    };
+    document.addEventListener("fullscreenchange", aoMudar);
+    document.addEventListener("webkitfullscreenchange", aoMudar);
+}
+
 /**
  * Cria, dentro de um elemento, um player do YouTube "blindado": os controles
  * nativos ficam desligados e um escudo transparente por cima bloqueia
  * qualquer clique que levaria ao canal ou ao YouTube — só toca e pausa.
+ * Retorna uma Promise que resolve com a instância do player.
  */
-async function criarPlayerBlindado(containerEl, videoId, { autoplay = true } = {}) {
+function criarPlayerBlindado(containerEl, videoId, { autoplay = true } = {}) {
     const playerId = `yt-player-${++ytPlayerContador}`;
     containerEl.innerHTML = `
         <div class="yt-embed-wrap">
@@ -150,39 +177,52 @@ async function criarPlayerBlindado(containerEl, videoId, { autoplay = true } = {
             <div class="yt-click-shield"></div>
         </div>`;
 
-    const YT = await carregarYoutubeApi();
-    const player = new YT.Player(playerId, {
-        videoId,
-        playerVars: {
-            autoplay: autoplay ? 1 : 0,
-            controls: 0,
-            disablekb: 1,
-            fs: 0,
-            modestbranding: 1,
-            rel: 0,
-            iv_load_policy: 3,
-            playsinline: 1
-        },
-        events: {
-            onReady: e => { if (autoplay) e.target.playVideo(); }
-        }
-    });
+    return carregarYoutubeApi().then(YT => new Promise(resolve => {
+        const player = new YT.Player(playerId, {
+            videoId,
+            playerVars: {
+                autoplay: autoplay ? 1 : 0,
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1,
+                rel: 0,
+                iv_load_policy: 3,
+                playsinline: 1
+            },
+            events: {
+                onReady: e => {
+                    if (autoplay) e.target.playVideo();
+                    resolve(player);
+                }
+            }
+        });
 
-    let tocando = !!autoplay;
-    const shield = containerEl.querySelector(".yt-click-shield");
-    shield.addEventListener("click", () => {
-        if (tocando) player.pauseVideo();
-        else player.playVideo();
-        tocando = !tocando;
-    });
+        let tocando = !!autoplay;
+        const shield = containerEl.querySelector(".yt-click-shield");
+        shield.addEventListener("click", () => {
+            if (tocando) {
+                player.pauseVideo();
+            } else {
+                pedirTelaCheia(containerEl);
+                player.playVideo();
+            }
+            tocando = !tocando;
+        });
+    }));
 }
 
-/** Troca a thumbnail de um card de vídeo pelo player blindado, tocando ali mesmo. */
+/** Troca a thumbnail de um card de vídeo pelo player blindado, tocando ali mesmo em tela cheia. */
 function reproduzirVideoNoCard(cardImageEl) {
     const videoId = cardImageEl.dataset.youtube;
     if (!videoId || cardImageEl.classList.contains("playing")) return;
     cardImageEl.classList.add("playing");
-    criarPlayerBlindado(cardImageEl, videoId, { autoplay: true });
+
+    // Pede tela cheia já dentro do clique do usuário (precisa ser síncrono com o gesto)
+    pedirTelaCheia(cardImageEl);
+
+    criarPlayerBlindado(cardImageEl, videoId, { autoplay: true }).then(player => {
+        pausarAoSairDaTelaCheia(player);
+    });
 }
 
 /** Mostra/esconde os cards do grid conforme a tag ou plataforma selecionada. */
