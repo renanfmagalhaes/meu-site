@@ -41,6 +41,25 @@ async function loadItems(jsonPath) {
     return items;
 }
 
+/**
+ * Extrai o ID de 11 caracteres de um link do YouTube, aceitando os formatos
+ * mais comuns: watch?v=, youtu.be/, embed/ e shorts/.
+ */
+function extractYoutubeId(url) {
+    if (!url) return null;
+    const patterns = [
+        /(?:youtube\.com\/watch\?v=)([\w-]{11})/,
+        /(?:youtu\.be\/)([\w-]{11})/,
+        /(?:youtube\.com\/embed\/)([\w-]{11})/,
+        /(?:youtube\.com\/shorts\/)([\w-]{11})/
+    ];
+    for (const re of patterns) {
+        const m = url.match(re);
+        if (m) return m[1];
+    }
+    return null;
+}
+
 /** Gera o HTML de um único card. Se o item tiver "link" (ou uma "category" for passada), o card inteiro vira um link clicável. */
 function cardHTML(item, options = {}) {
     const { showBadge = false, badgeLabel = "", category = null } = options;
@@ -59,10 +78,18 @@ function cardHTML(item, options = {}) {
             ? `<span class="card-rating">⭐ ${item.rating}</span>`
             : "";
 
+    // Se o item tiver "youtube", trata como vídeo: usa a thumbnail do YouTube
+    // (a não ser que um "img" próprio tenha sido definido) e mostra um ícone de play.
+    const videoId = item.youtube ? extractYoutubeId(item.youtube) : null;
+    const imgSrc = item.img || (videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "");
+    const playIcon = videoId ? `<span class="play-icon">▶</span>` : "";
+    const videoAttr = videoId ? ` data-youtube="${videoId}"` : "";
+
     const cardInner = `
         <div class="media-card" data-tags="${tagsData}"${platformAttr}>
-            <div class="card-image">
-                <img src="${item.img}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.classList.add('img-fallback');">
+            <div class="card-image"${videoAttr}>
+                <img src="${imgSrc}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.classList.add('img-fallback');">
+                ${playIcon}
                 ${badge}
                 ${platformBadge}
                 ${ratingBadge}
@@ -74,11 +101,29 @@ function cardHTML(item, options = {}) {
             </div>
         </div>`;
 
+    // Vídeos nunca navegam para lugar nenhum — o clique só toca o player no próprio card.
+    // Só itens sem "youtube" podem virar um link (para a página de detalhe ou um link customizado).
+    if (videoId) return cardInner;
+
     // Prioridade: link customizado do item (ex: tutoriais) > página de detalhe genérica (ex: filmes, séries...)
     const detailLink =
         item.link || (category && item.id ? `detalhe.html?cat=${category}&id=${item.id}` : null);
 
     return detailLink ? `<a class="card-link" href="${detailLink}">${cardInner}</a>` : cardInner;
+}
+
+/** Troca a thumbnail de um card de vídeo pelo player embutido do YouTube, tocando ali mesmo. */
+function reproduzirVideoNoCard(cardImageEl) {
+    const videoId = cardImageEl.dataset.youtube;
+    if (!videoId || cardImageEl.classList.contains("playing")) return;
+
+    cardImageEl.classList.add("playing");
+    cardImageEl.innerHTML = `<iframe
+        src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+        title="Vídeo"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy"></iframe>`;
 }
 
 /** Mostra/esconde os cards do grid conforme a tag ou plataforma selecionada. */
@@ -156,6 +201,14 @@ async function initCategoryPage(jsonPath, gridSelector, filtersSelector, categor
                 e.preventDefault();
                 e.stopPropagation();
                 filtrarTag(e.target.dataset.tag, gridEl, filtersEl);
+                return;
+            }
+
+            // Clicar num card de vídeo toca o player ali mesmo, sem sair da página
+            const cardImage = e.target.closest(".card-image[data-youtube]");
+            if (cardImage) {
+                e.preventDefault();
+                reproduzirVideoNoCard(cardImage);
             }
         });
     } catch (err) {
@@ -256,10 +309,20 @@ async function initDetailPage(containerSelector) {
             ? `<h2>Minha análise</h2><p>${item.analise}</p>`
             : "";
 
+        // Se o item tiver "youtube", mostra o player embutido no lugar da imagem de capa.
+        const videoId = item.youtube ? extractYoutubeId(item.youtube) : null;
+        const midiaHTML = videoId
+            ? `<div class="video-embed-wrap">
+                   <iframe src="https://www.youtube.com/embed/${videoId}" title="${item.title}"
+                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                       loading="lazy" allowfullscreen></iframe>
+               </div>`
+            : `<img class="article-cover" src="${item.img}" alt="${item.title}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.classList.add('img-fallback');">`;
+
         container.innerHTML = `
             <article class="article">
                 <a class="voltar" href="${meta.page}">&larr; Voltar para ${meta.label}</a>
-                <img class="article-cover" src="${item.img}" alt="${item.title}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.classList.add('img-fallback');">
+                ${midiaHTML}
                 <h1>${item.title}</h1>
                 <p class="article-meta">${metaParts.join(" · ")}</p>
                 <div class="card-tags article-tags">${tagsHTML}</div>
