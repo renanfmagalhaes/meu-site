@@ -196,12 +196,29 @@ main {
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* Quando o player é ativado, o iframe ocupa o mesmo espaço da thumbnail */
-.card-image.playing iframe {
+/* Player blindado: o iframe fica sem interação e um escudo transparente por
+   cima recebe todos os cliques (só toca/pausa via JS — nada leva ao YouTube) */
+.yt-embed-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.yt-embed-wrap iframe {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     border: 0;
-    display: block;
+    pointer-events: none;
+}
+
+.yt-click-shield {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+    background: transparent;
 }
 
 /* Selo de plataforma (jogos): SNES, Mega Drive, PC etc. */

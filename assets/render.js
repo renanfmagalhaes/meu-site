@@ -112,18 +112,77 @@ function cardHTML(item, options = {}) {
     return detailLink ? `<a class="card-link" href="${detailLink}">${cardInner}</a>` : cardInner;
 }
 
-/** Troca a thumbnail de um card de vídeo pelo player embutido do YouTube, tocando ali mesmo. */
+/* ---- Carregador da API do YouTube, compartilhado entre todos os players da página ---- */
+let youtubeApiPromise = null;
+function carregarYoutubeApi() {
+    if (youtubeApiPromise) return youtubeApiPromise;
+    youtubeApiPromise = new Promise(resolve => {
+        if (window.YT && window.YT.Player) {
+            resolve(window.YT);
+            return;
+        }
+        const anterior = window.onYouTubeIframeAPIReady;
+        window.onYouTubeIframeAPIReady = () => {
+            if (anterior) anterior();
+            resolve(window.YT);
+        };
+        if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+            const tag = document.createElement("script");
+            tag.src = "https://www.youtube.com/iframe_api";
+            document.head.appendChild(tag);
+        }
+    });
+    return youtubeApiPromise;
+}
+
+let ytPlayerContador = 0;
+
+/**
+ * Cria, dentro de um elemento, um player do YouTube "blindado": os controles
+ * nativos ficam desligados e um escudo transparente por cima bloqueia
+ * qualquer clique que levaria ao canal ou ao YouTube — só toca e pausa.
+ */
+async function criarPlayerBlindado(containerEl, videoId, { autoplay = true } = {}) {
+    const playerId = `yt-player-${++ytPlayerContador}`;
+    containerEl.innerHTML = `
+        <div class="yt-embed-wrap">
+            <div id="${playerId}"></div>
+            <div class="yt-click-shield"></div>
+        </div>`;
+
+    const YT = await carregarYoutubeApi();
+    const player = new YT.Player(playerId, {
+        videoId,
+        playerVars: {
+            autoplay: autoplay ? 1 : 0,
+            controls: 0,
+            disablekb: 1,
+            fs: 0,
+            modestbranding: 1,
+            rel: 0,
+            iv_load_policy: 3,
+            playsinline: 1
+        },
+        events: {
+            onReady: e => { if (autoplay) e.target.playVideo(); }
+        }
+    });
+
+    let tocando = !!autoplay;
+    const shield = containerEl.querySelector(".yt-click-shield");
+    shield.addEventListener("click", () => {
+        if (tocando) player.pauseVideo();
+        else player.playVideo();
+        tocando = !tocando;
+    });
+}
+
+/** Troca a thumbnail de um card de vídeo pelo player blindado, tocando ali mesmo. */
 function reproduzirVideoNoCard(cardImageEl) {
     const videoId = cardImageEl.dataset.youtube;
     if (!videoId || cardImageEl.classList.contains("playing")) return;
-
     cardImageEl.classList.add("playing");
-    cardImageEl.innerHTML = `<iframe
-        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0"
-        title="Vídeo"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        loading="lazy"></iframe>`;
+    criarPlayerBlindado(cardImageEl, videoId, { autoplay: true });
 }
 
 /** Mostra/esconde os cards do grid conforme a tag ou plataforma selecionada. */
@@ -309,14 +368,10 @@ async function initDetailPage(containerSelector) {
             ? `<h2>Minha análise</h2><p>${item.analise}</p>`
             : "";
 
-        // Se o item tiver "youtube", mostra o player embutido no lugar da imagem de capa.
+        // Se o item tiver "youtube", mostra o player blindado no lugar da imagem de capa.
         const videoId = item.youtube ? extractYoutubeId(item.youtube) : null;
         const midiaHTML = videoId
-            ? `<div class="video-embed-wrap">
-                   <iframe src="https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0" title="${item.title}"
-                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                       loading="lazy" allowfullscreen></iframe>
-               </div>`
+            ? `<div class="video-embed-wrap" id="video-embed-detalhe"></div>`
             : `<img class="article-cover" src="${item.img}" alt="${item.title}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.classList.add('img-fallback');">`;
 
         container.innerHTML = `
@@ -329,6 +384,10 @@ async function initDetailPage(containerSelector) {
                 <p>${item.sinopse}</p>
                 ${analiseHTML}
             </article>`;
+
+        if (videoId) {
+            criarPlayerBlindado(document.getElementById("video-embed-detalhe"), videoId, { autoplay: true });
+        }
     } catch (err) {
         console.error(err);
         container.innerHTML = '<p class="empty-state">Erro ao carregar o item. Verifique o arquivo JSON.</p>';
