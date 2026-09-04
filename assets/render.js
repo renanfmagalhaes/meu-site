@@ -219,6 +219,11 @@ function criarPlayerBlindado(containerEl, videoId, { autoplay = true } = {}) {
             videoId,
             playerVars: {
                 autoplay: autoplay ? 1 : 0,
+                // Começa mudo: é a única forma de garantir que o autoplay realmente
+                // funcione em qualquer navegador (Chrome, Safari/iOS etc. bloqueiam
+                // autoplay com som). Sem isso, o vídeo fica parado — e o ícone de
+                // pausa do próprio YouTube continua visível, preso na tela.
+                mute: autoplay ? 1 : 0,
                 controls: 0,
                 disablekb: 1,
                 modestbranding: 1,
@@ -228,15 +233,40 @@ function criarPlayerBlindado(containerEl, videoId, { autoplay = true } = {}) {
             },
             events: {
                 onReady: e => {
-                    if (autoplay) e.target.playVideo();
+                    if (autoplay) {
+                        e.target.mute();
+                        e.target.playVideo();
+                    }
                     resolve(player);
                 }
             }
         });
 
         let tocando = !!autoplay;
+        let silenciado = !!autoplay;
+
+        const embedWrap = containerEl.querySelector(".yt-embed-wrap");
+        const avisoSom = document.createElement("span");
+        avisoSom.className = "aviso-som";
+        avisoSom.textContent = "🔇 Toque para ativar o som";
+        avisoSom.style.display = silenciado ? "flex" : "none";
+        embedWrap.appendChild(avisoSom);
+
         const shield = containerEl.querySelector(".yt-click-shield");
         shield.addEventListener("click", () => {
+            // Primeiro toque, com o vídeo mudo: só ativa o som (o vídeo já está tocando)
+            if (silenciado) {
+                player.unMute();
+                player.setVolume(100);
+                silenciado = false;
+                avisoSom.style.display = "none";
+                if (!tocando) {
+                    player.playVideo();
+                    tocando = true;
+                }
+                return;
+            }
+
             if (tocando) {
                 player.pauseVideo();
             } else {
