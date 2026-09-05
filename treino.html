@@ -12,7 +12,7 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Low Volume — Treino</title>
+<title>João — Treino Hipertrofia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -330,7 +330,7 @@
 
 <header class="app">
   <div class="app-title">
-    <h1>Renan<span> Magalhães</span><span class="divider">·</span>LOW<span>VOLUME</span></h1>
+    <h1>João<span class="divider">·</span>HIPERTROFIA<span> AVANÇADO</span></h1>
     <button class="gear" id="gearBtn" aria-label="Ajustes">⚙</button>
   </div>
   <div class="daytabs" id="dayTabs"></div>
@@ -346,7 +346,7 @@
     <label>Back-off (% de redução)</label>
     <input type="number" id="backoffPct" min="5" max="40" step="1">
   </div>
-  <div class="settings-note">Padrão: feeder em 70% da carga do top set, back-off com 15% a menos. Ajuste conforme sua sensação nas sessões — o critério final sempre é o RPE alvo indicado em cada etapa, não o número exato.</div>
+  <div class="settings-note">Padrão: feeder em 70% da carga do top set, back-off com 15% a menos. Informe a carga do top set em cada exercício para ver a estimativa de carga das outras etapas — ajuste os % conforme sua sensação nas sessões.</div>
 
   <h3 style="margin-top:16px;">Cores por categoria</h3>
   <div id="colorRows"></div>
@@ -367,7 +367,7 @@
 <main id="main"></main>
 
 <div class="footer-note">
-  Baseado na planilha original de treino de perna com proteção de pubalgia e na lógica do método Low Volume (feeder, top set, back-off, microloading). Não substitui avaliação de profissional de educação física ou orientação médica.
+  Baseado na ficha de treino de João, elaborada pelo personal trainer Paulo Henrique — objetivo hipertrofia, nível avançado, início em 30/06/25. Não substitui a orientação do seu profissional de educação física.
 </div>
 
 <div class="toast" id="toast"></div>
@@ -379,123 +379,202 @@
    step.calc: 'feeder' | 'top' | 'backoff' | null
 ============================================================ */
 const DAYS = {
-  seg: { label:"Segunda", sub:"Perna A", note:"", exercises:[
-    {name:"Aquecimento: bike ou esteira leve", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"1 x 5-8 min", desc:"-", rpe:"3-4", obs:""}]},
-    {name:"Leg press", tier:"composto", steps:[
-      {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
-      {etapa:"Top set", sr:"1 x 8-12", desc:"90-120s", rpe:"8-9", obs:"Progredir carga a cada semana — registrar carga", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 10-14", desc:"90s", rpe:"8", obs:"Reduzir carga, manter controle", calc:"backoff"}]},
-    {name:"Agachamento no smith", tier:"sec", steps:[
-      {etapa:"Top set", sr:"1 x 6-10", desc:"120s", rpe:"8", obs:"Amplitude completa", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 8-12", desc:"90-120s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Afundo com halteres", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-12/lado", desc:"75-90s", rpe:"8", obs:"Vindo do treino de Domingo (removido)"}]},
-    {name:"Cadeira extensora", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60-90s", rpe:"9", obs:"Drop set na última série"}]},
-    {name:"Cadeira adutora", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60s", rpe:"8", obs:"Carga progressiva — trocou a isometria protetora"}]},
-    {name:"Panturrilha em pé", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"45-60s", rpe:"9", obs:""}]},
-    {name:"Agachamento búlgaro", tier:"sec", steps:[
-      {etapa:"Série válida", sr:"3 x 8-15", desc:"90s", rpe:"7-8", obs:""}]},
-
-    ]},
-  ter: { label:"Terça", sub:"Peito + Bíceps", note:"", exercises:[
+  seg: { label:"Segunda", sub:"Treino A — Peito / Tríceps", note:"", exercises:[
     {name:"Supino reto", tier:"composto", steps:[
-      {etapa:"Feeder", sr:"1 x 6-8 (leve)", desc:"45s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
-      {etapa:"Top set", sr:"1 x 6-10", desc:"90-120s", rpe:"8-9", obs:"Progredir carga — registrar carga", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 8-10", desc:"90s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Supino inclinado com halteres", tier:"sec", steps:[
-      {etapa:"Top set", sr:"1 x 8-12", desc:"90s", rpe:"8", obs:"", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 10-12", desc:"75-90s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Crucifixo máquina/cabo", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"60s", rpe:"9", obs:"Squeeze no topo"}]},
-    {name:"Máquina peitoral ou paralela assistida", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75-90s", rpe:"8-9", obs:""}]},
-    {name:"Rosca direta", tier:"sec", steps:[
-      {etapa:"Top set", sr:"1 x 6-10", desc:"75-90s", rpe:"8-9", obs:"Sem balanço", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 8-10", desc:"60-75s", rpe:"8-9", obs:"Última série pode ir até a falha, se estiver sem dor", calc:"backoff"}]},
-    {name:"Rosca inclinada", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"60-75s", rpe:"8", obs:""}]},
-    {name:"Rosca martelo", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-12", desc:"60s", rpe:"9", obs:"+1 série em relação à versão anterior"}]},
+      {etapa:"Feeder", sr:"1 x 10 (leve)", desc:"40s", rpe:"-", obs:"Na barra — aquecimento, carga leve, sem fadiga", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Na barra — série principal, registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 10", desc:"40s", rpe:"-", obs:"Na barra — reduzir carga, manter controle", calc:"backoff"}]},
+    {name:"Cross over polia alta", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Segura 2 seg em baixo — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Segura 2 seg em baixo — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Segura 2 seg em baixo — reduzir carga", calc:"backoff"}]},
+    {name:"Cross over polia média", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Polia na altura do ombro — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Polia na altura do ombro — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Polia na altura do ombro — reduzir carga", calc:"backoff"}]},
+    {name:"Cross over polia baixa", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Supino inclinado + flexão", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12+12 (leve)", desc:"40s", rpe:"-", obs:"Bi-set com halter — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set com halter — carga máxima", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set com halter — reduzir carga", calc:"backoff"}]},
+    {name:"Tríceps coice na polia", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Tríceps testa unilateral na polia", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Unilateral — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Unilateral — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Unilateral — reduzir carga", calc:"backoff"}]},
+    {name:"Tríceps pulley barra reta", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Tríceps francês", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Abdominal", tier:"protecao", steps:[
+      {etapa:"Série válida", sr:"3 x 15", desc:"40s", rpe:"-", obs:"Sem esquema de carga — mantido como no original"}]},
   ]},
-  qua: { label:"Quarta", sub:"Recuperação Ativa + Core", note:"Sem exercícios de força pesada — foco em mobilidade e core.", exercises:[
-    {name:"Caminhada leve ou bike", tier:"cardio", steps:[
-      {etapa:"Padrão", sr:"1 x 15-20 min", desc:"-", rpe:"4-5", obs:""}]},
-    {name:"Mobilidade geral de quadril", tier:"padrao", steps:[
-      {etapa:"Padrão", sr:"1 x 8-10 min", desc:"-", rpe:"3-4", obs:""}]},
-    {name:"Prancha frontal", tier:"protecao", steps:[
-      {etapa:"Padrão (core)", sr:"3 x 30-45s", desc:"45s", rpe:"7", obs:"Adicionada — antes só havia prancha lateral"}]},
-    {name:"Prancha lateral", tier:"protecao", steps:[
-      {etapa:"Padrão (core)", sr:"3 x 30-45s/lado", desc:"45s", rpe:"7", obs:""}]},
-    {name:"Elevação de pernas", tier:"protecao", steps:[
-      {etapa:"Padrão (core)", sr:"3 x 12-15", desc:"45-60s", rpe:"7-8", obs:"Adicionada"}]},
+  ter: { label:"Terça", sub:"Treino B — Costas / Bíceps", note:"", exercises:[
+    {name:"Remada curvada na barra", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Pegada pronada — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Pegada pronada — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Pegada pronada — reduzir carga", calc:"backoff"}]},
+    {name:"Remada cavalinho", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Aquecimento", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Progredindo carga — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 8", desc:"40s", rpe:"-", obs:"Carga mais alta, reps reduzidas", calc:"backoff"}]},
+    {name:"Puxada frontal", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Com a corda — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Com a corda — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 12", desc:"40s", rpe:"-", obs:"Com a corda — reduzir carga", calc:"backoff"}]},
+    {name:"Remada sentado", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Na barra reta, pegada pronada — aquecimento", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Progredindo carga — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 8", desc:"40s", rpe:"-", obs:"Carga mais alta, reps reduzidas", calc:"backoff"}]},
+    {name:"Pulldown", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Usar corda — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Usar corda — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 12", desc:"40s", rpe:"-", obs:"Usar corda — reduzir carga", calc:"backoff"}]},
+    {name:"Rosca alternada sentado", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Carga máxima", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Rosca martelo unilateral", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"Pegada neutra, em pé — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Pegada neutra, em pé — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Pegada neutra, em pé — reduzir carga", calc:"backoff"}]},
+    {name:"Rosca direta na barra reta", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Rosca concentrada", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"Colocar o braço na perna — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Colocar o braço na perna — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Colocar o braço na perna — reduzir carga", calc:"backoff"}]},
   ]},
-  qui: { label:"Quinta", sub:"Perna B", note:"", exercises:[
-    {name:"Terra romeno", tier:"composto", steps:[
-      {etapa:"Feeder", sr:"1 x 6-8 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
-      {etapa:"Top set", sr:"1 x 6-10", desc:"120s", rpe:"8", obs:"Progredir carga — registrar carga", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 8-10", desc:"90-120s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Leg press pés altos", tier:"sec", steps:[
-      {etapa:"Top set", sr:"1 x 10-12", desc:"90s", rpe:"8", obs:"Vindo do treino de Domingo (removido) — ênfase posterior", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 12-14", desc:"75-90s", rpe:"7-8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Mesa flexora", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60-90s", rpe:"9", obs:""}]},
-    {name:"Flexora sentada", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60-90s", rpe:"8-9", obs:""}]},
-    {name:"Hip thrust", tier:"composto", steps:[
-      {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
-      {etapa:"Top set", sr:"1 x 8-12", desc:"90-120s", rpe:"8-9", obs:"Pico de contração 1-2s — registrar carga", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 10-14", desc:"90-120s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Ponte de glúteo unilateral", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-12/lado", desc:"60s", rpe:"8", obs:"Progrediu de bilateral para unilateral"}]},
-    {name:"Abdutora máquina", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 15-20", desc:"45-60s", rpe:"8-9", obs:"Substituiu o Dead bug"}]},
-    {name:"Panturrilha sentada", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"45-60s", rpe:"9", obs:"Substituiu a 2ª prancha lateral"}]},
+  qua: { label:"Quarta", sub:"Treino C — Perna completa", note:"", exercises:[
+    {name:"Cadeira extensora", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Aquecimento", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Progredindo carga — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 8", desc:"40s", rpe:"-", obs:"Carga mais alta, reps reduzidas", calc:"backoff"}]},
+    {name:"Hack", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 10 (leve)", desc:"40s", rpe:"-", obs:"Segura 3 seg em baixo em cada repetição — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Segura 3 seg em baixo em cada repetição — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 10", desc:"40s", rpe:"-", obs:"Segura 3 seg em baixo em cada repetição — reduzir carga", calc:"backoff"}]},
+    {name:"Leg 45", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Segurar 10 seg na primeira repetição do treino e fazer as 11 seguintes", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Recuo no step", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Flexora unilateral", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Elevação pélvica", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Carga moderada", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Carga moderada — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Carga moderada — reduzir levemente", calc:"backoff"}]},
+    {name:"Leg horizontal unilateral", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Agachamento frontal + sumô", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12+15 (leve)", desc:"40s", rpe:"-", obs:"Bi-set com halter — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12+15", desc:"40s", rpe:"-", obs:"Bi-set com halter — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12+15", desc:"40s", rpe:"-", obs:"Bi-set com halter — reduzir carga", calc:"backoff"}]},
+    {name:"Panturrilha", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 20 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 20", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 20", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
   ]},
-  sex: { label:"Sexta", sub:"Costas", note:"", exercises:[
-    {name:"Puxada alta pegada neutra", tier:"composto", steps:[
-      {etapa:"Feeder", sr:"1 x 8-10 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
-      {etapa:"Top set", sr:"1 x 6-10", desc:"90-120s", rpe:"8-9", obs:"Registrar carga", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 8-12", desc:"90-120s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Remada baixa triângulo", tier:"sec", steps:[
-      {etapa:"Top set", sr:"1 x 8-12", desc:"90s", rpe:"8-9", obs:"", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 10-14", desc:"75-90s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
-    {name:"Remada unilateral apoiada", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-12", desc:"75-90s", rpe:"8", obs:""}]},
-    {name:"Pulldown braço reto", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"60s", rpe:"8-9", obs:""}]},
-    {name:"Face pull", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"60s", rpe:"8-9", obs:""}]},
-    {name:"Hiperextensão", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"60s", rpe:"8", obs:"+1 série, carga normal (não precisa mais ser leve)"}]},
-  ]},
-  sab: { label:"Sábado", sub:"Ombro + Tríceps", note:"", exercises:[
-    {name:"Desenvolvimento sentado", tier:"composto", steps:[
-      {etapa:"Feeder", sr:"1 x 6-8 (leve)", desc:"60s", rpe:"5-6", obs:"Contato com o padrão, sem fadiga", calc:"feeder"},
-      {etapa:"Top set", sr:"1 x 6-10", desc:"90-120s", rpe:"8-9", obs:"Registrar carga", calc:"top"},
-      {etapa:"Back-off", sr:"1 x 8-12", desc:"90s", rpe:"8", obs:"Segundo estímulo controlado", calc:"backoff"}]},
+  qui: { label:"Quinta", sub:"Treino D — Ombro / Bíceps / Tríceps", note:"", exercises:[
     {name:"Elevação lateral", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"45-60s", rpe:"9", obs:""}]},
-    {name:"Elevação lateral no cabo", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-15", desc:"45-60s", rpe:"8-9", obs:""}]},
+      {etapa:"Série válida", sr:"10 x 10", desc:"10s", rpe:"-", obs:"Rest-pause: carga moderada, apenas 10 seg de descanso entre cada série — não se aplica ao esquema feeder/top/back-off"}]},
+    {name:"Desenvolvimento", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"2 x 12 (leve)", desc:"40s", rpe:"-", obs:"Aquecimento progressivo", calc:"feeder"},
+      {etapa:"Top set", sr:"2 x 10", desc:"40s", rpe:"-", obs:"Aumenta a carga — registrar a carga das 2 séries finais", calc:"top"}]},
+    {name:"Elevação frontal unilateral", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"Pegada pronada — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Pegada pronada — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 15", desc:"40s", rpe:"-", obs:"Pegada pronada — reduzir carga", calc:"backoff"}]},
+    {name:"Elevação frontal pegada neutra", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"2 x 12 (leve)", desc:"40s", rpe:"-", obs:"Aquecimento progressivo", calc:"feeder"},
+      {etapa:"Top set", sr:"2 x 10", desc:"40s", rpe:"-", obs:"Aumenta a carga — registrar a carga das 2 séries finais", calc:"top"}]},
     {name:"Crucifixo inverso", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 12-20", desc:"60s", rpe:"8-9", obs:""}]},
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 15", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Rosca scott barra W", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Sentado no banco — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Sentado no banco — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Sentado no banco — reduzir carga", calc:"backoff"}]},
     {name:"Tríceps corda", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 10-15", desc:"60s", rpe:"9", obs:""}]},
-    {name:"Tríceps testa", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75s", rpe:"8-9", obs:""}]},
-    {name:"Mergulho máquina", tier:"isolador", steps:[
-      {etapa:"Série válida", sr:"1-2 x 8-12", desc:"75s", rpe:"8-9", obs:"+1 série em relação à versão anterior"}]},
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Rosca alternada + rosca martelo", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12+12 (leve)", desc:"40s", rpe:"-", obs:"Bi-set com o mesmo halter — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set com o mesmo halter — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set com o mesmo halter — reduzir carga", calc:"backoff"}]},
+    {name:"Tríceps unilateral + coice com halter", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12+12 (leve)", desc:"40s", rpe:"-", obs:"Bi-set — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set — reduzir carga", calc:"backoff"}]},
+    {name:"Abdominal", tier:"protecao", steps:[
+      {etapa:"Série válida", sr:"3 x 15", desc:"40s", rpe:"-", obs:"Sem esquema de carga — mantido como no original"}]},
   ]},
-  dom: { label:"Domingo", sub:"Descanso completo", note:"Sem treino de força. O treino de Domingo foi removido nesta versão — o que agregava algo novo migrou para Segunda e Quinta; o resto era redundante e saiu de vez.", exercises:[
-    {name:"Descanso completo", tier:"padrao", steps:[
+  sex: { label:"Sexta", sub:"Treino E — Peito / Costas", note:"", exercises:[
+    {name:"Supino inclinado", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 15 (leve)", desc:"40s", rpe:"-", obs:"Com halter — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Com halter — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 15", desc:"40s", rpe:"-", obs:"Com halter — reduzir carga", calc:"backoff"}]},
+    {name:"Remada serrote", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Peck deck", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Aquecimento", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Progredindo carga — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 8", desc:"40s", rpe:"-", obs:"Carga mais alta, reps reduzidas", calc:"backoff"}]},
+    {name:"Puxada articulado unilateral", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 12", desc:"40s", rpe:"-", obs:"Reduzir carga", calc:"backoff"}]},
+    {name:"Supino declinado", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Com halter — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Com halter — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 12", desc:"40s", rpe:"-", obs:"Com halter — reduzir carga", calc:"backoff"}]},
+    {name:"Remada curvada", tier:"composto", steps:[
+      {etapa:"Feeder", sr:"1 x 12 (leve)", desc:"40s", rpe:"-", obs:"Pegada supinada — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12", desc:"40s", rpe:"-", obs:"Pegada supinada — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 12", desc:"40s", rpe:"-", obs:"Pegada supinada — reduzir carga", calc:"backoff"}]},
+    {name:"Flexão de braço + crucifixo reto", tier:"isolador", steps:[
+      {etapa:"Feeder", sr:"1 x 12+12 (leve)", desc:"40s", rpe:"-", obs:"Bi-set — carga leve", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set — registrar carga", calc:"top"},
+      {etapa:"Back-off", sr:"2 x 12+12", desc:"40s", rpe:"-", obs:"Bi-set — reduzir carga", calc:"backoff"}]},
+    {name:"Barra fixa ou graviton", tier:"sec", steps:[
+      {etapa:"Feeder", sr:"1 x 10 (leve/assistida)", desc:"40s", rpe:"-", obs:"", calc:"feeder"},
+      {etapa:"Top set", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Registrar carga/assistência", calc:"top"},
+      {etapa:"Back-off", sr:"1 x 10", desc:"40s", rpe:"-", obs:"Reduzir carga, aumentar assistência se precisar", calc:"backoff"}]},
+    {name:"Abdominal", tier:"protecao", steps:[
+      {etapa:"Série válida", sr:"3 x 15", desc:"40s", rpe:"-", obs:"Sem esquema de carga — mantido como no original"}]},
+  ]},
+  sab: { label:"Sábado", sub:"Descanso", note:"Sem treino previsto na ficha original — dia de descanso ou atividade leve, a critério do João.", exercises:[
+    {name:"Descanso", tier:"padrao", steps:[
       {etapa:"Padrão", sr:"—", desc:"-", rpe:"-", obs:"Fique à vontade para caminhar, fazer uma atividade leve ou simplesmente descansar."}]},
   ]},
-  rpe: { label:"RPE", sub:"Guia rápido", isInfo:true },
+  dom: { label:"Domingo", sub:"Descanso", note:"Sem treino previsto na ficha original — dia de descanso ou atividade leve, a critério do João.", exercises:[
+    {name:"Descanso", tier:"padrao", steps:[
+      {etapa:"Padrão", sr:"—", desc:"-", rpe:"-", obs:"Fique à vontade para caminhar, fazer uma atividade leve ou simplesmente descansar."}]},
+  ]},
 };
 const TIER_LABEL = {composto:"Composto principal", sec:"Composto secundário", isolador:"Isolador", protecao:"Proteção", padrao:"Padrão", cardio:"Cardio"};
 const TIER_VAR = {composto:"--composto", sec:"--sec", isolador:"--isolador", protecao:"--protecao", padrao:"--padrao", cardio:"--cardio"};
@@ -542,7 +621,7 @@ function renderColorRows(){
 }
 
 /* ---------- storage helpers (localStorage — funciona em qualquer site estático, ex: GitHub Pages) ---------- */
-const LS_PREFIX = "lowvolume:";
+const LS_PREFIX = "joao-treino-v1:";
 function lsGet(key){
   try{ const v = localStorage.getItem(LS_PREFIX + key); return v; }
   catch(e){ return null; }
@@ -649,7 +728,8 @@ function fmtVal(v, unit){
 function fmtKg(v){ return fmtVal(v, "kg"); }
 
 function stepMeta(step){
-  return `<b>${step.sr}</b><span>·</span><span>Descanso ${step.desc}</span><span>·</span><span>RPE ${step.rpe}</span>`;
+  const rpePart = (step.rpe && step.rpe !== "-") ? `<span>·</span><span>RPE ${step.rpe}</span>` : "";
+  return `<b>${step.sr}</b><span>·</span><span>Descanso ${step.desc}</span>${rpePart}`;
 }
 
 function loadStackHTML(tier, topVal){
