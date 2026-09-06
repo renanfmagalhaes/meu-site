@@ -87,5 +87,15 @@
   "tags": ["#Tag"],
   "date": "04/09/2026",
   "id": "video-04092026"
-}
+},
+{
+    "title":"2020",
+    "sinopse": "...",
+    "img": "assets/img/fotos/14.jpg",
+    "tags": [
+      "#capoeira"
+    ],
+    "date": "05/09/2026",
+    "id": "capoeira2020"
+  }
 ]
