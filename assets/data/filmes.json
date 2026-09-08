@@ -35,5 +35,16 @@
     ],
     "date": "03/09/2026",
     "id": "um-homem-chamado-ove"
+  },
+  {
+    "title": "Querida Zoe",
+    "sinopse": "Quando Tess sofre uma terrível perda em sua família, ela se aproxima de seu pai biológico e encontra nele um inesperado apoio.",
+    "img": "https://image.tmdb.org/t/p/w500/tLyKCXea2INdSCyOlGOvDnR3feO.jpg",
+    "rating": 7.5,
+    "tags": [
+      "#Drama"
+    ],
+    "date": "07/09/2026",
+    "id": "querida-zoe"
   }
 ]
