@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
 <style>
   :root{
     --bg:#121417;
@@ -53,27 +54,11 @@
   }
   .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.04em;}
 
-  /* ---------- Site header ---------- */
-  .site-header{
-    background:#141722; padding:24px 40px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:14px; border-bottom:1px solid #252a3d;
-    font-family:'Poppins',sans-serif;
-  }
-  .site-header .logo{
-    font-size:1.2rem; font-weight:700; color:#38bdf8;
-    letter-spacing:1px; text-align:center;
-  }
-  .site-header nav{display:flex; justify-content:center; gap:25px; flex-wrap:wrap;}
-  .site-header nav a{
-    color:#a0a6b8; text-decoration:none; font-size:0.95rem;
-    font-weight:500; transition:color 0.2s ease;
-  }
-  .site-header nav a:hover, .site-header nav a.active{color:#38bdf8;}
+  header{font-family:'Poppins',sans-serif;}
 
   /* ---------- Top bar ---------- */
-  header.app{
-    position:sticky; top:0; z-index:20;
+  .app{
+    position:relative; z-index:20;
     background:linear-gradient(180deg, var(--bg) 80%, transparent);
     padding:18px 16px 8px;
   }
@@ -140,7 +125,7 @@
   }
 
   /* ---------- Day section ---------- */
-  main{padding:14px 16px 0;}
+  main{padding:14px 16px 0; max-width:none; margin:0;}
   .day-sub{
     font-size:12.5px; color:var(--text-dim); margin:2px 0 16px; line-height:1.5;
     background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px 12px;
@@ -347,9 +332,9 @@
 </head>
 <body>
 
-<header class="site-header">
+<header>
   <div class="logo">Renan Magalhães</div>
-  <nav aria-label="Navegação principal">
+  <nav>
     <a href="index.html">Início</a>
     <a href="filmes.html">Filmes</a>
     <a href="series.html">Séries</a>
@@ -363,13 +348,13 @@
   </nav>
 </header>
 
-<header class="app">
+<div class="app">
   <div class="app-title">
     <h1>Renan<span class="divider">·</span>HIPERTROFIA<span> AVANÇADO</span></h1>
     <button class="gear" id="gearBtn" aria-label="Ajustes">⚙</button>
   </div>
   <div class="daytabs" id="dayTabs"></div>
-</header>
+</div>
 
 <div class="settings" id="settingsPanel">
   <h3>Ajustes de cálculo</h3>
