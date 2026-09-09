@@ -14,6 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Renan — Treino Hipertrofia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -51,6 +52,24 @@
     padding-bottom:40px;
   }
   .display{font-family:'Bebas Neue',sans-serif; letter-spacing:0.04em;}
+
+  /* ---------- Site header ---------- */
+  .site-header{
+    background:#141722; padding:24px 40px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px; border-bottom:1px solid #252a3d;
+    font-family:'Poppins',sans-serif;
+  }
+  .site-header .logo{
+    font-size:1.2rem; font-weight:700; color:#38bdf8;
+    letter-spacing:1px; text-align:center;
+  }
+  .site-header nav{display:flex; justify-content:center; gap:25px; flex-wrap:wrap;}
+  .site-header nav a{
+    color:#a0a6b8; text-decoration:none; font-size:0.95rem;
+    font-weight:500; transition:color 0.2s ease;
+  }
+  .site-header nav a:hover, .site-header nav a.active{color:#38bdf8;}
 
   /* ---------- Top bar ---------- */
   header.app{
@@ -327,6 +346,22 @@
 </style>
 </head>
 <body>
+
+<header class="site-header">
+  <div class="logo">Renan Magalhães</div>
+  <nav aria-label="Navegação principal">
+    <a href="index.html">Início</a>
+    <a href="filmes.html">Filmes</a>
+    <a href="series.html">Séries</a>
+    <a href="livros.html">Livros</a>
+    <a href="musicas.html">Músicas</a>
+    <a href="jogos.html">Jogos</a>
+    <a href="tutoriais.html">Tutoriais</a>
+    <a href="fotos.html">Fotos</a>
+    <a href="devaneio.html">Devaneio</a>
+    <a href="treino.html" class="active" aria-current="page">Treino</a>
+  </nav>
+</header>
 
 <header class="app">
   <div class="app-title">
