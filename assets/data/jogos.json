@@ -279,8 +279,21 @@
     "rating": 9.5,
     "tags": [],
     "platform": "PC",
-    "date": "05/09/2026",
+    "date": "06/09/2026",
     "id": "halloween-the-game"
+  },
+  {
+    "title": "The Dark Pictures Anthology: Little Hope",
+    "sinopse": "The Dark Pictures Anthology is a series of intense, standalone, branching cinematic horror games featuring single and multiplayer modes. 4 college students and their professor become stranded in the abandoned town of Little Hope. Trapped by an impenetrable fog they try desperately to escape whilst witnessing terrifying visions from the past. They must figure out the motivation of these apparitions before the evil forces at work drags each of their souls to hell. Witness terrifying visions of the past, haunted by the events of the XVIIth century Andover Witch Trials Escape the hideous apparitions that relentlessly pursue them through the fog! Play online with a friend or up to 5 friends offline. Abandon Hope...all who enter here!",
+    "img": "https://media.rawg.io/media/games/643/6431f15213a854efd273943f2cf6a925.jpg",
+    "rating": 9,
+    "tags": [
+      "#Action",
+      "#Adventure"
+    ],
+    "platform": "PC",
+    "date": "11/09/2026",
+    "id": "the-dark-pictures-anthology-little-hope"
   }
 
 ]
