@@ -58,5 +58,17 @@
     ],
     "date": "09-09-2026",
     "id": "dia-d"
+  },
+   {
+    "title": "Obsessão",
+    "sinopse": "Sem grandes pretensões, um romântico incurável compra um brinquedo que promete realizar desejos únicos. Ele quebra o artefato misterioso enquanto pede para conquistar a crush e consegue exatamente o que desejava, mas descobre que a consequência é sinistra.",
+    "img": "https://image.tmdb.org/t/p/w500/wUc6IDf5ChjM1UyQye21qFBeJY0.jpg",
+    "rating": 6,
+    "tags": [
+      "#Terror",
+      "#Thriller"
+    ],
+    "date": "20/09/2026",
+    "id": "obsessao"
   }
 ]
