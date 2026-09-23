@@ -17,6 +17,12 @@ function parseData(dateStr) {
         return new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
     }
 
+    const brTraco = dateStr.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+    if (brTraco) {
+        const [, dd, mm, yyyy] = brTraco;
+        return new Date(`${yyyy}-${mm}-${dd}T00:00:00`);
+    }
+
     const iso = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (iso) {
         return new Date(`${dateStr}T00:00:00`);
@@ -25,6 +31,17 @@ function parseData(dateStr) {
     // Formato desconhecido: tenta do jeito padrão e avisa no console
     console.warn(`Data em formato inesperado: "${dateStr}". Use AAAA-MM-DD.`);
     return new Date(dateStr);
+}
+
+/**
+ * Devolve o ano de um item como texto (ex: "2026"). Usa o campo "year" do
+ * item, se existir; senão, tira o ano do campo "date".
+ */
+function anoDoItem(item) {
+    if (item.year) return String(item.year);
+    if (!item.date) return "";
+    const d = parseData(item.date);
+    return isNaN(d) || d.getTime() === 0 ? "" : String(d.getFullYear());
 }
 
 /**
@@ -68,6 +85,9 @@ function cardHTML(item, options = {}) {
         ? `<span class="card-platform">🎮 ${item.platform}</span>`
         : "";
     const platformAttr = item.platform ? ` data-platform="${item.platform}"` : "";
+    const ano = anoDoItem(item);
+    const yearBadge = ano ? `<span class="card-year">📅 ${ano}</span>` : "";
+    const yearAttr = ano ? ` data-year="${ano}"` : "";
     const tagsData = item.tags.join(" ");
     const tagSpans = item.tags
         .map(t => `<span class="tag" data-tag="${t}">${t}</span>`)
@@ -86,12 +106,13 @@ function cardHTML(item, options = {}) {
     const videoAttr = videoId ? ` data-youtube="${videoId}"` : "";
 
     const cardInner = `
-        <div class="media-card" data-tags="${tagsData}"${platformAttr}>
+        <div class="media-card" data-tags="${tagsData}"${platformAttr}${yearAttr}>
             <div class="card-image"${videoAttr}>
                 <img src="${imgSrc}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.classList.add('img-fallback');">
                 ${playIcon}
                 ${badge}
                 ${platformBadge}
+                ${yearBadge}
                 ${ratingBadge}
             </div>
             <div class="card-content">
@@ -297,7 +318,7 @@ function reproduzirVideoNoCard(cardImageEl) {
     });
 }
 
-/** Mostra/esconde os cards do grid conforme a tag ou plataforma selecionada. */
+/** Mostra/esconde os cards do grid conforme a tag, plataforma ou ano selecionado. */
 function filtrarTag(valorSelecionado, gridEl, filtersEl) {
     gridEl.querySelectorAll(".media-card").forEach(card => {
         let visivel;
@@ -306,6 +327,9 @@ function filtrarTag(valorSelecionado, gridEl, filtersEl) {
         } else if (valorSelecionado.startsWith("plat:")) {
             const plataforma = valorSelecionado.slice(5);
             visivel = card.getAttribute("data-platform") === plataforma;
+        } else if (valorSelecionado.startsWith("ano:")) {
+            const ano = valorSelecionado.slice(4);
+            visivel = card.getAttribute("data-year") === ano;
         } else {
             const tagsDoCard = card.getAttribute("data-tags") || "";
             visivel = tagsDoCard.includes(valorSelecionado);
@@ -339,7 +363,7 @@ async function initCategoryPage(jsonPath, gridSelector, filtersSelector, categor
             return;
         }
 
-        // Botões de filtro dinâmicos, a partir das tags e plataformas presentes nos itens
+        // Botões de filtro dinâmicos, a partir das tags, plataformas e anos presentes nos itens
         const tagsUnicas = [...new Set(items.flatMap(i => i.tags))];
         const plataformasUnicas = [...new Set(items.filter(i => i.platform).map(i => i.platform))];
 
@@ -352,6 +376,14 @@ async function initCategoryPage(jsonPath, gridSelector, filtersSelector, categor
         if (plataformasUnicas.length > 0) {
             filtrosHTML += plataformasUnicas
                 .map(p => `<button class="tag-btn platform-btn" data-tag="plat:${p}">🎮 ${p}</button>`)
+                .join("");
+        }
+
+        // Anos presentes nos itens (do mais recente para o mais antigo)
+        const anosUnicos = [...new Set(items.map(anoDoItem).filter(Boolean))].sort((a, b) => b - a);
+        if (anosUnicos.length > 0) {
+            filtrosHTML += anosUnicos
+                .map(a => `<button class="tag-btn year-btn" data-tag="ano:${a}">📅 ${a}</button>`)
                 .join("");
         }
 

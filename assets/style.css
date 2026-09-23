@@ -114,6 +114,19 @@ main {
     border-color: #a78bfa;
 }
 
+/* Botões de filtro de ano: cor própria, diferente de gênero e plataforma */
+.tag-btn.year-btn {
+    border-color: #34d399;
+    color: #34d399;
+}
+
+.tag-btn.year-btn:hover,
+.tag-btn.year-btn.active {
+    background-color: #34d399;
+    color: #0f111a;
+    border-color: #34d399;
+}
+
 /* Grade estilo Bento Grid */
 .bento-grid {
     display: grid;
@@ -289,6 +302,20 @@ body.travar-scroll {
     bottom: 12px;
     left: 12px;
     background-color: rgba(167, 139, 250, 0.9);
+    color: #0f111a;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    backdrop-filter: blur(5px);
+}
+
+/* Selo de ano (todas as categorias): canto inferior direito da imagem */
+.card-year {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background-color: rgba(52, 211, 153, 0.9);
     color: #0f111a;
     padding: 6px 10px;
     border-radius: 8px;
