@@ -206,7 +206,7 @@
                 <input type="text" id="fNota">
             </div>
             <div>
-                <label>Data (AAAA-MM-DD)</label>
+                <label>Data (DD/MM/AAAA)</label>
                 <input type="text" id="fData">
             </div>
             <div id="blocoPlataforma" style="display:none;">
@@ -340,12 +340,29 @@ async function traduzirSinopse() {
     }
 }
 
+// Devolve sempre no padrão brasileiro (DD/MM/AAAA).
+// Aceita o que as APIs devolvem (AAAA-MM-DD, AAAA-MM, AAAA) e também datas
+// digitadas à mão em DD/MM/AAAA ou MM/DD/AAAA (esta só quando não há dúvida,
+// ou seja, quando o segundo número é maior que 12).
 function normalizarData(str) {
     if (!str) return "";
-    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
-    if (/^\d{4}-\d{2}$/.test(str)) return str + "-01";
-    if (/^\d{4}$/.test(str)) return str + "-01-01";
+    str = String(str).trim();
+    const pad = n => String(n).padStart(2, "0");
+    let m;
+    if ((m = str.match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})/))) return `${pad(m[3])}/${pad(m[2])}/${m[1]}`;
+    if ((m = str.match(/^(\d{4})[\/-](\d{1,2})$/))) return `01/${pad(m[2])}/${m[1]}`;
+    if (/^\d{4}$/.test(str)) return `01/01/${str}`;
+    if ((m = str.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/))) {
+        let dd = Number(m[1]), mm = Number(m[2]);
+        if (mm > 12 && dd <= 12) [dd, mm] = [mm, dd];
+        return `${pad(dd)}/${pad(mm)}/${m[3]}`;
+    }
     return str;
+}
+
+function dataDeHoje() {
+    const h = new Date();
+    return `${String(h.getDate()).padStart(2, "0")}/${String(h.getMonth() + 1).padStart(2, "0")}/${h.getFullYear()}`;
 }
 
 // ---------- Chaves ----------
@@ -561,7 +578,7 @@ function adicionarAoLote() {
         sinopse: document.getElementById("fSinopse").value.trim(),
         img: document.getElementById("fImagem").value.trim(),
         tags,
-        date: document.getElementById("fData").value.trim() || new Date().toISOString().slice(0, 10),
+        date: normalizarData(document.getElementById("fData").value) || dataDeHoje(),
         id: document.getElementById("fId").value.trim() || slugify(titulo)
     };
 
