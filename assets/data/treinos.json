@@ -1,0 +1,18 @@
+[
+  {
+    "id": "metodo-usa2x",
+    "title": "Método USA 2X",
+    "subtitle": "Pump Definitivo — Full Body, 4x por semana",
+    "date": "2026-09-23",
+    "file": "treinos/metodo-usa2x.html",
+    "current": true
+  },
+  {
+    "id": "hipertrofia-avancado",
+    "title": "Hipertrofia Avançado",
+    "subtitle": "Peito/Tríceps, Costas/Bíceps — início 03/09/26",
+    "date": "2026-09-03",
+    "file": "treinos/hipertrofia-avancado.html",
+    "current": false
+  }
+]
