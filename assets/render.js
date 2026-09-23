@@ -79,7 +79,14 @@ function extractYoutubeId(url) {
 
 /** Gera o HTML de um único card. Se o item tiver "link" (ou uma "category" for passada), o card inteiro vira um link clicável. */
 function cardHTML(item, options = {}) {
-    const { showBadge = false, badgeLabel = "", category = null } = options;
+    const { showBadge = false, badgeLabel = "", category = null, respeitarTamanho = false } = options;
+
+    // Campo opcional "tamanho" no JSON: "inteira" (ou "real") mostra a foto sem corte,
+    // no tamanho real, ocupando a linha toda. Qualquer outro valor (ou sem o campo)
+    // mantém o cartão padrão. Só vale nas páginas de categoria, não na home.
+    const tamanho = String(item.tamanho || "").toLowerCase();
+    const fotoInteira = respeitarTamanho && ["inteira", "real", "full"].includes(tamanho);
+    const cardClasse = fotoInteira ? "media-card card-inteira" : "media-card";
     const badge = showBadge ? `<span class="card-category">${badgeLabel}</span>` : "";
     const platformBadge = item.platform
         ? `<span class="card-platform">🎮 ${item.platform}</span>`
@@ -106,7 +113,7 @@ function cardHTML(item, options = {}) {
     const videoAttr = videoId ? ` data-youtube="${videoId}"` : "";
 
     const cardInner = `
-        <div class="media-card" data-tags="${tagsData}"${platformAttr}${yearAttr}>
+        <div class="${cardClasse}" data-tags="${tagsData}"${platformAttr}${yearAttr}>
             <div class="card-image"${videoAttr}>
                 <img src="${imgSrc}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null;this.parentElement.classList.add('img-fallback');">
                 ${playIcon}
@@ -396,7 +403,7 @@ async function initCategoryPage(jsonPath, gridSelector, filtersSelector, categor
         });
 
         // Renderiza os cards
-        gridEl.innerHTML = items.map(item => cardHTML(item, { category: categorySlug })).join("");
+        gridEl.innerHTML = items.map(item => cardHTML(item, { category: categorySlug, respeitarTamanho: true })).join("");
 
         // Clicar numa tag dentro de um card também filtra (e não deve navegar, se o card for um link)
         gridEl.addEventListener("click", e => {

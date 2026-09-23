@@ -310,6 +310,33 @@ body.travar-scroll {
     backdrop-filter: blur(5px);
 }
 
+/* Foto inteira ("tamanho": "inteira" no JSON): sem corte, tamanho real, linha toda */
+.media-card.card-inteira,
+.card-link:has(> .card-inteira) {
+    grid-column: 1 / -1;
+}
+
+.card-inteira .card-image {
+    width: fit-content;
+    max-width: 100%;
+    height: auto;
+    min-height: 0;
+    margin: 0 auto;
+}
+
+.card-inteira .card-image img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.card-inteira .card-image.img-fallback {
+    min-height: 200px;
+    min-width: 280px;
+}
+
 /* Selo de ano (todas as categorias): canto inferior direito da imagem */
 .card-year {
     position: absolute;
