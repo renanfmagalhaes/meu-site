@@ -18,12 +18,13 @@
       const kind = ['feeder','top','backoff'].includes(step.calc) ? step.calc : 'work';
       const pair = /^\s*(\d+)\s*[x×]\s*(\d+)\s*(?:\([^)]*\))?\s*$/.exec(step.sr || '');
       const setMatch = /^\s*(\d+)\s*[x×]/.exec(step.sr || '');
+      const blocks = /^\s*(\d+)\s*séries de\s*(\d+)\s*x\s*(\d+)\s*$/.exec(step.sr || '');
       const factor = kind === 'feeder' ? settings.feederPct/100 : kind === 'backoff' ? 1-settings.backoffPct/100 : 1;
       return {
         kind,
         name:kind === 'top' ? 'Top set' : kind === 'backoff' ? 'Back-off' : kind === 'feeder' ? 'Feeder' : step.etapa || 'Série válida',
-        sets:kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
-        reps:pair ? Number(pair[2]) : null,
+        sets:blocks ? Number(blocks[1]) : kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
+        reps:blocks ? Number(blocks[2]) * Number(blocks[3]) : pair ? Number(pair[2]) : null,
         weight:positive(weight) ? Math.round(weight * factor * 100)/100 : null,
         factor, enabled:true, manualWeight:false
       };

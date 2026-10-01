@@ -405,12 +405,13 @@
       const kind = ['feeder','top','backoff'].includes(step.calc) ? step.calc : 'work';
       const pair = /^\s*(\d+)\s*[x×]\s*(\d+)\s*(?:\([^)]*\))?\s*$/.exec(step.sr || '');
       const setMatch = /^\s*(\d+)\s*[x×]/.exec(step.sr || '');
+      const blocks = /^\s*(\d+)\s*séries de\s*(\d+)\s*x\s*(\d+)\s*$/.exec(step.sr || '');
       const factor = kind === 'feeder' ? settings.feederPct/100 : kind === 'backoff' ? 1-settings.backoffPct/100 : 1;
       return {
         kind,
         name:kind === 'top' ? 'Top set' : kind === 'backoff' ? 'Back-off' : kind === 'feeder' ? 'Feeder' : step.etapa || 'Série válida',
-        sets:kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
-        reps:pair ? Number(pair[2]) : null,
+        sets:blocks ? Number(blocks[1]) : kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
+        reps:blocks ? Number(blocks[2]) * Number(blocks[3]) : pair ? Number(pair[2]) : null,
         weight:positive(weight) ? Math.round(weight * factor * 100)/100 : null,
         factor, enabled:true, manualWeight:false
       };
@@ -836,13 +837,13 @@ const DAYS = {
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Séries válidas", sr:"3 x 9-15", desc:"2-4 min entre séries", rpe:"-", obs:"Mesma carga nas 3 séries. Ao bater 15 reps com técnica perfeita em todas, aumente a carga na próxima sessão."}]},
     {name:"Tríceps francês na polia com corda", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Rosca 45 graus", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Cadeira flexora", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Cadeira extensora", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
   ]},
   ter: { label:"Terça", sub:"Treino B — Método USA 2X (Full Body)", note:"Full Body 4x/semana. No 1º exercício de cada grupo muscular novo, faça antes 1 série extra de 12-15 reps com carga bem leve. Técnica é inegociável — nunca sacrifique a execução para levantar mais peso.", exercises:[
     {name:"Leg press 45°", tier:"composto", steps:[
@@ -863,15 +864,15 @@ const DAYS = {
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Séries válidas", sr:"3 x 9-15", desc:"2-4 min entre séries", rpe:"-", obs:"Mesma carga nas 3 séries. Ao bater 15 reps com técnica perfeita em todas, aumente a carga na próxima sessão."}]},
     {name:"Voador (peck deck)", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Desenvolvimento Smith", tier:"composto", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Tríceps testa com halteres", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Rosca alternada", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
   ]},
   qua: { label:"Quarta", sub:"Descanso", note:"Sem treino no Método USA 2X (protocolo de 4x por semana) — dia de descanso ou atividade leve.", exercises:[
     {name:"Descanso", tier:"padrao", steps:[
@@ -896,15 +897,15 @@ const DAYS = {
     {name:"Crucifixo com halteres", tier:"isolador", steps:[
       {etapa:"DC Style Rest-Pause", sr:"Falha (8-11) + 20s + falha, x3 blocos", desc:"20s entre blocos", rpe:"-", obs:"Mesma carga nos 3 blocos, sem trocar de peso. Não usa back-off — descanse 2-4 min antes do próximo exercício."}]},
     {name:"Elevação lateral com halteres", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Tríceps na polia barra reta", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Rosca martelo na polia com corda", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Cadeira abdutora", tier:"isolador", steps:[
       {etapa:"DC Style Rest-Pause", sr:"Falha (8-11) + 20s + falha, x3 blocos", desc:"20s entre blocos", rpe:"-", obs:"Mesma carga nos 3 blocos, sem trocar de peso. Não usa back-off — descanse 2-4 min antes do próximo exercício."}]},
     {name:"Elevação de quadril", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
   ]},
   sex: { label:"Sexta", sub:"Treino D — Método USA 2X (Full Body)", note:"Full Body 4x/semana. No 1º exercício de cada grupo muscular novo, faça antes 1 série extra de 12-15 reps com carga bem leve. Técnica é inegociável — nunca sacrifique a execução para levantar mais peso.", exercises:[
     {name:"Leg press unilateral", tier:"composto", steps:[
@@ -916,23 +917,23 @@ const DAYS = {
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Cadeira extensora", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Levantamento terra", tier:"composto", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Puxada triângulo", tier:"sec", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Supino inclinado Smith", tier:"composto", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Supino fechado Smith", tier:"sec", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Y Raise", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Tríceps na corda", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Rosca inversa na polia", tier:"isolador", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},

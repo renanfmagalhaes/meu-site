@@ -4,7 +4,7 @@ require('../assets/treino-session.js');
 const {totals,defaults,removeDate} = globalThis.TrainingSession;
 
 test('Muscle Round counts six sets of 32 reps and their complete volume', ()=>{
-  const stages=defaults([{etapa:'Muscle Round',sr:'6 x 32'}],20,{feederPct:70,backoffPct:25});
+  const stages=defaults([{etapa:'Muscle Round',sr:'6 séries de 8 x 4'}],20,{feederPct:70,backoffPct:25});
   assert.deepEqual(totals(stages),{sets:6,reps:192,volume:3840});
 });
 test('counts feeder, top set and back-off independently', ()=>{
