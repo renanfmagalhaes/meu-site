@@ -257,12 +257,12 @@
   .logrow{
     display:flex; align-items:center; gap:8px; padding:10px 14px 14px; border-top:1px solid var(--border);
   }
-  .dor-select{display:flex; gap:4px; flex:1;}
-  .dor-chip{
+  .reps-select{display:flex; gap:4px; flex:1;}
+  .reps-chip{
     flex:1; text-align:center; font-size:11px; padding:7px 0; border-radius:7px;
     background:var(--surface-2); border:1px solid var(--border); color:var(--text-dim); font-weight:700;
   }
-  .dor-chip.sel{background:var(--danger); border-color:var(--danger); color:#1A1414;}
+  .reps-chip.sel{background:var(--danger); border-color:var(--danger); color:#1A1414;}
   .save-btn{
     flex-shrink:0; background:var(--tier-color); color:#10131a; font-weight:800; font-size:12px;
     border:none; border-radius:9px; padding:9px 14px;
@@ -272,6 +272,7 @@
   .hist{padding:0 14px 14px; font-size:11px; color:var(--text-faint);}
   .hist-item{display:flex; justify-content:space-between; padding:5px 0; border-top:1px dashed var(--border);}
   .hist-item span:first-child{color:var(--text-dim);}
+  .clear-hist-btn{margin-top:10px; padding:8px 12px; border:1px solid var(--danger); border-radius:8px; background:transparent; color:var(--danger); font-size:12px; cursor:pointer;}
   .hist-empty{color:var(--text-faint); font-style:italic;}
 
   .rpe-card{
@@ -326,6 +327,8 @@
   }
   .treino-switch-select:focus{outline:none; border-color:var(--composto);}
 </style>
+<link rel="stylesheet" href="../assets/treino-progress.css">
+<script src="../assets/treino-progress.js"></script>
 </head>
 <body>
 
@@ -387,6 +390,12 @@
 </div>
 
 <main id="main"></main>
+<section class="training-progress" aria-labelledby="progressTitle">
+  <h2 id="progressTitle">Evolução por dia</h2>
+  <p class="progress-note">Todos os exercícios deste treino, agrupados pela data do registro. Peso total = soma das cargas salvas. Médias = total dividido pelo número de registros. Cada salvamento conta como um registro; cardio não entra nos cálculos.</p>
+  <p class="progress-note">Registros sem repetições entram apenas nos cálculos de carga. Role para os lados para comparar as datas.</p>
+  <div id="trainingProgress"></div>
+</section>
 
 <div class="footer-note">
   Baseado no Método USA 2X — Pump Definitivo (Full Body, 4x por semana). A CBF é uma merda o PT também!!!!.<br>Treino cedido por João.
@@ -636,9 +645,8 @@ async function loadHist(dayId, idx){
 async function pushHist(dayId, idx, entry){
   const h = await loadHist(dayId, idx);
   h.unshift(entry);
-  const trimmed = h.slice(0, 6);
-  lsSet(histKey(dayId, idx), JSON.stringify(trimmed));
-  return trimmed;
+  if(!lsSet(histKey(dayId, idx), JSON.stringify(h))) return null;
+  return h;
 }
 
 function addedKey(dayId){ return `added:${dayId}`; }
@@ -718,6 +726,7 @@ function loadStackHTML(tier, topVal, showFeeder, showBackoff){
 }
 
 async function renderDay(){
+  renderProgress();
   const main = document.getElementById("main");
   const day = DAYS[currentDay];
   main.innerHTML = "";
@@ -1014,22 +1023,26 @@ async function renderDay(){
     card.appendChild(steps);
 
     {
-      const hist = await loadHist(currentDay, idKey);
+      const historyDay = currentDay;
+      const hist = await loadHist(historyDay, idKey);
       const logrow = document.createElement("div");
       logrow.className = "logrow";
-      let selectedDor = null;
-      const dorWrap = document.createElement("div");
-      dorWrap.className = "dor-select";
-      [0,1,2,3,4,5].forEach(v=>{
+      const repsLabel = document.createElement("div");
+      repsLabel.textContent = "Repetições da carga máxima";
+      card.appendChild(repsLabel);
+      let selectedReps = null;
+      const repsWrap = document.createElement("div");
+      repsWrap.className = "reps-select";
+      [4,5,6,7,8,9].forEach(v=>{
         const chip = document.createElement("div");
-        chip.className = "dor-chip";
-        chip.textContent = v===5 ? "5+" : v;
+        chip.className = "reps-chip";
+        chip.textContent = v;
         chip.onclick = ()=>{
-          selectedDor = v;
-          dorWrap.querySelectorAll(".dor-chip").forEach(c=>c.classList.remove("sel"));
+          selectedReps = v;
+          repsWrap.querySelectorAll(".reps-chip").forEach(c=>c.classList.remove("sel"));
           chip.classList.add("sel");
         };
-        dorWrap.appendChild(chip);
+        repsWrap.appendChild(chip);
       });
       const saveBtn = document.createElement("button");
       saveBtn.className = "save-btn";
@@ -1037,18 +1050,20 @@ async function renderDay(){
       saveBtn.onclick = async ()=>{
         const w = await loadWeight(currentDay, idKey);
         if(!w){ showToast(isCardio ? "Preencha o tempo primeiro" : "Preencha a carga usada primeiro"); return; }
-        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, dor: selectedDor };
-        const updated = await pushHist(currentDay, idKey, entry);
-        renderHistList(histList, updated, unitLabel);
+        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, reps: selectedReps, unit: unitLabel };
+        const updated = await pushHist(historyDay, idKey, entry);
+        if(!updated){ showToast("Não foi possível salvar o registro. Tente novamente."); return; }
+        renderHistList(histList, updated, unitLabel, historyDay, idKey);
+        renderProgress();
         showToast("Registrado no histórico");
       };
-      logrow.appendChild(dorWrap);
+      logrow.appendChild(repsWrap);
       logrow.appendChild(saveBtn);
       card.appendChild(logrow);
 
       const histList = document.createElement("div");
       histList.className = "hist";
-      renderHistList(histList, hist, unitLabel);
+      renderHistList(histList, hist, unitLabel, historyDay, idKey);
       card.appendChild(histList);
     }
 
@@ -1082,18 +1097,63 @@ async function renderDay(){
   main.appendChild(addBtn);
 }
 
-function renderHistList(el, hist, unit){
+function renderProgress(){
+  const records = [];
+  for(let i=0; i<localStorage.length; i++){
+    const key = localStorage.key(i);
+    if(!key || !key.startsWith(LS_PREFIX + "hist:")) continue;
+    try{
+      const [, dayId, idKey] = key.slice(LS_PREFIX.length).split(":");
+      const history = JSON.parse(localStorage.getItem(key));
+      if(!Array.isArray(history)) continue;
+      const added = idKey.startsWith("a");
+      const exercise = added
+        ? (JSON.parse(lsGet(addedKey(dayId)) || "[]"))[Number(idKey.slice(1))]
+        : DAYS[dayId]?.exercises?.[Number(idKey)];
+      const custom = JSON.parse(lsGet(customKey(dayId, idKey)) || "{}");
+      const tier = (added ? exercise?.tier : custom.tier || exercise?.tier);
+      for(const entry of history){
+        if(!entry || typeof entry !== "object") continue;
+        const unit = entry.unit || (tier === "cardio" ? "min" : tier ? "kg" : null);
+        records.push({...entry, unit});
+      }
+    }catch(error){ console.error("Falha ao ler histórico", error); }
+  }
+  TrainingProgress.render(document.getElementById("trainingProgress"), records);
+}
+
+function renderHistList(el, hist, unit, dayId, idKey){
   unit = unit || "kg";
   if(!hist || hist.length===0){
     el.innerHTML = `<div class="hist-empty">Sem histórico ainda — salve a primeira sessão.</div>`;
     return;
   }
-  el.innerHTML = hist.map(h=>`
+  const dateKey = date => date.split('/').reverse().join('-');
+  const recentDates = [...new Set(hist.map(h=>h.date))]
+    .sort((a,b)=>dateKey(b).localeCompare(dateKey(a))).slice(0, 4);
+  const visibleHist = hist.filter(h=>recentDates.includes(h.date))
+    .sort((a,b)=>dateKey(b.date).localeCompare(dateKey(a.date)));
+  el.innerHTML = visibleHist.map(h=>`
     <div class="hist-item">
       <span>${h.date}</span>
-      <span>${fmtVal(h.weight, unit)}${h.dor!==null && h.dor!==undefined ? ` · dor ${h.dor===5?'5+':h.dor}` : ''}</span>
+      <span>${fmtVal(h.weight, unit)}${h.reps!==null && h.reps!==undefined ? ` · ${h.reps} repetições na carga máxima` : ''}</span>
     </div>
   `).join("");
+  const clearBtn = document.createElement("button");
+  clearBtn.type = "button";
+  clearBtn.className = "clear-hist-btn";
+  clearBtn.textContent = "Apagar histórico deste exercício";
+  clearBtn.onclick = ()=>{
+    if(!confirm("Apagar o histórico somente deste exercício?")) return;
+    if(!lsSet(histKey(dayId, idKey), JSON.stringify([]))){
+      showToast("Não foi possível apagar o histórico. Tente novamente.");
+      return;
+    }
+    renderHistList(el, [], unit, dayId, idKey);
+    renderProgress();
+    showToast("Histórico do exercício apagado");
+  };
+  el.appendChild(clearBtn);
 }
 
 /* ---------- backup ---------- */

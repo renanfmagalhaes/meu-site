@@ -1,0 +1,14 @@
+.training-progress{max-width:720px; margin:20px auto; padding:18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-sizing:border-box;}
+.training-progress h2{margin:0 0 8px; font-size:21px; color:var(--text);}
+.progress-note,.progress-empty{font-size:12px; line-height:1.6; color:var(--text-dim);}
+.progress-scroll{overflow-x:auto; padding:8px 0;}
+.progress-scroll:focus-visible{outline:2px solid var(--composto); outline-offset:3px;}
+.progress-panel{margin-bottom:24px;}
+.progress-panel h3{font-size:13px; color:var(--text); margin:0 0 14px;}
+.progress-bars{display:flex; gap:8px; padding:0 4px;}
+.progress-column{flex:1; min-width:72px; text-align:center;}
+.progress-track{height:140px; padding-top:25px; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; border-bottom:1px solid var(--border); position:relative; box-sizing:content-box; background:repeating-linear-gradient(to top, transparent 0, transparent 34px, var(--border) 35px);}
+.progress-bar{width:65%; max-width:54px; border-radius:5px 5px 0 0; flex-shrink:0;}
+.progress-value{position:absolute; top:3px; font-size:11px; color:var(--text);}
+.progress-date{display:block; margin-top:8px; font-size:10px; color:var(--text-dim); white-space:nowrap;}
+@media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}}
