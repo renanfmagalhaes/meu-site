@@ -328,9 +328,9 @@
   }
   .treino-switch-select:focus{outline:none; border-color:var(--composto);}
 </style>
-<link rel="stylesheet" href="../assets/treino-progress.css?v=20261001-3">
-<script src="../assets/treino-session.js?v=20261001-3"></script>
-<script src="../assets/treino-progress.js?v=20261001-3"></script>
+<link rel="stylesheet" href="../assets/treino-progress.css?v=20261001-5">
+<script src="../assets/treino-session.js?v=20261001-5"></script>
+<script src="../assets/treino-progress.js?v=20261001-5"></script>
 </head>
 <body>
 
@@ -1038,17 +1038,21 @@ async function renderDay(){
       saveBtn.className = "save-btn";
       saveBtn.textContent = "Salvar";
       saveBtn.onclick = async ()=>{
+        if(saveBtn.disabled) return;
+        saveBtn.disabled = true;
+        try{
         const w = await loadWeight(historyDay, idKey);
-        if(!w){ showToast(isCardio ? "Preencha o tempo primeiro" : "Preencha a carga usada primeiro"); return; }
+        if(isCardio && !w){ showToast(isCardio ? "Preencha o tempo primeiro" : "Preencha a carga usada primeiro"); return; }
         const stages = sessionEditor ? sessionEditor.read() : null;
         if(sessionEditor && !stages){ showToast("Preencha séries, repetições e carga das etapas realizadas"); return; }
-        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, unit: unitLabel, schemaVersion:2 };
+        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: stages ? Math.max(...stages.map(stage=>stage.weight)) : w, unit: unitLabel, schemaVersion:2 };
         if(stages) entry.stages = stages;
         const updated = await pushHist(historyDay, idKey, entry);
         if(!updated){ showToast("Não foi possível salvar o registro. Tente novamente."); return; }
         renderHistList(histList, updated, unitLabel, historyDay, idKey);
         renderProgress();
         showToast("Registrado no histórico");
+        }finally{ saveBtn.disabled = false; }
       };
       logrow.appendChild(saveBtn);
       card.appendChild(logrow);

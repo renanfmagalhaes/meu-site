@@ -91,7 +91,7 @@
         const formatted = value === null ? 'Sem dados' : value.toLocaleString('pt-BR', {maximumFractionDigits:metric.digits});
         const column = document.createElement('div');
         column.className = 'progress-column';
-        column.title = `${day.date}: ${formatted}${value === null ? '' : ' ' + metric.unit} · ${day.count} registro(s), ${day.pairedCount} com repetições`;
+        column.title = `${day.date}: ${formatted}${value === null ? '' : ' ' + metric.unit} · ${day.sets} séries, ${day.pairedCount} registros completos, ${day.incomplete} sem detalhes`;
         const track = document.createElement('div');
         track.className = 'progress-track';
         const bar = document.createElement('div');

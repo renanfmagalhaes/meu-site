@@ -35,14 +35,25 @@
     element.className = 'session-editor';
     const rows = [];
     for(const stage of defaults(steps, weight, settings)){
-      const row = document.createElement('div');
+      const row = document.createElement('details');
       row.className = `session-stage session-${stage.kind}`;
+      const toggle = document.createElement('summary');
+      toggle.className = 'session-toggle';
+      const name = document.createElement('span');
+      name.textContent = stage.name;
+      const status = document.createElement('span');
+      status.className = 'session-status';
+      toggle.append(name,status);
+      row.appendChild(toggle);
+      const content = document.createElement('div');
+      content.className = 'session-content';
+      row.appendChild(content);
       const title = document.createElement('label');
       title.className = 'session-title';
       const enabled = document.createElement('input');
       enabled.type = 'checkbox'; enabled.checked = true;
-      title.append(enabled, document.createTextNode(stage.name));
-      row.appendChild(title);
+      title.append(enabled, document.createTextNode('Incluir esta etapa'));
+      content.appendChild(title);
       const fields = document.createElement('div');
       fields.className = 'session-fields';
       function field(label, value, step){
@@ -51,7 +62,7 @@
         const input = document.createElement('input');
         input.type = 'number'; input.min = step === '1' ? '1' : '0.01'; input.step = step;
         input.inputMode = step === '1' ? 'numeric' : 'decimal';
-        input.value = value ?? ''; input.placeholder = 'Informe';
+        input.value = value ?? ''; input.placeholder = 'Informe'; input.required = true;
         input.setAttribute('aria-label', `${stage.name}: ${label}`);
         wrap.appendChild(input); fields.appendChild(wrap);
         return input;
@@ -60,7 +71,15 @@
       const reps = field('Repetições por série', stage.reps, '1');
       const load = field('Carga por série (kg)', stage.weight, '0.01');
       load.addEventListener('input', ()=>{stage.manualWeight = true;});
-      row.appendChild(fields);
+      content.appendChild(fields);
+      function updateStatus(){
+        const complete = [sets,reps,load].every(input=>input.checkValidity()) && totals([
+          {sets:Number(sets.value),reps:Number(reps.value),weight:Number(load.value)}
+        ]);
+        status.textContent = !enabled.checked ? '— Desativada' : complete ? '✓ Preenchida' : '○ Pendente';
+        row.classList.toggle('session-complete',Boolean(complete && enabled.checked));
+      }
+      for(const input of [sets,reps,load]) input.addEventListener('input',updateStatus);
       function chips(label, values, input){
         const group = document.createElement('div');
         group.className = 'session-chips';
@@ -79,6 +98,7 @@
               input.removeAttribute('max'); input.placeholder = 'Informe'; input.value = value;
             }
             update();
+            updateStatus();
           };
           group.appendChild(button);
           return {button,value};
@@ -90,7 +110,7 @@
             button.setAttribute('aria-pressed',String(selected));
           }
         }
-        input.addEventListener('input',update); update(); row.appendChild(group);
+        input.addEventListener('input',update); update(); content.appendChild(group);
       }
       if(stage.kind === 'feeder') chips('Séries', [2,3], sets);
       chips('Repetições', stage.kind === 'backoff' ? ['<8',8,9,10,11,12,13,14,15] : Array.from({length:12},(_,i)=>i+4), reps);
@@ -98,8 +118,10 @@
         row.classList.toggle('session-disabled',!enabled.checked);
         for(const input of [sets,reps,load]) input.disabled = !enabled.checked;
         row.querySelectorAll('button').forEach(button=>{button.disabled = !enabled.checked;});
+        updateStatus();
       });
-      rows.push({stage,enabled,sets,reps,load});
+      updateStatus();
+      rows.push({stage,enabled,sets,reps,load,row,updateStatus});
       element.appendChild(row);
     }
     const note = document.createElement('p');
@@ -109,13 +131,17 @@
     return {
       element,
       setWeight(value){
-        for(const {stage,load} of rows){
+        for(const {stage,load,updateStatus} of rows){
           if(!stage.manualWeight) load.value = positive(value) ? Math.round(value * stage.factor * 100)/100 : '';
+          updateStatus();
         }
       },
       read(){
         for(const row of rows){
-          if(row.enabled.checked && [row.sets,row.reps,row.load].some(input=>!input.checkValidity())) return null;
+          if(row.enabled.checked){
+            const invalid = [row.sets,row.reps,row.load].find(input=>!input.checkValidity());
+            if(invalid){ row.row.open = true; invalid.reportValidity(); return null; }
+          }
         }
         const stages = rows.filter(row=>row.enabled.checked).map(({stage,sets,reps,load})=>({
           kind:stage.kind, name:stage.name, sets:Number(sets.value), reps:Number(reps.value), weight:Number(load.value)
