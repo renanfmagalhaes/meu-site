@@ -2,30 +2,35 @@
   function aggregate(records){
     const days = new Map();
     for(const entry of records){
-      if(!entry || entry.unit !== 'kg' || !Number.isFinite(entry.weight) || entry.weight <= 0) continue;
+      if(!entry || entry.unit !== 'kg') continue;
       const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(entry.date);
       if(!match) continue;
       const [, d, m, y] = match;
       const date = new Date(Number(y), Number(m)-1, Number(d));
       if(date.getFullYear() !== Number(y) || date.getMonth() !== Number(m)-1 || date.getDate() !== Number(d)) continue;
       const key = `${y}-${m}-${d}`;
-      if(!days.has(key)) days.set(key, {key, date:entry.date, weight:0, reps:0, count:0, pairedCount:0});
+      if(!days.has(key)) days.set(key, {key, date:entry.date, weight:0, reps:0, sets:0, count:0, pairedCount:0, incomplete:0});
       const day = days.get(key);
-      day.weight += entry.weight;
       day.count++;
-      if(Number.isInteger(entry.reps) && entry.reps > 0){
-        day.reps += entry.reps;
+      const totals = root.TrainingSession.totals(entry.stages);
+      if(totals){
+        day.weight += totals.volume;
+        day.reps += totals.reps;
+        day.sets += totals.sets;
         day.pairedCount++;
+      }else{
+        day.incomplete++;
       }
     }
     return [...days.values()].sort((a,b)=>a.key.localeCompare(b.key)).map(day=>({
       ...day,
+      weight:day.pairedCount ? day.weight : null,
       reps:day.pairedCount ? day.reps : null,
       loadPerRep:day.pairedCount ? day.weight / day.reps : null
     }));
   }
 
-  function render(container, records){
+  function render(container, records, onDeleteDate){
     container.replaceChildren();
     const days = aggregate(records);
     if(!days.length){
@@ -35,16 +40,34 @@
       container.appendChild(empty);
       return;
     }
-    const scroll = document.createElement('div');
-    scroll.className = 'progress-scroll';
-    scroll.tabIndex = 0;
-    scroll.setAttribute('role', 'region');
-    scroll.setAttribute('aria-label', 'Gráficos diários. Role horizontalmente para comparar todas as datas.');
+    if(onDeleteDate){
+      const actions = document.createElement('div');
+      actions.className = 'progress-actions';
+      const label = document.createElement('label');
+      label.textContent = 'Apagar uma data: ';
+      const select = document.createElement('select');
+      for(const day of [...days].reverse()){
+        const option = document.createElement('option');
+        option.value = day.date; option.textContent = day.date;
+        select.appendChild(option);
+      }
+      label.appendChild(select);
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'clear-hist-btn';
+      button.textContent = 'Apagar dia';
+      button.onclick = ()=>onDeleteDate(select.value);
+      actions.append(label,button); container.appendChild(actions);
+    }
+    if(days.some(day=>day.incomplete)){
+      const note = document.createElement('p');
+      note.className = 'progress-note';
+      note.textContent = 'Há registros antigos sem séries e cargas por etapa. Eles continuam no histórico, mas não entram nos totais abaixo. Dias com esses registros podem estar incompletos.';
+      container.appendChild(note);
+    }
     const plots = document.createElement('div');
     plots.className = 'progress-plots';
-    plots.style.minWidth = `${Math.max(280, days.length * 88)}px`;
     const metrics = [
-      {key:'weight', label:'Peso total', unit:'kg', color:'#7dd3fc', digits:1},
+      {key:'weight', label:'Volume total (carga × repetições)', unit:'kg', color:'#7dd3fc', digits:1},
       {key:'reps', label:'Repetições totais', unit:'rep', color:'#c4b5fd', digits:0},
       {key:'loadPerRep', label:'Carga total ÷ repetições', unit:'kg/rep', color:'#86efac', digits:2}
     ];
@@ -56,6 +79,12 @@
       panel.appendChild(heading);
       const chart = document.createElement('div');
       chart.className = 'progress-bars';
+      chart.style.minWidth = `${Math.max(240, days.length * 88)}px`;
+      const scroll = document.createElement('div');
+      scroll.className = 'progress-scroll';
+      scroll.tabIndex = 0;
+      scroll.setAttribute('role', 'region');
+      scroll.setAttribute('aria-label', metric.label);
       const max = Math.max(...days.map(day=>day[metric.key] || 0), 0.001);
       for(const day of days){
         const value = day[metric.key];
@@ -80,12 +109,15 @@
         column.append(track, date);
         chart.appendChild(column);
       }
-      panel.appendChild(chart);
+      scroll.appendChild(chart);
+      panel.appendChild(scroll);
       plots.appendChild(panel);
     }
-    scroll.appendChild(plots);
-    container.appendChild(scroll);
-    scroll.scrollLeft = scroll.scrollWidth;
+    container.appendChild(plots);
+    for(const panel of plots.children){
+      const scroll = panel.children[1];
+      scroll.scrollLeft = scroll.scrollWidth;
+    }
   }
   root.TrainingProgress = {aggregate, render};
 })(typeof window === 'undefined' ? globalThis : window);

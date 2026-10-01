@@ -1,14 +1,35 @@
-.training-progress{max-width:720px; margin:20px auto; padding:18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-sizing:border-box;}
+.training-progress{max-width:none; margin:20px 16px; padding:18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-sizing:border-box;}
 .training-progress h2{margin:0 0 8px; font-size:21px; color:var(--text);}
 .progress-note,.progress-empty{font-size:12px; line-height:1.6; color:var(--text-dim);}
 .progress-scroll{overflow-x:auto; padding:8px 0;}
 .progress-scroll:focus-visible{outline:2px solid var(--composto); outline-offset:3px;}
-.progress-panel{margin-bottom:24px;}
-.progress-panel h3{font-size:13px; color:var(--text); margin:0 0 14px;}
+.progress-plots{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:24px;}
+.progress-panel{margin-bottom:0; min-width:0;}
+.progress-panel h3{min-height:32px;font-size:13px; color:var(--text); margin:0 0 14px;}
 .progress-bars{display:flex; gap:8px; padding:0 4px;}
 .progress-column{flex:1; min-width:72px; text-align:center;}
 .progress-track{height:140px; padding-top:25px; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; border-bottom:1px solid var(--border); position:relative; box-sizing:content-box; background:repeating-linear-gradient(to top, transparent 0, transparent 34px, var(--border) 35px);}
 .progress-bar{width:65%; max-width:54px; border-radius:5px 5px 0 0; flex-shrink:0;}
 .progress-value{position:absolute; top:3px; font-size:11px; color:var(--text);}
 .progress-date{display:block; margin-top:8px; font-size:10px; color:var(--text-dim); white-space:nowrap;}
-@media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}}
+.progress-actions{display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:12px 0; font-size:12px; color:var(--text-dim);}
+.progress-actions select{background:var(--surface-2); color:var(--text); padding:8px; border:1px solid var(--border); border-radius:8px;}
+.progress-actions .clear-hist-btn{margin:0;}
+.session-editor{padding:10px 14px;}
+.session-stage{--stage-color:#c4b5fd; border-left:3px solid var(--stage-color); padding:10px; margin-bottom:10px; background:var(--surface-2); border-radius:8px;}
+.session-feeder{--stage-color:#7dd3fc;}
+.session-top{--stage-color:#fcd34d;}
+.session-backoff{--stage-color:#86efac;}
+.session-title{display:flex; align-items:center; gap:7px; color:var(--stage-color); font-size:11.5px; line-height:1.4; margin-bottom:10px;}
+.session-title input{accent-color:var(--stage-color);}
+.session-fields{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;}
+.session-fields label{font-size:11px; color:var(--text-dim);}
+.session-fields input{display:block; width:100%; min-width:0; margin-top:5px; border:1px solid var(--border); border-radius:6px; background:var(--surface); padding:8px; color:var(--text); font:inherit;}
+.session-chips{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;}
+.session-caption{width:100%; font-size:11px; color:var(--text-dim);}
+.session-chips button{min-width:32px; padding:8px 5px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text-dim); font:inherit; font-size:11px; cursor:pointer;}
+.session-chips button.sel{background:var(--stage-color); color:#121417; border-color:var(--stage-color); font-weight:700;}
+.session-disabled .session-fields,.session-disabled .session-chips{opacity:.45;}
+.session-note{font-size:11.5px; line-height:1.4; color:var(--text-dim);}
+.hist-detail{display:block; margin-top:3px;}
+@media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}.progress-plots{grid-template-columns:minmax(0, 1fr);}.progress-panel h3{min-height:0;}}

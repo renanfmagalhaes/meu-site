@@ -348,8 +348,9 @@
   }
   .treino-switch-select:focus{outline:none; border-color:var(--composto);}
 </style>
-<link rel="stylesheet" href="../assets/treino-progress.css">
-<script src="../assets/treino-progress.js"></script>
+<link rel="stylesheet" href="../assets/treino-progress.css?v=20261001-3">
+<script src="../assets/treino-session.js?v=20261001-3"></script>
+<script src="../assets/treino-progress.js?v=20261001-3"></script>
 </head>
 <body>
 
@@ -413,8 +414,8 @@
 <main id="main"></main>
 <section class="training-progress" aria-labelledby="progressTitle">
   <h2 id="progressTitle">Evolução por dia</h2>
-  <p class="progress-note">Todos os exercícios deste treino, agrupados pela data do registro. Peso total = soma das cargas salvas. Carga por repetição = carga total do dia ÷ total de repetições do dia. Cada salvamento conta como um registro; cardio não entra nos cálculos.</p>
-  <p class="progress-note">Registros sem repetições somam carga, mas não repetições. Sem repetições registradas no dia, a relação fica sem dados. Role para os lados para comparar as datas.</p>
+  <p class="progress-note">Totais por data: repetições = séries × repetições por série; volume = carga × repetições, somados em todas as etapas. Volume ÷ repetições mostra a carga média por repetição. Cardio não entra nesses cálculos.</p>
+  <p class="progress-note">Cada salvamento representa uma execução completa do exercício. Role os gráficos para comparar datas. Apagar uma data exclui os registros de todos os exercícios desse treino naquela data.</p>
   <div id="trainingProgress"></div>
 </section>
 
@@ -1102,38 +1103,27 @@ async function renderDay(){
       const hist = await loadHist(historyDay, idKey);
       const logrow = document.createElement("div");
       logrow.className = "logrow";
-      const repsLabel = document.createElement("div");
-      repsLabel.className = "reps-label";
-      repsLabel.textContent = "Repetições da carga máxima";
-      card.appendChild(repsLabel);
-      let selectedReps = null;
-      const repsWrap = document.createElement("div");
-      repsWrap.className = "reps-select";
-      [4,5,6,7,8,9].forEach(v=>{
-        const chip = document.createElement("div");
-        chip.className = "reps-chip";
-        chip.textContent = v;
-        chip.onclick = ()=>{
-          selectedReps = v;
-          repsWrap.querySelectorAll(".reps-chip").forEach(c=>c.classList.remove("sel"));
-          chip.classList.add("sel");
-        };
-        repsWrap.appendChild(chip);
-      });
+      const sessionEditor = isCardio ? null : TrainingSession.createEditor(effSteps, savedTop, SETTINGS);
+      if(sessionEditor){
+        card.appendChild(sessionEditor.element);
+        weightInput.addEventListener("input", ()=>sessionEditor.setWeight(parseFloat(weightInput.value)));
+      }
       const saveBtn = document.createElement("button");
       saveBtn.className = "save-btn";
       saveBtn.textContent = "Salvar";
       saveBtn.onclick = async ()=>{
-        const w = await loadWeight(currentDay, idKey);
+        const w = await loadWeight(historyDay, idKey);
         if(!w){ showToast(isCardio ? "Preencha o tempo primeiro" : "Preencha a carga usada primeiro"); return; }
-        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, reps: selectedReps, unit: unitLabel };
+        const stages = sessionEditor ? sessionEditor.read() : null;
+        if(sessionEditor && !stages){ showToast("Preencha séries, repetições e carga das etapas realizadas"); return; }
+        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, unit: unitLabel, schemaVersion:2 };
+        if(stages) entry.stages = stages;
         const updated = await pushHist(historyDay, idKey, entry);
         if(!updated){ showToast("Não foi possível salvar o registro. Tente novamente."); return; }
         renderHistList(histList, updated, unitLabel, historyDay, idKey);
         renderProgress();
         showToast("Registrado no histórico");
       };
-      logrow.appendChild(repsWrap);
       logrow.appendChild(saveBtn);
       card.appendChild(logrow);
 
@@ -1196,7 +1186,30 @@ function renderProgress(){
       }
     }catch(error){ console.error("Falha ao ler histórico", error); }
   }
-  TrainingProgress.render(document.getElementById("trainingProgress"), records);
+  TrainingProgress.render(document.getElementById("trainingProgress"), records, deleteHistoryDate);
+}
+
+async function deleteHistoryDate(date){
+  if(!confirm(`Apagar todos os registros de ${date} deste treino? Isso remove a data dos gráficos e dos históricos dos exercícios.`)) return;
+  try{
+    TrainingSession.removeDate(localStorage, LS_PREFIX, date);
+  }catch(error){
+    console.error(error);
+    showToast("Não foi possível apagar essa data");
+    return;
+  }
+  await renderDay();
+  showToast("Registros da data apagados");
+}
+
+function historyEntryText(entry, unit){
+  const totals = TrainingSession.totals(entry.stages);
+  if(totals){
+    return entry.stages.map(stage=>`${stage.sets} × ${stage.reps} rep × ${fmtVal(stage.weight, "kg")}`).join(" | ") +
+      ` · Total: ${totals.sets} séries, ${totals.reps} rep, ${fmtVal(totals.volume, "kg")} de volume`;
+  }
+  return fmtVal(entry.weight, unit) + (entry.reps != null ? ` · Top set: ${entry.reps} rep` : "") +
+    (unit === "kg" ? " · registro antigo sem detalhes das séries" : "");
 }
 
 function renderHistList(el, hist, unit, dayId, idKey){
@@ -1213,7 +1226,7 @@ function renderHistList(el, hist, unit, dayId, idKey){
   el.innerHTML = visibleHist.map(h=>`
     <div class="hist-item">
       <span>${h.date}</span>
-      <span>${fmtVal(h.weight, unit)}${h.reps!==null && h.reps!==undefined ? ` · ${h.reps} repetições na carga máxima` : ''}</span>
+      <span>${historyEntryText(h, unit)}</span>
     </div>
   `).join("");
   const clearBtn = document.createElement("button");

@@ -330,52 +330,226 @@
 </style>
 <style>
   .clear-hist-btn{margin-top:10px; padding:8px 12px; border:1px solid var(--danger); border-radius:8px; background:transparent; color:var(--danger); font-size:12px; cursor:pointer;}
-.training-progress{max-width:720px; margin:20px auto; padding:18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-sizing:border-box;}
+.training-progress{max-width:none; margin:20px 16px; padding:18px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-sizing:border-box;}
 .training-progress h2{margin:0 0 8px; font-size:21px; color:var(--text);}
 .progress-note,.progress-empty{font-size:12px; line-height:1.6; color:var(--text-dim);}
 .progress-scroll{overflow-x:auto; padding:8px 0;}
 .progress-scroll:focus-visible{outline:2px solid var(--composto); outline-offset:3px;}
-.progress-plots{display:grid; grid-template-columns:repeat(3, minmax(280px, 1fr)); gap:24px;}
+.progress-plots{display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:24px;}
 .progress-panel{margin-bottom:0; min-width:0;}
-.progress-panel h3{font-size:13px; color:var(--text); margin:0 0 14px;}
+.progress-panel h3{min-height:32px;font-size:13px; color:var(--text); margin:0 0 14px;}
 .progress-bars{display:flex; gap:8px; padding:0 4px;}
 .progress-column{flex:1; min-width:72px; text-align:center;}
 .progress-track{height:140px; padding-top:25px; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; border-bottom:1px solid var(--border); position:relative; box-sizing:content-box; background:repeating-linear-gradient(to top, transparent 0, transparent 34px, var(--border) 35px);}
 .progress-bar{width:65%; max-width:54px; border-radius:5px 5px 0 0; flex-shrink:0;}
 .progress-value{position:absolute; top:3px; font-size:11px; color:var(--text);}
 .progress-date{display:block; margin-top:8px; font-size:10px; color:var(--text-dim); white-space:nowrap;}
-@media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}}
+.progress-actions{display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:12px 0; font-size:12px; color:var(--text-dim);}
+.progress-actions select{background:var(--surface-2); color:var(--text); padding:8px; border:1px solid var(--border); border-radius:8px;}
+.progress-actions .clear-hist-btn{margin:0;}
+.session-editor{padding:10px 14px;}
+.session-stage{--stage-color:#c4b5fd; border-left:3px solid var(--stage-color); padding:10px; margin-bottom:10px; background:var(--surface-2); border-radius:8px;}
+.session-feeder{--stage-color:#7dd3fc;}
+.session-top{--stage-color:#fcd34d;}
+.session-backoff{--stage-color:#86efac;}
+.session-title{display:flex; align-items:center; gap:7px; color:var(--stage-color); font-size:11.5px; line-height:1.4; margin-bottom:10px;}
+.session-title input{accent-color:var(--stage-color);}
+.session-fields{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px;}
+.session-fields label{font-size:11px; color:var(--text-dim);}
+.session-fields input{display:block; width:100%; min-width:0; margin-top:5px; border:1px solid var(--border); border-radius:6px; background:var(--surface); padding:8px; color:var(--text); font:inherit;}
+.session-chips{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;}
+.session-caption{width:100%; font-size:11px; color:var(--text-dim);}
+.session-chips button{min-width:32px; padding:8px 5px; border:1px solid var(--border); border-radius:6px; background:var(--surface); color:var(--text-dim); font:inherit; font-size:11px; cursor:pointer;}
+.session-chips button.sel{background:var(--stage-color); color:#121417; border-color:var(--stage-color); font-weight:700;}
+.session-disabled .session-fields,.session-disabled .session-chips{opacity:.45;}
+.session-note{font-size:11.5px; line-height:1.4; color:var(--text-dim);}
+.hist-detail{display:block; margin-top:3px;}
+@media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}.progress-plots{grid-template-columns:minmax(0, 1fr);}.progress-panel h3{min-height:0;}}
 
 </style>
 <script>
 (function(root){
+  const positive = value => Number.isFinite(value) && value > 0;
+  function totals(stages){
+    if(!Array.isArray(stages) || !stages.length) return null;
+    let reps=0, sets=0, volume=0;
+    for(const stage of stages){
+      if(!stage || !Number.isInteger(stage.sets) || stage.sets < 1 ||
+        !Number.isInteger(stage.reps) || stage.reps < 1 || !positive(stage.weight)) return null;
+      sets += stage.sets;
+      reps += stage.sets * stage.reps;
+      volume += stage.weight * stage.sets * stage.reps;
+    }
+    return {sets, reps, volume};
+  }
+
+  function defaults(steps, weight, settings){
+    return steps.map(step=>{
+      const kind = ['feeder','top','backoff'].includes(step.calc) ? step.calc : 'work';
+      const pair = /^\s*(\d+)\s*[x×]\s*(\d+)\s*(?:\([^)]*\))?\s*$/.exec(step.sr || '');
+      const setMatch = /^\s*(\d+)\s*[x×]/.exec(step.sr || '');
+      const factor = kind === 'feeder' ? settings.feederPct/100 : kind === 'backoff' ? 1-settings.backoffPct/100 : 1;
+      return {
+        kind,
+        name:kind === 'top' ? 'Top set' : kind === 'backoff' ? 'Back-off' : kind === 'feeder' ? 'Feeder' : step.etapa || 'Série válida',
+        sets:kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
+        reps:pair ? Number(pair[2]) : null,
+        weight:positive(weight) ? Math.round(weight * factor * 100)/100 : null,
+        factor, enabled:true, manualWeight:false
+      };
+    });
+  }
+
+  function createEditor(steps, weight, settings){
+    const element = document.createElement('div');
+    element.className = 'session-editor';
+    const rows = [];
+    for(const stage of defaults(steps, weight, settings)){
+      const row = document.createElement('div');
+      row.className = `session-stage session-${stage.kind}`;
+      const title = document.createElement('label');
+      title.className = 'session-title';
+      const enabled = document.createElement('input');
+      enabled.type = 'checkbox'; enabled.checked = true;
+      title.append(enabled, document.createTextNode(stage.name));
+      row.appendChild(title);
+      const fields = document.createElement('div');
+      fields.className = 'session-fields';
+      function field(label, value, step){
+        const wrap = document.createElement('label');
+        wrap.textContent = label;
+        const input = document.createElement('input');
+        input.type = 'number'; input.min = step === '1' ? '1' : '0.01'; input.step = step;
+        input.inputMode = step === '1' ? 'numeric' : 'decimal';
+        input.value = value ?? ''; input.placeholder = 'Informe';
+        input.setAttribute('aria-label', `${stage.name}: ${label}`);
+        wrap.appendChild(input); fields.appendChild(wrap);
+        return input;
+      }
+      const sets = field('Séries', stage.sets, '1');
+      const reps = field('Repetições por série', stage.reps, '1');
+      const load = field('Carga por série (kg)', stage.weight, '0.01');
+      load.addEventListener('input', ()=>{stage.manualWeight = true;});
+      row.appendChild(fields);
+      function chips(label, values, input){
+        const group = document.createElement('div');
+        group.className = 'session-chips';
+        group.setAttribute('role','group');
+        group.setAttribute('aria-label', `${stage.name}: ${label}`);
+        const caption = document.createElement('span');
+        caption.className = 'session-caption'; caption.textContent = label;
+        group.appendChild(caption);
+        const buttons = values.map(value=>{
+          const button = document.createElement('button');
+          button.type = 'button'; button.textContent = value;
+          button.onclick = ()=>{
+            if(value === '<8'){
+              input.value = ''; input.placeholder = '1 a 7'; input.max = '7'; input.focus();
+            }else{
+              input.removeAttribute('max'); input.placeholder = 'Informe'; input.value = value;
+            }
+            update();
+          };
+          group.appendChild(button);
+          return {button,value};
+        });
+        function update(){
+          for(const {button,value} of buttons){
+            const selected = value === '<8' ? Number(input.value) > 0 && Number(input.value) < 8 : Number(input.value) === value;
+            button.classList.toggle('sel',selected);
+            button.setAttribute('aria-pressed',String(selected));
+          }
+        }
+        input.addEventListener('input',update); update(); row.appendChild(group);
+      }
+      if(stage.kind === 'feeder') chips('Séries', [2,3], sets);
+      chips('Repetições', stage.kind === 'backoff' ? ['<8',8,9,10,11,12,13,14,15] : Array.from({length:12},(_,i)=>i+4), reps);
+      enabled.addEventListener('change', ()=>{
+        row.classList.toggle('session-disabled',!enabled.checked);
+        for(const input of [sets,reps,load]) input.disabled = !enabled.checked;
+        row.querySelectorAll('button').forEach(button=>{button.disabled = !enabled.checked;});
+      });
+      rows.push({stage,enabled,sets,reps,load});
+      element.appendChild(row);
+    }
+    const note = document.createElement('p');
+    note.className = 'session-note';
+    note.textContent = 'Ajuste cada etapa realizada. Os atalhos vão de 4 a 15; o campo aceita outros valores. Séries com repetições e cargas diferentes devem ser cadastradas como etapas separadas na edição do exercício.';
+    element.appendChild(note);
+    return {
+      element,
+      setWeight(value){
+        for(const {stage,load} of rows){
+          if(!stage.manualWeight) load.value = positive(value) ? Math.round(value * stage.factor * 100)/100 : '';
+        }
+      },
+      read(){
+        for(const row of rows){
+          if(row.enabled.checked && [row.sets,row.reps,row.load].some(input=>!input.checkValidity())) return null;
+        }
+        const stages = rows.filter(row=>row.enabled.checked).map(({stage,sets,reps,load})=>({
+          kind:stage.kind, name:stage.name, sets:Number(sets.value), reps:Number(reps.value), weight:Number(load.value)
+        }));
+        return totals(stages) ? stages : null;
+      }
+    };
+  }
+
+  function removeDate(storage, prefix, date){
+    const changes = [];
+    for(let i=0;i<storage.length;i++){
+      const key = storage.key(i);
+      if(!key || !key.startsWith(prefix+'hist:')) continue;
+      const previous = storage.getItem(key);
+      const entries = JSON.parse(previous);
+      if(!Array.isArray(entries)) throw new Error('Histórico inválido');
+      const remaining = entries.filter(entry=>entry?.date !== date);
+      if(remaining.length !== entries.length) changes.push({key,previous,next:JSON.stringify(remaining)});
+    }
+    const written = [];
+    try{
+      for(const change of changes){ storage.setItem(change.key,change.next); written.push(change); }
+    }catch(error){
+      for(const change of written.reverse()) storage.setItem(change.key,change.previous);
+      throw error;
+    }
+    return changes.length;
+  }
+  root.TrainingSession = {totals, defaults, createEditor, removeDate};
+})(typeof window === 'undefined' ? globalThis : window);
+(function(root){
   function aggregate(records){
     const days = new Map();
     for(const entry of records){
-      if(!entry || entry.unit !== 'kg' || !Number.isFinite(entry.weight) || entry.weight <= 0) continue;
+      if(!entry || entry.unit !== 'kg') continue;
       const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(entry.date);
       if(!match) continue;
       const [, d, m, y] = match;
       const date = new Date(Number(y), Number(m)-1, Number(d));
       if(date.getFullYear() !== Number(y) || date.getMonth() !== Number(m)-1 || date.getDate() !== Number(d)) continue;
       const key = `${y}-${m}-${d}`;
-      if(!days.has(key)) days.set(key, {key, date:entry.date, weight:0, reps:0, count:0, pairedCount:0});
+      if(!days.has(key)) days.set(key, {key, date:entry.date, weight:0, reps:0, sets:0, count:0, pairedCount:0, incomplete:0});
       const day = days.get(key);
-      day.weight += entry.weight;
       day.count++;
-      if(Number.isInteger(entry.reps) && entry.reps > 0){
-        day.reps += entry.reps;
+      const totals = root.TrainingSession.totals(entry.stages);
+      if(totals){
+        day.weight += totals.volume;
+        day.reps += totals.reps;
+        day.sets += totals.sets;
         day.pairedCount++;
+      }else{
+        day.incomplete++;
       }
     }
     return [...days.values()].sort((a,b)=>a.key.localeCompare(b.key)).map(day=>({
       ...day,
+      weight:day.pairedCount ? day.weight : null,
       reps:day.pairedCount ? day.reps : null,
       loadPerRep:day.pairedCount ? day.weight / day.reps : null
     }));
   }
 
-  function render(container, records){
+  function render(container, records, onDeleteDate){
     container.replaceChildren();
     const days = aggregate(records);
     if(!days.length){
@@ -385,16 +559,34 @@
       container.appendChild(empty);
       return;
     }
-    const scroll = document.createElement('div');
-    scroll.className = 'progress-scroll';
-    scroll.tabIndex = 0;
-    scroll.setAttribute('role', 'region');
-    scroll.setAttribute('aria-label', 'Gráficos diários. Role horizontalmente para comparar todas as datas.');
+    if(onDeleteDate){
+      const actions = document.createElement('div');
+      actions.className = 'progress-actions';
+      const label = document.createElement('label');
+      label.textContent = 'Apagar uma data: ';
+      const select = document.createElement('select');
+      for(const day of [...days].reverse()){
+        const option = document.createElement('option');
+        option.value = day.date; option.textContent = day.date;
+        select.appendChild(option);
+      }
+      label.appendChild(select);
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'clear-hist-btn';
+      button.textContent = 'Apagar dia';
+      button.onclick = ()=>onDeleteDate(select.value);
+      actions.append(label,button); container.appendChild(actions);
+    }
+    if(days.some(day=>day.incomplete)){
+      const note = document.createElement('p');
+      note.className = 'progress-note';
+      note.textContent = 'Há registros antigos sem séries e cargas por etapa. Eles continuam no histórico, mas não entram nos totais abaixo. Dias com esses registros podem estar incompletos.';
+      container.appendChild(note);
+    }
     const plots = document.createElement('div');
     plots.className = 'progress-plots';
-    plots.style.minWidth = `${Math.max(280, days.length * 88) * 3 + 48}px`;
     const metrics = [
-      {key:'weight', label:'Peso total', unit:'kg', color:'#7dd3fc', digits:1},
+      {key:'weight', label:'Volume total (carga × repetições)', unit:'kg', color:'#7dd3fc', digits:1},
       {key:'reps', label:'Repetições totais', unit:'rep', color:'#c4b5fd', digits:0},
       {key:'loadPerRep', label:'Carga total ÷ repetições', unit:'kg/rep', color:'#86efac', digits:2}
     ];
@@ -406,6 +598,12 @@
       panel.appendChild(heading);
       const chart = document.createElement('div');
       chart.className = 'progress-bars';
+      chart.style.minWidth = `${Math.max(240, days.length * 88)}px`;
+      const scroll = document.createElement('div');
+      scroll.className = 'progress-scroll';
+      scroll.tabIndex = 0;
+      scroll.setAttribute('role', 'region');
+      scroll.setAttribute('aria-label', metric.label);
       const max = Math.max(...days.map(day=>day[metric.key] || 0), 0.001);
       for(const day of days){
         const value = day[metric.key];
@@ -430,12 +628,15 @@
         column.append(track, date);
         chart.appendChild(column);
       }
-      panel.appendChild(chart);
+      scroll.appendChild(chart);
+      panel.appendChild(scroll);
       plots.appendChild(panel);
     }
-    scroll.appendChild(plots);
-    container.appendChild(scroll);
-    scroll.scrollLeft = scroll.scrollWidth;
+    container.appendChild(plots);
+    for(const panel of plots.children){
+      const scroll = panel.children[1];
+      scroll.scrollLeft = scroll.scrollWidth;
+    }
   }
   root.TrainingProgress = {aggregate, render};
 })(typeof window === 'undefined' ? globalThis : window);
@@ -488,8 +689,8 @@
 <main id="main"></main>
 <section class="training-progress" aria-labelledby="progressTitle">
   <h2 id="progressTitle">Evolução por dia</h2>
-  <p class="progress-note">Todos os exercícios deste treino, agrupados pela data do registro. Peso total = soma das cargas salvas. Carga por repetição = carga total do dia ÷ total de repetições do dia. Cada salvamento conta como um registro; cardio não entra nos cálculos.</p>
-  <p class="progress-note">Registros sem repetições somam carga, mas não repetições. Sem repetições registradas no dia, a relação fica sem dados. Role para os lados para comparar as datas.</p>
+  <p class="progress-note">Totais por data: repetições = séries × repetições por série; volume = carga × repetições, somados em todas as etapas. Volume ÷ repetições mostra a carga média por repetição. Cardio não entra nesses cálculos.</p>
+  <p class="progress-note">Cada salvamento representa uma execução completa do exercício. Role os gráficos para comparar datas. Apagar uma data exclui os registros de todos os exercícios desse treino naquela data.</p>
   <div id="trainingProgress"></div>
 </section>
 
@@ -530,13 +731,13 @@ const DAYS = {
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Séries válidas", sr:"3 x 9-15", desc:"2-4 min entre séries", rpe:"-", obs:"Mesma carga nas 3 séries. Ao bater 15 reps com técnica perfeita em todas, aumente a carga na próxima sessão."}]},
     {name:"Tríceps francês na polia com corda", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Rosca 45 graus", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Cadeira flexora", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Cadeira extensora", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
   ]},
   ter: { label:"Terça", sub:"Treino B — Método USA 2X (Full Body)", note:"Full Body 4x/semana. No 1º exercício de cada grupo muscular novo, faça antes 1 série extra de 12-15 reps com carga bem leve. Técnica é inegociável — nunca sacrifique a execução para levantar mais peso.", exercises:[
     {name:"Leg press 45°", tier:"composto", steps:[
@@ -557,15 +758,15 @@ const DAYS = {
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Séries válidas", sr:"3 x 9-15", desc:"2-4 min entre séries", rpe:"-", obs:"Mesma carga nas 3 séries. Ao bater 15 reps com técnica perfeita em todas, aumente a carga na próxima sessão."}]},
     {name:"Voador (peck deck)", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Desenvolvimento Smith", tier:"composto", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Tríceps testa com halteres", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Rosca alternada", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
   ]},
   qua: { label:"Quarta", sub:"Descanso", note:"Sem treino no Método USA 2X (protocolo de 4x por semana) — dia de descanso ou atividade leve.", exercises:[
     {name:"Descanso", tier:"padrao", steps:[
@@ -590,15 +791,15 @@ const DAYS = {
     {name:"Crucifixo com halteres", tier:"isolador", steps:[
       {etapa:"DC Style Rest-Pause", sr:"Falha (8-11) + 20s + falha, x3 blocos", desc:"20s entre blocos", rpe:"-", obs:"Mesma carga nos 3 blocos, sem trocar de peso. Não usa back-off — descanse 2-4 min antes do próximo exercício."}]},
     {name:"Elevação lateral com halteres", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Tríceps na polia barra reta", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Rosca martelo na polia com corda", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Cadeira abdutora", tier:"isolador", steps:[
       {etapa:"DC Style Rest-Pause", sr:"Falha (8-11) + 20s + falha, x3 blocos", desc:"20s entre blocos", rpe:"-", obs:"Mesma carga nos 3 blocos, sem trocar de peso. Não usa back-off — descanse 2-4 min antes do próximo exercício."}]},
     {name:"Elevação de quadril", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
   ]},
   sex: { label:"Sexta", sub:"Treino D — Método USA 2X (Full Body)", note:"Full Body 4x/semana. No 1º exercício de cada grupo muscular novo, faça antes 1 série extra de 12-15 reps com carga bem leve. Técnica é inegociável — nunca sacrifique a execução para levantar mais peso.", exercises:[
     {name:"Leg press unilateral", tier:"composto", steps:[
@@ -610,23 +811,23 @@ const DAYS = {
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Cadeira extensora", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Levantamento terra", tier:"composto", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Puxada triângulo", tier:"sec", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Supino inclinado Smith", tier:"composto", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Supino fechado Smith", tier:"sec", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Y Raise", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Tríceps na corda", tier:"isolador", steps:[
-      {etapa:"Muscle Round", sr:"6 x 4 (blocos)", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
+      {etapa:"Muscle Round", sr:"6 x 32", desc:"10s entre blocos", rpe:"-", obs:"Carga aproximada de 8RM. Objetivo: alta intensidade com fadiga controlada."}]},
     {name:"Rosca inversa na polia", tier:"isolador", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
@@ -1123,38 +1324,27 @@ async function renderDay(){
       const hist = await loadHist(historyDay, idKey);
       const logrow = document.createElement("div");
       logrow.className = "logrow";
-      const repsLabel = document.createElement("div");
-      repsLabel.className = "reps-label";
-      repsLabel.textContent = "Repetições da carga máxima";
-      card.appendChild(repsLabel);
-      let selectedReps = null;
-      const repsWrap = document.createElement("div");
-      repsWrap.className = "reps-select";
-      [4,5,6,7,8,9].forEach(v=>{
-        const chip = document.createElement("div");
-        chip.className = "reps-chip";
-        chip.textContent = v;
-        chip.onclick = ()=>{
-          selectedReps = v;
-          repsWrap.querySelectorAll(".reps-chip").forEach(c=>c.classList.remove("sel"));
-          chip.classList.add("sel");
-        };
-        repsWrap.appendChild(chip);
-      });
+      const sessionEditor = isCardio ? null : TrainingSession.createEditor(effSteps, savedTop, SETTINGS);
+      if(sessionEditor){
+        card.appendChild(sessionEditor.element);
+        weightInput.addEventListener("input", ()=>sessionEditor.setWeight(parseFloat(weightInput.value)));
+      }
       const saveBtn = document.createElement("button");
       saveBtn.className = "save-btn";
       saveBtn.textContent = "Salvar";
       saveBtn.onclick = async ()=>{
-        const w = await loadWeight(currentDay, idKey);
+        const w = await loadWeight(historyDay, idKey);
         if(!w){ showToast(isCardio ? "Preencha o tempo primeiro" : "Preencha a carga usada primeiro"); return; }
-        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, reps: selectedReps, unit: unitLabel };
+        const stages = sessionEditor ? sessionEditor.read() : null;
+        if(sessionEditor && !stages){ showToast("Preencha séries, repetições e carga das etapas realizadas"); return; }
+        const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: w, unit: unitLabel, schemaVersion:2 };
+        if(stages) entry.stages = stages;
         const updated = await pushHist(historyDay, idKey, entry);
         if(!updated){ showToast("Não foi possível salvar o registro. Tente novamente."); return; }
         renderHistList(histList, updated, unitLabel, historyDay, idKey);
         renderProgress();
         showToast("Registrado no histórico");
       };
-      logrow.appendChild(repsWrap);
       logrow.appendChild(saveBtn);
       card.appendChild(logrow);
 
@@ -1216,7 +1406,30 @@ function renderProgress(){
       }
     }catch(error){ console.error("Falha ao ler histórico", error); }
   }
-  TrainingProgress.render(document.getElementById("trainingProgress"), records);
+  TrainingProgress.render(document.getElementById("trainingProgress"), records, deleteHistoryDate);
+}
+
+async function deleteHistoryDate(date){
+  if(!confirm(`Apagar todos os registros de ${date} deste treino? Isso remove a data dos gráficos e dos históricos dos exercícios.`)) return;
+  try{
+    TrainingSession.removeDate(localStorage, LS_PREFIX, date);
+  }catch(error){
+    console.error(error);
+    showToast("Não foi possível apagar essa data");
+    return;
+  }
+  await renderDay();
+  showToast("Registros da data apagados");
+}
+
+function historyEntryText(entry, unit){
+  const totals = TrainingSession.totals(entry.stages);
+  if(totals){
+    return entry.stages.map(stage=>`${stage.sets} × ${stage.reps} rep × ${fmtVal(stage.weight, "kg")}`).join(" | ") +
+      ` · Total: ${totals.sets} séries, ${totals.reps} rep, ${fmtVal(totals.volume, "kg")} de volume`;
+  }
+  return fmtVal(entry.weight, unit) + (entry.reps != null ? ` · Top set: ${entry.reps} rep` : "") +
+    (unit === "kg" ? " · registro antigo sem detalhes das séries" : "");
 }
 
 function renderHistList(el, hist, unit, dayId, idKey){
@@ -1233,7 +1446,7 @@ function renderHistList(el, hist, unit, dayId, idKey){
   el.innerHTML = visibleHist.map(h=>`
     <div class="hist-item">
       <span>${h.date}</span>
-      <span>${fmtVal(h.weight, unit)}${h.reps!==null && h.reps!==undefined ? ` · ${h.reps} repetições na carga máxima` : ''}</span>
+      <span>${historyEntryText(h, unit)}</span>
     </div>
   `).join("");
   const clearBtn = document.createElement("button");
