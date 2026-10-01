@@ -6,7 +6,7 @@ const vm = require('node:vm');
 require('../assets/treino-progress.js');
 const {aggregate, render} = globalThis.TrainingProgress;
 
-test('groups dates chronologically and calculates separate averages', ()=>{
+test('groups dates chronologically and calculates total load divided by repetitions', ()=>{
   const days = aggregate([
     {date:'01/10/2026', weight:100, reps:9, unit:'kg'},
     {date:'30/09/2026', weight:40, reps:4, unit:'kg'},
@@ -17,8 +17,7 @@ test('groups dates chronologically and calculates separate averages', ()=>{
   assert.deepEqual(days.map(d=>d.date), ['30/09/2026','01/10/2026']);
   assert.equal(days[0].weight, 150);
   assert.equal(days[0].reps, 12);
-  assert.equal(days[0].averageReps, 6);
-  assert.equal(days[0].averageWeight, 50);
+  assert.equal(days[0].loadPerRep, 12.5);
 });
 
 test('missing reps remain unknown and invalid data is ignored', ()=>{
@@ -30,11 +29,10 @@ test('missing reps remain unknown and invalid data is ignored', ()=>{
   ]);
   assert.equal(days.length, 1);
   assert.equal(days[0].reps, null);
-  assert.equal(days[0].averageReps, null);
-  assert.equal(days[0].averageWeight, 40);
+  assert.equal(days[0].loadPerRep, null);
 });
 
-test('renders empty state and four bar panels with one bar per day', ()=>{
+test('renders empty state and three bar panels with one bar per day', ()=>{
   class Element {
     constructor(){ this.children=[]; this.style={}; }
     append(...items){ this.children.push(...items); }
@@ -51,7 +49,7 @@ test('renders empty state and four bar panels with one bar per day', ()=>{
     {date:'01/10/2026', weight:80, reps:8, unit:'kg'}
   ]);
   const panels = container.children[0].children[0].children;
-  assert.equal(panels.length, 4);
+  assert.equal(panels.length, 3);
   for(const panel of panels) assert.equal(panel.children[1].children.length, 2);
   delete globalThis.document;
 });

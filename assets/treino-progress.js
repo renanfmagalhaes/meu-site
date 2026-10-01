@@ -21,8 +21,7 @@
     return [...days.values()].sort((a,b)=>a.key.localeCompare(b.key)).map(day=>({
       ...day,
       reps:day.pairedCount ? day.reps : null,
-      averageReps:day.pairedCount ? day.reps / day.pairedCount : null,
-      averageWeight:day.weight / day.count
+      loadPerRep:day.pairedCount ? day.weight / day.reps : null
     }));
   }
 
@@ -47,8 +46,7 @@
     const metrics = [
       {key:'weight', label:'Peso total', unit:'kg', color:'#7dd3fc', digits:1},
       {key:'reps', label:'Repetições totais', unit:'rep', color:'#c4b5fd', digits:0},
-      {key:'averageReps', label:'Média de repetições por registro', unit:'rep', color:'#86efac', digits:1},
-      {key:'averageWeight', label:'Média de carga por registro', unit:'kg', color:'#fcd34d', digits:1}
+      {key:'loadPerRep', label:'Carga total ÷ repetições', unit:'kg/rep', color:'#86efac', digits:2}
     ];
     for(const metric of metrics){
       const panel = document.createElement('section');

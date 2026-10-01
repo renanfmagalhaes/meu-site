@@ -276,6 +276,7 @@
     display:flex; align-items:center; gap:8px; padding:10px 14px 14px; border-top:1px solid var(--border);
   }
   .reps-select{display:flex; gap:4px; flex:1;}
+  .reps-label{padding:0 14px; color:var(--text-dim); font-size:11.5px; font-weight:400; margin-top:3px; line-height:1.4;}
   .reps-chip{
     flex:1; text-align:center; font-size:11px; padding:7px 0; border-radius:7px;
     background:var(--surface-2); border:1px solid var(--border); color:var(--text-dim); font-weight:700;
@@ -334,7 +335,8 @@
 .progress-note,.progress-empty{font-size:12px; line-height:1.6; color:var(--text-dim);}
 .progress-scroll{overflow-x:auto; padding:8px 0;}
 .progress-scroll:focus-visible{outline:2px solid var(--composto); outline-offset:3px;}
-.progress-panel{margin-bottom:24px;}
+.progress-plots{display:grid; grid-template-columns:repeat(3, minmax(280px, 1fr)); gap:24px;}
+.progress-panel{margin-bottom:0; min-width:0;}
 .progress-panel h3{font-size:13px; color:var(--text); margin:0 0 14px;}
 .progress-bars{display:flex; gap:8px; padding:0 4px;}
 .progress-column{flex:1; min-width:72px; text-align:center;}
@@ -369,8 +371,7 @@
     return [...days.values()].sort((a,b)=>a.key.localeCompare(b.key)).map(day=>({
       ...day,
       reps:day.pairedCount ? day.reps : null,
-      averageReps:day.pairedCount ? day.reps / day.pairedCount : null,
-      averageWeight:day.weight / day.count
+      loadPerRep:day.pairedCount ? day.weight / day.reps : null
     }));
   }
 
@@ -391,12 +392,11 @@
     scroll.setAttribute('aria-label', 'Gráficos diários. Role horizontalmente para comparar todas as datas.');
     const plots = document.createElement('div');
     plots.className = 'progress-plots';
-    plots.style.minWidth = `${Math.max(280, days.length * 88)}px`;
+    plots.style.minWidth = `${Math.max(280, days.length * 88) * 3 + 48}px`;
     const metrics = [
       {key:'weight', label:'Peso total', unit:'kg', color:'#7dd3fc', digits:1},
       {key:'reps', label:'Repetições totais', unit:'rep', color:'#c4b5fd', digits:0},
-      {key:'averageReps', label:'Média de repetições por registro', unit:'rep', color:'#86efac', digits:1},
-      {key:'averageWeight', label:'Média de carga por registro', unit:'kg', color:'#fcd34d', digits:1}
+      {key:'loadPerRep', label:'Carga total ÷ repetições', unit:'kg/rep', color:'#86efac', digits:2}
     ];
     for(const metric of metrics){
       const panel = document.createElement('section');
@@ -488,8 +488,8 @@
 <main id="main"></main>
 <section class="training-progress" aria-labelledby="progressTitle">
   <h2 id="progressTitle">Evolução por dia</h2>
-  <p class="progress-note">Todos os exercícios deste treino, agrupados pela data do registro. Peso total = soma das cargas salvas. Médias = total dividido pelo número de registros. Cada salvamento conta como um registro; cardio não entra nos cálculos.</p>
-  <p class="progress-note">Registros sem repetições entram apenas nos cálculos de carga. Role para os lados para comparar as datas.</p>
+  <p class="progress-note">Todos os exercícios deste treino, agrupados pela data do registro. Peso total = soma das cargas salvas. Carga por repetição = carga total do dia ÷ total de repetições do dia. Cada salvamento conta como um registro; cardio não entra nos cálculos.</p>
+  <p class="progress-note">Registros sem repetições somam carga, mas não repetições. Sem repetições registradas no dia, a relação fica sem dados. Role para os lados para comparar as datas.</p>
   <div id="trainingProgress"></div>
 </section>
 
@@ -1124,6 +1124,7 @@ async function renderDay(){
       const logrow = document.createElement("div");
       logrow.className = "logrow";
       const repsLabel = document.createElement("div");
+      repsLabel.className = "reps-label";
       repsLabel.textContent = "Repetições da carga máxima";
       card.appendChild(repsLabel);
       let selectedReps = null;

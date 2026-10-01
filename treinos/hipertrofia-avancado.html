@@ -276,6 +276,7 @@
   .logrow{
     display:flex; align-items:center; gap:8px; padding:10px 14px 14px; border-top:1px solid var(--border);
   }
+  .reps-label{padding:0 14px; color:var(--text-dim); font-size:11.5px; font-weight:400; margin-top:3px; line-height:1.4;}
   .reps-select{display:flex; gap:4px; flex:1;}
   .reps-chip{
     flex:1; text-align:center; font-size:11px; padding:7px 0; border-radius:7px;
@@ -412,8 +413,8 @@
 <main id="main"></main>
 <section class="training-progress" aria-labelledby="progressTitle">
   <h2 id="progressTitle">Evolução por dia</h2>
-  <p class="progress-note">Todos os exercícios deste treino, agrupados pela data do registro. Peso total = soma das cargas salvas. Médias = total dividido pelo número de registros. Cada salvamento conta como um registro; cardio não entra nos cálculos.</p>
-  <p class="progress-note">Registros sem repetições entram apenas nos cálculos de carga. Role para os lados para comparar as datas.</p>
+  <p class="progress-note">Todos os exercícios deste treino, agrupados pela data do registro. Peso total = soma das cargas salvas. Carga por repetição = carga total do dia ÷ total de repetições do dia. Cada salvamento conta como um registro; cardio não entra nos cálculos.</p>
+  <p class="progress-note">Registros sem repetições somam carga, mas não repetições. Sem repetições registradas no dia, a relação fica sem dados. Role para os lados para comparar as datas.</p>
   <div id="trainingProgress"></div>
 </section>
 
@@ -1102,6 +1103,7 @@ async function renderDay(){
       const logrow = document.createElement("div");
       logrow.className = "logrow";
       const repsLabel = document.createElement("div");
+      repsLabel.className = "reps-label";
       repsLabel.textContent = "Repetições da carga máxima";
       card.appendChild(repsLabel);
       let selectedReps = null;
