@@ -96,3 +96,37 @@ test('exported HTML embeds the current session and chart modules with valid scri
   }
   for(const match of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g)) new vm.Script(match[1]);
 });
+
+test('history date editing preserves entry data and exercise day deletion preserves other days', async()=>{
+  class Element{
+    constructor(tag){this.tag=tag;this.children=[];}
+    appendChild(child){this.children.push(child);}
+    replaceChildren(){this.children=[];}
+    focus(){}
+    checkValidity(){return Boolean(this.value);}
+  }
+  globalThis.document={createElement:tag=>new Element(tag)};
+  let approved=false, fail=false, refreshed=0;
+  globalThis.confirm=()=>approved;
+  let history=[{date:'01/10/2026',weight:100,stages:[{sets:1,reps:6,weight:100}]},{date:'30/09/2026',weight:80}];
+  const el=new Element('div');
+  const actions={load:async()=>structuredClone(history),save:next=>{if(fail)return false;history=next;return true;},refresh:()=>refreshed++,toast:()=>{}};
+  const walk=element=>[element,...element.children.flatMap(walk)];
+  try{
+    globalThis.TrainingSession.renderHistory(el,history,entry=>String(entry.weight),actions);
+    const date=walk(el).find(element=>element.type==='date');
+    date.value='2026-10-02';
+    await walk(el).find(element=>element.textContent==='Salvar data').onclick();
+    assert.equal(history[0].date,'02/10/2026');
+    assert.deepEqual(history[0].stages,[{sets:1,reps:6,weight:100}]);
+    await walk(el).find(element=>element.textContent==='Apagar este dia').onclick();
+    assert.equal(history.length,2);
+    approved=true;fail=true;
+    await walk(el).find(element=>element.textContent==='Apagar este dia').onclick();
+    assert.equal(history.length,2);
+    fail=false;
+    await walk(el).find(element=>element.textContent==='Apagar este dia').onclick();
+    assert.deepEqual(history,[{date:'30/09/2026',weight:80}]);
+    assert.equal(refreshed,2);
+  }finally{delete globalThis.document;delete globalThis.confirm;}
+});

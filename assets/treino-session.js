@@ -171,5 +171,66 @@
     }
     return changes.length;
   }
-  root.TrainingSession = {totals, defaults, createEditor, removeDate};
+  function renderHistory(el, hist, describe, actions){
+    el.replaceChildren();
+    function button(text, handler, parent){
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='history-action'; btn.textContent=text; btn.onclick=handler;
+      parent.appendChild(btn); return btn;
+    }
+    if(!hist?.length){
+      const empty=document.createElement('div'); empty.className='hist-empty'; empty.textContent='Sem histórico ainda — salve a primeira sessão.';
+      el.appendChild(empty); return;
+    }
+    const dates=[...new Set(hist.map(entry=>entry.date))].sort((a,b)=>b.split('/').reverse().join('-').localeCompare(a.split('/').reverse().join('-')));
+    async function commit(next){
+      if(!await actions.save(next)){actions.toast('Não foi possível salvar a alteração. Tente novamente.');return false;}
+      renderHistory(el,next,describe,actions); actions.refresh(); return true;
+    }
+    async function deleteDay(date){
+      if(!confirm(`Apagar os registros de ${date} somente deste exercício?`)) return;
+      const current=await actions.load();
+      if(await commit(current.filter(entry=>entry.date!==date))) actions.toast('Dia apagado deste exercício');
+    }
+    for(const date of dates.slice(0,4)){
+      const group=document.createElement('div'); group.className='history-day';
+      const head=document.createElement('div'); head.className='history-day-head';
+      const label=document.createElement('span'); label.textContent=date; head.appendChild(label);
+      button('Apagar este dia',()=>deleteDay(date),head); group.appendChild(head);
+      hist.forEach((entry,index)=>{
+        if(entry.date!==date) return;
+        const row=document.createElement('div'); row.className='history-record';
+        const text=document.createElement('span'); text.textContent=describe(entry); row.appendChild(text);
+        const editor=document.createElement('div'); editor.className='history-date-editor'; editor.hidden=true;
+        const dateLabel=document.createElement('label'); dateLabel.textContent='Data do registro: ';
+        const input=document.createElement('input'); input.type='date'; input.required=true;
+        input.value=date.split('/').reverse().join('-'); dateLabel.appendChild(input); editor.appendChild(dateLabel);
+        button('Salvar data',async()=>{
+          if(!input.checkValidity()){input.reportValidity();return;}
+          const newDate=input.value.split('-').reverse().join('/');
+          const current=await actions.load();
+          if(JSON.stringify(current[index])!==JSON.stringify(entry)){
+            renderHistory(el,current,describe,actions);actions.toast('O histórico mudou. Edite o registro novamente.');return;
+          }
+          current[index]={...current[index],date:newDate};
+          if(await commit(current)) actions.toast('Data atualizada');
+        },editor);
+        button('Cancelar',()=>{editor.hidden=true;},editor);
+        button('Editar data',()=>{editor.hidden=!editor.hidden;if(!editor.hidden)input.focus();},row);
+        row.appendChild(editor);group.appendChild(row);
+      });
+      el.appendChild(group);
+    }
+    const tools=document.createElement('div');tools.className='history-tools';
+    const label=document.createElement('label');label.textContent='Apagar um dia deste exercício: ';
+    const select=document.createElement('select');
+    for(const date of dates){const option=document.createElement('option');option.value=date;option.textContent=date;select.appendChild(option);}
+    label.appendChild(select);tools.appendChild(label);
+    button('Apagar dia',()=>deleteDay(select.value),tools);
+    button('Apagar todo o histórico deste exercício',async()=>{
+      if(confirm('Apagar todo o histórico somente deste exercício?') && await commit([])) actions.toast('Histórico do exercício apagado');
+    },tools);
+    el.appendChild(tools);
+  }
+  root.TrainingSession = {totals, defaults, createEditor, removeDate, renderHistory};
 })(typeof window === 'undefined' ? globalThis : window);

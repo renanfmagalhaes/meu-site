@@ -40,4 +40,13 @@
 .session-disabled .session-fields,.session-disabled .session-chips{opacity:.45;}
 .session-note{font-size:11.5px; line-height:1.4; color:var(--text-dim);}
 .hist-detail{display:block; margin-top:3px;}
+.history-day{border-top:1px dashed var(--border); padding:8px 0;}
+.history-day-head{display:flex; justify-content:space-between; align-items:center; gap:8px; color:var(--text-dim);}
+.history-record{display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:8px 0; line-height:1.5;}
+.history-record>span{flex:1; min-width:180px;}
+.history-action{background:var(--surface-2); color:var(--text-dim); border:1px solid var(--border); border-radius:7px; padding:7px 9px; font:inherit; cursor:pointer;}
+.history-date-editor{width:100%;}
+.history-date-editor[hidden]{display:none;}
+.history-tools{display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding-top:10px;}
+.history-tools select,.history-date-editor input{background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:7px; font:inherit;}
 @media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}.progress-plots{grid-template-columns:minmax(0, 1fr);}.progress-panel h3{min-height:0;}}

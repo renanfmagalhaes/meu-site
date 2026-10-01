@@ -328,9 +328,9 @@
   }
   .treino-switch-select:focus{outline:none; border-color:var(--composto);}
 </style>
-<link rel="stylesheet" href="../assets/treino-progress.css?v=20261001-5">
-<script src="../assets/treino-session.js?v=20261001-5"></script>
-<script src="../assets/treino-progress.js?v=20261001-5"></script>
+<link rel="stylesheet" href="../assets/treino-progress.css?v=20261001-6">
+<script src="../assets/treino-session.js?v=20261001-6"></script>
+<script src="../assets/treino-progress.js?v=20261001-6"></script>
 </head>
 <body>
 
@@ -1142,37 +1142,12 @@ function historyEntryText(entry, unit){
 }
 
 function renderHistList(el, hist, unit, dayId, idKey){
-  unit = unit || "kg";
-  if(!hist || hist.length===0){
-    el.innerHTML = `<div class="hist-empty">Sem histórico ainda — salve a primeira sessão.</div>`;
-    return;
-  }
-  const dateKey = date => date.split('/').reverse().join('-');
-  const recentDates = [...new Set(hist.map(h=>h.date))]
-    .sort((a,b)=>dateKey(b).localeCompare(dateKey(a))).slice(0, 4);
-  const visibleHist = hist.filter(h=>recentDates.includes(h.date))
-    .sort((a,b)=>dateKey(b.date).localeCompare(dateKey(a.date)));
-  el.innerHTML = visibleHist.map(h=>`
-    <div class="hist-item">
-      <span>${h.date}</span>
-      <span>${historyEntryText(h, unit)}</span>
-    </div>
-  `).join("");
-  const clearBtn = document.createElement("button");
-  clearBtn.type = "button";
-  clearBtn.className = "clear-hist-btn";
-  clearBtn.textContent = "Apagar histórico deste exercício";
-  clearBtn.onclick = ()=>{
-    if(!confirm("Apagar o histórico somente deste exercício?")) return;
-    if(!lsSet(histKey(dayId, idKey), JSON.stringify([]))){
-      showToast("Não foi possível apagar o histórico. Tente novamente.");
-      return;
-    }
-    renderHistList(el, [], unit, dayId, idKey);
-    renderProgress();
-    showToast("Histórico do exercício apagado");
-  };
-  el.appendChild(clearBtn);
+  TrainingSession.renderHistory(el, hist, entry=>historyEntryText(entry, unit || "kg"), {
+    load:()=>loadHist(dayId, idKey),
+    save:next=>lsSet(histKey(dayId, idKey), JSON.stringify(next)),
+    refresh:renderProgress,
+    toast:showToast
+  });
 }
 
 /* ---------- backup ---------- */
