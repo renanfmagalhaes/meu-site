@@ -348,9 +348,9 @@
   }
   .treino-switch-select:focus{outline:none; border-color:var(--composto);}
 </style>
-<link rel="stylesheet" href="../assets/treino-progress.css?v=20261001-7">
-<script src="../assets/treino-session.js?v=20261001-7"></script>
-<script src="../assets/treino-progress.js?v=20261001-7"></script>
+<link rel="stylesheet" href="../assets/treino-progress.css?v=20261001-8">
+<script src="../assets/treino-session.js?v=20261001-8"></script>
+<script src="../assets/treino-progress.js?v=20261001-8"></script>
 </head>
 <body>
 
@@ -1134,7 +1134,13 @@ async function renderDay(){
       const histList = document.createElement("div");
       histList.className = "hist";
       renderHistList(histList, hist, unitLabel, historyDay, idKey);
-      card.appendChild(histList);
+      const historyPanel = document.createElement("details");
+      historyPanel.className = "history-panel";
+      const historyToggle = document.createElement("summary");
+      historyToggle.className = "history-toggle";
+      historyToggle.textContent = "Ver histórico";
+      historyPanel.append(historyToggle, histList);
+      card.appendChild(historyPanel);
     }
 
     main.appendChild(card);

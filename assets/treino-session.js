@@ -23,7 +23,7 @@
       return {
         kind,
         name:kind === 'top' ? 'Top set' : kind === 'backoff' ? 'Back-off' : kind === 'feeder' ? 'Feeder' : step.etapa || 'Série válida',
-        sets:blocks ? Number(blocks[1]) : kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
+        sets:step.etapa === 'DC Style Rest-Pause' ? 1 : blocks ? Number(blocks[1]) : kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
         reps:blocks ? Number(blocks[2]) * Number(blocks[3]) : pair ? Number(pair[2]) : null,
         weight:positive(weight) ? Math.round(weight * factor * 100)/100 : null,
         factor, enabled:true, manualWeight:false
@@ -139,7 +139,7 @@
         input.addEventListener('input',update); update(); content.appendChild(group);
       }
       if(stage.kind === 'feeder') chips('Séries', [2,3], sets);
-      chips('Repetições', stage.kind === 'backoff' ? ['<8',8,9,10,11,12,13,14,15] : Array.from({length:12},(_,i)=>i+4), reps);
+      chips('Repetições', [...(stage.kind === 'backoff' ? ['<8'] : []), ...Array.from({length:22},(_,i)=>i+4)], reps);
       enabled.addEventListener('change', ()=>{
         row.classList.toggle('session-disabled',!enabled.checked);
         for(const input of [sets,reps,load]) input.disabled = !enabled.checked;
@@ -152,7 +152,7 @@
     }
     const note = document.createElement('p');
     note.className = 'session-note';
-    note.textContent = 'Ajuste cada etapa realizada. Os atalhos vão de 4 a 15; o campo aceita outros valores. Séries com repetições e cargas diferentes devem ser cadastradas como etapas separadas na edição do exercício.';
+    note.textContent = 'Ajuste cada etapa realizada. Os atalhos vão de 4 a 25; o campo aceita outros valores. Séries com repetições e cargas diferentes devem ser cadastradas como etapas separadas na edição do exercício.';
     element.appendChild(note);
     return {
       element,

@@ -3,6 +3,14 @@ const assert = require('node:assert/strict');
 require('../assets/treino-session.js');
 const {totals,defaults,removeDate} = globalThis.TrainingSession;
 
+test('DC Style Rest-Pause uses one set and the entered total repetitions', ()=>{
+  const stages=defaults([{etapa:'DC Style Rest-Pause',sr:'1 x X repetições'}],40,{feederPct:70,backoffPct:25});
+  assert.equal(stages[0].sets,1);
+  assert.equal(stages[0].reps,null);
+  stages[0].reps=25;
+  assert.deepEqual(totals(stages),{sets:1,reps:25,volume:1000});
+});
+
 test('Muscle Round counts six sets of 32 reps and their complete volume', ()=>{
   const stages=defaults([{etapa:'Muscle Round',sr:'6 séries de 8 x 4'}],20,{feederPct:70,backoffPct:25});
   assert.deepEqual(totals(stages),{sets:6,reps:192,volume:3840});

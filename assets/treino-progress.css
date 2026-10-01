@@ -65,3 +65,11 @@
 .session-editor>.session-stage>.session-toggle{display:none;}
 .session-editor>.session-stage>.session-content{padding:12px;}
 }
+
+.history-panel{margin:0 14px 14px;}
+.history-toggle{display:block;list-style:none;cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--surface-2);color:var(--text);font-size:12px;font-weight:700;}
+.history-toggle::-webkit-details-marker{display:none;}
+.history-toggle::after{content:" +";}
+.history-panel[open]>.history-toggle::after{content:" \2212";}
+.history-toggle:focus-visible{outline:2px solid var(--composto);outline-offset:2px;}
+.history-panel>.hist{padding:10px 0 0;}

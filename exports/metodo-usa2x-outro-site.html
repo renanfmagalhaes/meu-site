@@ -398,6 +398,14 @@
 .session-editor>.session-stage>.session-content{padding:12px;}
 }
 
+.history-panel{margin:0 14px 14px;}
+.history-toggle{display:block;list-style:none;cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--surface-2);color:var(--text);font-size:12px;font-weight:700;}
+.history-toggle::-webkit-details-marker{display:none;}
+.history-toggle::after{content:" +";}
+.history-panel[open]>.history-toggle::after{content:" \2212";}
+.history-toggle:focus-visible{outline:2px solid var(--composto);outline-offset:2px;}
+.history-panel>.hist{padding:10px 0 0;}
+
 </style>
 <script>
 (function(root){
@@ -425,7 +433,7 @@
       return {
         kind,
         name:kind === 'top' ? 'Top set' : kind === 'backoff' ? 'Back-off' : kind === 'feeder' ? 'Feeder' : step.etapa || 'Série válida',
-        sets:blocks ? Number(blocks[1]) : kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
+        sets:step.etapa === 'DC Style Rest-Pause' ? 1 : blocks ? Number(blocks[1]) : kind === 'feeder' ? 2 : setMatch ? Number(setMatch[1]) : null,
         reps:blocks ? Number(blocks[2]) * Number(blocks[3]) : pair ? Number(pair[2]) : null,
         weight:positive(weight) ? Math.round(weight * factor * 100)/100 : null,
         factor, enabled:true, manualWeight:false
@@ -541,7 +549,7 @@
         input.addEventListener('input',update); update(); content.appendChild(group);
       }
       if(stage.kind === 'feeder') chips('Séries', [2,3], sets);
-      chips('Repetições', stage.kind === 'backoff' ? ['<8',8,9,10,11,12,13,14,15] : Array.from({length:12},(_,i)=>i+4), reps);
+      chips('Repetições', [...(stage.kind === 'backoff' ? ['<8'] : []), ...Array.from({length:22},(_,i)=>i+4)], reps);
       enabled.addEventListener('change', ()=>{
         row.classList.toggle('session-disabled',!enabled.checked);
         for(const input of [sets,reps,load]) input.disabled = !enabled.checked;
@@ -554,7 +562,7 @@
     }
     const note = document.createElement('p');
     note.className = 'session-note';
-    note.textContent = 'Ajuste cada etapa realizada. Os atalhos vão de 4 a 15; o campo aceita outros valores. Séries com repetições e cargas diferentes devem ser cadastradas como etapas separadas na edição do exercício.';
+    note.textContent = 'Ajuste cada etapa realizada. Os atalhos vão de 4 a 25; o campo aceita outros valores. Séries com repetições e cargas diferentes devem ser cadastradas como etapas separadas na edição do exercício.';
     element.appendChild(note);
     return {
       element,
@@ -899,7 +907,7 @@ const DAYS = {
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Remada baixa triângulo", tier:"sec", steps:[
-      {etapa:"DC Style Rest-Pause", sr:"Falha (8-11) + 20s + falha, x3 blocos", desc:"20s entre blocos", rpe:"-", obs:"Mesma carga nos 3 blocos, sem trocar de peso. Não usa back-off — descanse 2-4 min antes do próximo exercício."}]},
+      {etapa:"DC Style Rest-Pause", sr:"1 x X repetições", desc:"20s entre blocos", rpe:"-", obs:"Registre 1 série com o total de repetições realizadas (X), incluindo todos os blocos. Mantenha a mesma carga; o cálculo usa carga × X repetições."}]},
     {name:"Face pull", tier:"isolador", steps:[
       {etapa:"Feeder", sr:"2-3 séries progressivas", desc:"-", rpe:"-", obs:"Séries leves e crescentes antes da 1ª série válida.", calc:"feeder"},
       {etapa:"Séries válidas", sr:"3 x 9-15", desc:"2-4 min entre séries", rpe:"-", obs:"Mesma carga nas 3 séries. Ao bater 15 reps com técnica perfeita em todas, aumente a carga na próxima sessão."}]},
@@ -935,7 +943,7 @@ const DAYS = {
       {etapa:"Top set", sr:"1 x 5-9", desc:"2-3 min", rpe:"-", obs:"Série pesada, perto da falha entre 5 e 9 reps — registrar carga.", calc:"top"},
       {etapa:"Back-off", sr:"1 x 9-15", desc:"2-4 min", rpe:"-", obs:"Reduza a carga em 20-30% e vá até a falha entre 9 e 15 reps.", calc:"backoff"}]},
     {name:"Crucifixo com halteres", tier:"isolador", steps:[
-      {etapa:"DC Style Rest-Pause", sr:"Falha (8-11) + 20s + falha, x3 blocos", desc:"20s entre blocos", rpe:"-", obs:"Mesma carga nos 3 blocos, sem trocar de peso. Não usa back-off — descanse 2-4 min antes do próximo exercício."}]},
+      {etapa:"DC Style Rest-Pause", sr:"1 x X repetições", desc:"20s entre blocos", rpe:"-", obs:"Registre 1 série com o total de repetições realizadas (X), incluindo todos os blocos. Mantenha a mesma carga; o cálculo usa carga × X repetições."}]},
     {name:"Elevação lateral com halteres", tier:"isolador", steps:[
       {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Tríceps na polia barra reta", tier:"isolador", steps:[
@@ -943,7 +951,7 @@ const DAYS = {
     {name:"Rosca martelo na polia com corda", tier:"isolador", steps:[
       {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
     {name:"Cadeira abdutora", tier:"isolador", steps:[
-      {etapa:"DC Style Rest-Pause", sr:"Falha (8-11) + 20s + falha, x3 blocos", desc:"20s entre blocos", rpe:"-", obs:"Mesma carga nos 3 blocos, sem trocar de peso. Não usa back-off — descanse 2-4 min antes do próximo exercício."}]},
+      {etapa:"DC Style Rest-Pause", sr:"1 x X repetições", desc:"20s entre blocos", rpe:"-", obs:"Registre 1 série com o total de repetições realizadas (X), incluindo todos os blocos. Mantenha a mesma carga; o cálculo usa carga × X repetições."}]},
     {name:"Elevação de quadril", tier:"isolador", steps:[
       {etapa:"Muscle Round", sr:"6 séries de 8 x 4", desc:"10s entre blocos", rpe:"-", obs:"Em cada uma das 6 séries: 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições + 10s de descanso + 8 repetições."}]},
   ]},
@@ -1501,7 +1509,13 @@ async function renderDay(){
       const histList = document.createElement("div");
       histList.className = "hist";
       renderHistList(histList, hist, unitLabel, historyDay, idKey);
-      card.appendChild(histList);
+      const historyPanel = document.createElement("details");
+      historyPanel.className = "history-panel";
+      const historyToggle = document.createElement("summary");
+      historyToggle.className = "history-toggle";
+      historyToggle.textContent = "Ver histórico";
+      historyPanel.append(historyToggle, histList);
+      card.appendChild(historyPanel);
     }
 
     main.appendChild(card);
