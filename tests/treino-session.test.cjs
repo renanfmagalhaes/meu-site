@@ -69,7 +69,16 @@ test('editor keeps stage selections independent and requires exact reps below ei
       {etapa:'Top set',calc:'top',sr:'1 x 6'},
       {etapa:'Back-off',calc:'backoff',sr:'1 x 10'}
     ],100,{feederPct:70,backoffPct:25});
-    const rows=editor.element.children.slice(0,3);
+    const rows=editor.element.children.slice(1,4);
+    const buttons=editor.element.children[0].children;
+    assert.equal(buttons.length,3);
+    buttons[0].onclick();
+    assert.equal(rows[0].open,true);
+    buttons[1].onclick();
+    assert.equal(rows[0].open,false);
+    assert.equal(rows[1].open,true);
+    buttons[1].onclick();
+    assert.equal(rows[1].open,false);
     for(const row of rows){assert.equal(row.tag,"details");assert(!row.open);assert.match(row.children[0].children[1].textContent,/Preenchida/);}
     const [feeder,top,backoff]=rows.map(row=>row.children[1]);
     feeder.children[2].children.find(button=>button.textContent===3).onclick();

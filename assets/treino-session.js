@@ -34,6 +34,9 @@
   function createEditor(steps, weight, settings){
     const element = document.createElement('div');
     element.className = 'session-editor';
+    const mobileButtons = document.createElement('div');
+    mobileButtons.className = 'session-mobile-buttons';
+    element.appendChild(mobileButtons);
     const rows = [];
     for(const stage of defaults(steps, weight, settings)){
       const row = document.createElement('details');
@@ -44,6 +47,27 @@
       name.textContent = stage.name;
       const status = document.createElement('span');
       status.className = 'session-status';
+      const mobileButton = document.createElement('button');
+      mobileButton.type = 'button';
+      mobileButton.className = `session-mobile-button session-${stage.kind}`;
+      const mobileName = document.createElement('span');
+      mobileName.textContent = stage.name;
+      const mobileStatus = document.createElement('span');
+      mobileStatus.className = 'session-status';
+      mobileButton.append(mobileName, mobileStatus);
+      mobileButton.setAttribute('aria-expanded', 'false');
+      mobileButton.onclick = ()=>{
+        const open = !row.open;
+        for(const item of rows) item.row.open = false;
+        row.open = open;
+      };
+      row.addEventListener('toggle', ()=>{
+        if(row.open && root.matchMedia?.('(max-width:760px)').matches){
+          for(const item of rows) if(item.row !== row) item.row.open = false;
+        }
+        mobileButton.setAttribute('aria-expanded', String(row.open));
+      });
+      mobileButtons.appendChild(mobileButton);
       toggle.append(name,status);
       row.appendChild(toggle);
       const content = document.createElement('div');
@@ -78,6 +102,7 @@
           {sets:Number(sets.value),reps:Number(reps.value),weight:Number(load.value)}
         ]);
         status.textContent = !enabled.checked ? '— Desativada' : complete ? '✓ Preenchida' : '○ Pendente';
+        mobileStatus.textContent = status.textContent;
         row.classList.toggle('session-complete',Boolean(complete && enabled.checked));
       }
       for(const input of [sets,reps,load]) input.addEventListener('input',updateStatus);

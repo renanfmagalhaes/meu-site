@@ -383,6 +383,21 @@
 .history-tools select,.history-date-editor input{background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:7px; font:inherit;}
 @media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}.progress-plots{grid-template-columns:minmax(0, 1fr);}.progress-panel h3{min-height:0;}}
 
+.session-mobile-buttons{display:none;}
+@media(max-width:760px){
+.session-mobile-buttons{display:flex;gap:6px;margin-bottom:10px;}
+.session-mobile-button{flex:1;min-width:0;--stage-color:#c4b5fd;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;border:1px solid var(--stage-color);border-radius:8px;background:var(--surface-2);color:var(--stage-color);font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+.session-mobile-button.session-feeder{--stage-color:#7dd3fc;}
+.session-mobile-button.session-top{--stage-color:#FF9F43;}
+.session-mobile-button.session-backoff{--stage-color:#86efac;}
+.session-mobile-button .session-status{margin:0;font-size:9px;}
+.session-mobile-button[aria-expanded="true"]{background:var(--stage-color);color:var(--bg);}
+.session-mobile-button:focus-visible{outline:2px solid var(--stage-color);outline-offset:2px;}
+.session-editor>.session-stage:not([open]){display:none;}
+.session-editor>.session-stage>.session-toggle{display:none;}
+.session-editor>.session-stage>.session-content{padding:12px;}
+}
+
 </style>
 <script>
 (function(root){
@@ -421,6 +436,9 @@
   function createEditor(steps, weight, settings){
     const element = document.createElement('div');
     element.className = 'session-editor';
+    const mobileButtons = document.createElement('div');
+    mobileButtons.className = 'session-mobile-buttons';
+    element.appendChild(mobileButtons);
     const rows = [];
     for(const stage of defaults(steps, weight, settings)){
       const row = document.createElement('details');
@@ -431,6 +449,27 @@
       name.textContent = stage.name;
       const status = document.createElement('span');
       status.className = 'session-status';
+      const mobileButton = document.createElement('button');
+      mobileButton.type = 'button';
+      mobileButton.className = `session-mobile-button session-${stage.kind}`;
+      const mobileName = document.createElement('span');
+      mobileName.textContent = stage.name;
+      const mobileStatus = document.createElement('span');
+      mobileStatus.className = 'session-status';
+      mobileButton.append(mobileName, mobileStatus);
+      mobileButton.setAttribute('aria-expanded', 'false');
+      mobileButton.onclick = ()=>{
+        const open = !row.open;
+        for(const item of rows) item.row.open = false;
+        row.open = open;
+      };
+      row.addEventListener('toggle', ()=>{
+        if(row.open && root.matchMedia?.('(max-width:760px)').matches){
+          for(const item of rows) if(item.row !== row) item.row.open = false;
+        }
+        mobileButton.setAttribute('aria-expanded', String(row.open));
+      });
+      mobileButtons.appendChild(mobileButton);
       toggle.append(name,status);
       row.appendChild(toggle);
       const content = document.createElement('div');
@@ -465,6 +504,7 @@
           {sets:Number(sets.value),reps:Number(reps.value),weight:Number(load.value)}
         ]);
         status.textContent = !enabled.checked ? '— Desativada' : complete ? '✓ Preenchida' : '○ Pendente';
+        mobileStatus.textContent = status.textContent;
         row.classList.toggle('session-complete',Boolean(complete && enabled.checked));
       }
       for(const input of [sets,reps,load]) input.addEventListener('input',updateStatus);
