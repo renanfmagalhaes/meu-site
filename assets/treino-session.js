@@ -62,7 +62,7 @@
         row.open = open;
       };
       row.addEventListener('toggle', ()=>{
-        if(row.open && root.matchMedia?.('(max-width:760px)').matches){
+        if(row.open){
           for(const item of rows) if(item.row !== row) item.row.open = false;
         }
         mobileButton.setAttribute('aria-expanded', String(row.open));

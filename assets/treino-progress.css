@@ -51,8 +51,7 @@
 .history-tools select,.history-date-editor input{background:var(--surface-2); color:var(--text); border:1px solid var(--border); border-radius:6px; padding:7px; font:inherit;}
 @media(max-width:760px){.training-progress{margin:16px 12px; padding:14px;}.progress-plots{grid-template-columns:minmax(0, 1fr);}.progress-panel h3{min-height:0;}}
 
-.session-mobile-buttons{display:none;}
-@media(max-width:760px){
+
 .session-mobile-buttons{display:flex;gap:6px;margin-bottom:10px;}
 .session-mobile-button{flex:1;min-width:0;--stage-color:#c4b5fd;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px;border:1px solid var(--stage-color);border-radius:8px;background:var(--surface-2);color:var(--stage-color);font:inherit;font-size:12px;font-weight:700;cursor:pointer;}
 .session-mobile-button.session-feeder{--stage-color:#7dd3fc;}
@@ -64,7 +63,6 @@
 .session-editor>.session-stage:not([open]){display:none;}
 .session-editor>.session-stage>.session-toggle{display:none;}
 .session-editor>.session-stage>.session-content{padding:12px;}
-}
 
 .history-panel{margin:0 14px 14px;}
 .history-toggle{display:block;list-style:none;cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--surface-2);color:var(--text);font-size:12px;font-weight:700;}
