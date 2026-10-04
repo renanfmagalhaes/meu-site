@@ -328,9 +328,9 @@
   }
   .treino-switch-select:focus{outline:none; border-color:var(--composto);}
 </style>
-<link rel="stylesheet" href="../assets/treino-progress.css?v=20261002-1">
-<script src="../assets/treino-session.js?v=20261002-1"></script>
-<script src="../assets/treino-progress.js?v=20261002-1"></script>
+<link rel="stylesheet" href="../assets/treino-progress.css?v=20261004-1">
+<script src="../assets/treino-session.js?v=20261004-1"></script>
+<script src="../assets/treino-progress.js?v=20261004-1"></script>
 </head>
 <body>
 
@@ -1046,6 +1046,7 @@ async function renderDay(){
         const stages = sessionEditor ? sessionEditor.read() : null;
         if(sessionEditor && !stages){ showToast("Preencha séries, repetições e carga das etapas realizadas"); return; }
         const entry = { date: new Date().toLocaleDateString('pt-BR'), weight: stages ? Math.max(...stages.map(stage=>stage.weight)) : w, unit: unitLabel, schemaVersion:2 };
+        entry.exerciseName = displayName;
         if(stages) entry.stages = stages;
         const updated = await pushHist(historyDay, idKey, entry);
         if(!updated){ showToast("Não foi possível salvar o registro. Tente novamente."); return; }
@@ -1117,7 +1118,7 @@ function renderProgress(){
       for(const entry of history){
         if(!entry || typeof entry !== "object") continue;
         const unit = entry.unit || (tier === "cardio" ? "min" : tier ? "kg" : null);
-        records.push({...entry, unit});
+        records.push({...entry, unit, exerciseName:entry.exerciseName || custom.name || exercise?.name, exerciseId:dayId + ":" + idKey});
       }
     }catch(error){ console.error("Falha ao ler histórico", error); }
   }

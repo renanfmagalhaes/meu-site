@@ -7,6 +7,21 @@ require('../assets/treino-session.js');
 require('../assets/treino-progress.js');
 const {aggregate, render} = globalThis.TrainingProgress;
 
+test('muscle charts total volume and count distinct exercises per training date', ()=>{
+  const {muscleGroup,aggregateMuscles}=globalThis.TrainingProgress;
+  assert.equal(muscleGroup('Supino fechado Smith'),'Tríceps');
+  assert.equal(muscleGroup('Voador inverso'),'Ombros');
+  assert.equal(muscleGroup('Cadeira flexora'),'Posteriores de coxa');
+  const entry={date:'04/10/2026',unit:'kg',exerciseName:'Supino reto',exerciseId:'seg:0',stages:[{sets:2,reps:10,weight:50}]};
+  const records=[entry,{...entry},{...entry,date:'03/10/2026'},
+    {...entry,exerciseName:'Remada',exerciseId:'seg:1'},
+    {...entry,unit:'min'}, {...entry,stages:null}];
+  assert.deepEqual(aggregateMuscles(records,['04/10/2026']),[
+    {name:'Peito',volume:2000,count:1},{name:'Costas',volume:1000,count:1}
+  ]);
+  assert.equal(aggregateMuscles(records,['03/10/2026','04/10/2026'])[0].count,2);
+});
+
 test('groups dates chronologically and calculates total load divided by repetitions', ()=>{
   const days = aggregate([
     {date:'01/10/2026', stages:[{sets:1, weight:100, reps:9}], unit:'kg'},

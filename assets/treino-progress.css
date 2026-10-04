@@ -71,3 +71,12 @@
 .history-panel[open]>.history-toggle::after{content:" \2212";}
 .history-toggle:focus-visible{outline:2px solid var(--composto);outline-offset:2px;}
 .history-panel>.hist{padding:10px 0 0;}
+
+.muscle-plots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:28px;}
+.muscle-plots h3{font-size:15px;color:var(--text);}
+.muscle-chart-body{display:flex;flex-wrap:wrap;align-items:center;gap:18px;}
+.muscle-pie{width:190px;aspect-ratio:1;border-radius:50%;flex-shrink:0;}
+.muscle-legend{flex:1;min-width:180px;list-style:none;padding:0;margin:0;font-size:12px;color:var(--text-dim);}
+.muscle-legend li{display:flex;gap:8px;align-items:baseline;margin:10px 0;line-height:1.5;}
+.muscle-swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+@media(max-width:760px){.muscle-plots{grid-template-columns:1fr;}.muscle-pie{margin:auto;}}
