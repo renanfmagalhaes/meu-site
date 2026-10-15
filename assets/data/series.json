@@ -277,5 +277,18 @@
     ],
     "date": "01/09/2026",
     "id": "tudo-culpa-dela"
+  },
+    {
+    "title": "O Mundo Sombrio de Sabrina",
+    "sinopse": "Bruxa e também mortal, a jovem Sabrina Spellman fica dividida entre a vida normal de adolescente e o legado de sua família feiticeira.",
+    "img": "https://image.tmdb.org/t/p/w500/8hSvf5pHue3UzqBWTO9xMLPMOGn.jpg",
+    "rating": 8,
+    "tags": [
+      "#Mistério",
+      "#Sci-Fi&Fantasy",
+      "#Drama"
+    ],
+    "date": "01/09/2026",
+    "id": "o-mundo-sombrio-de-sabrina"
   }
 ]

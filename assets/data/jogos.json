@@ -307,6 +307,30 @@
     "platform": "PC",
     "date": "20/09/2026",
     "id": "nicktoons-the-dice-of-destiny"
+  },
+  {
+    "title": "God of War: Ascension",
+    "sinopse": "This prequel to the very first game in the God of War series and the seventh game in the franchise. It is exclusive for the Sony PlayStation 3 console. The game still uses the ancient Greek mythology as visual inspiration and the primary story source. The player takes control over the warrior Kratos. At the beginning of the game, the protagonist was imprisoned after he violated the blood oath given to the god of war Ares. One of the three goddesses of revenge Megera tortures Kratos, but he manages to break free and start the path to revenge on the gods of Olympus. Kratos still uses the dual Blade of Chaos. They can be improved, but this is not the only weapon in the game: other weapons are available for purchase thanks to the new World Weapons mechanics. The gameplay is no different from t",
+    "img": "https://media.rawg.io/media/games/c13/c13815d4923dc9778ff959985ad4dd43.jpg",
+    "rating": 9.9,
+    "tags": [
+      "#Action"
+    ],
+    "platform": "PlayStation 3",
+    "date": "27/09/2026",
+    "id": "god-of-war-ascension"
+  },
+    {
+    "title": "The Walking Dead: Streets of Survival",
+    "sinopse": "Como Rick Grimes, Daryl Dixon e Michonne e Negan (desbloqueável) enfrente caminhantes neste arcade ambientado no mundo de The Walking Dead da AMC. Encare inimigos implacáveis como os Salvadores e hordas de caminhantes enquanto lança combos, ataques incríveis com armas e golpes finais devastadores.",
+    "img": "https://static.wikia.nocookie.net/walkingdead/images/c/c3/TWD_Streets_of_Survival.jpg",
+    "rating": 7.7,
+    "tags": [
+      "#Action"
+    ],
+    "platform": "PlayStation 3",
+    "date": "06/10/2026",
+    "id": "the-walking-dead-street-of-survivor"
   }
 
 ]
